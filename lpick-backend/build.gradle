@@ -35,6 +35,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // suitable driver class 자체 탐색 위한 psql 드라이버 추가
+    implementation 'org.postgresql:postgresql:42.6.0'
 }
 
 tasks.named('test') {

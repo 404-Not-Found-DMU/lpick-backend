@@ -1,0 +1,25 @@
+package com.notfound.lpickbackend.AUTO_ENTITIES;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "tier")
+public class Tier {
+    @Id
+    @Column(name = "tier_id", nullable = false, length = 40)
+    private String tierId;
+
+    @Column(name = "name", nullable = false, length = 50)
+    private String name;
+
+    @Column(name = "point_scope", nullable = false)
+    private Integer pointScope;
+
+}
