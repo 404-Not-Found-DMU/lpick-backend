@@ -1,20 +1,32 @@
 package com.notfound.lpickbackend.AUTO_ENTITIES;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "page_revision")
 public class PageRevision {
+
+    @Builder
+    public PageRevision(String content, String revisionNumber, Instant createdAt, String wikiId, String oauthId) {
+        this.content = content;
+        this.revisionNumber = revisionNumber;
+        this.createdAt = createdAt;
+        this.wikiId = wikiId;
+        this.oauthId = oauthId;
+    }
+
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "revision_id", nullable = false, length = 40)
     private String revisionId;
 
@@ -24,6 +36,7 @@ public class PageRevision {
     @Column(name = "revision_number", nullable = false, length = 50)
     private String revisionNumber;
 
+    @CreatedDate
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
