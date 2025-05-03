@@ -17,10 +17,9 @@ import java.time.Instant;
 public class PageRevision {
 
     @Builder
-    public PageRevision(String content, String revisionNumber, Instant createdAt, String wikiId, String oauthId) {
+    public PageRevision(String content, String revisionNumber, String wikiId, String oauthId) {
         this.content = content;
         this.revisionNumber = revisionNumber;
-        this.createdAt = createdAt;
         this.wikiId = wikiId;
         this.oauthId = oauthId;
     }
