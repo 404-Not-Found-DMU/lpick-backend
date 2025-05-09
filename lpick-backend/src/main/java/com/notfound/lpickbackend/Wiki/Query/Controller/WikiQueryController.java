@@ -2,6 +2,7 @@ package com.notfound.lpickbackend.Wiki.Query.Controller;
 
 import com.notfound.lpickbackend.Wiki.Command.Application.DTO.InlineDiffLine;
 import com.notfound.lpickbackend.Wiki.Command.Application.Service.RevisionService;
+import com.notfound.lpickbackend.Wiki.Query.DTO.HighLightedDiffLine;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,15 @@ public class WikiQueryController {
                                                       @RequestParam("new") String newVersion) {
 
         List<InlineDiffLine> diffResult = revisionService.findRevisionDiff(wikiId, oldVersion, newVersion);
+        return ResponseEntity.status(HttpStatus.OK).body(diffResult);
+    }
+
+    @GetMapping("/test-diff-by-char/{wikiId}")
+    public ResponseEntity<List<HighLightedDiffLine>> getDiffLineWithWord(@PathVariable("wikiId") String wikiId,
+                                                            @RequestParam("old") String oldVersion,
+                                                            @RequestParam("new") String newVersion) {
+
+        List<HighLightedDiffLine> diffResult = revisionService.findRevisionDiffByWord(wikiId, oldVersion, newVersion);
         return ResponseEntity.status(HttpStatus.OK).body(diffResult);
     }
 }

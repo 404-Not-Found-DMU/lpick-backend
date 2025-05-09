@@ -5,6 +5,9 @@ import com.notfound.lpickbackend.Wiki.Command.Application.DTO.InlineDiffLine;
 import com.notfound.lpickbackend.Wiki.Command.Application.DTO.Request.PageRevisionRequest;
 import com.notfound.lpickbackend.Wiki.Command.Application.DTO.Response.PageRevisionResponse;
 import com.notfound.lpickbackend.Wiki.Command.Repository.RevisionRepository;
+import com.notfound.lpickbackend.Wiki.Query.DTO.HighLightedDiffLine;
+import com.notfound.lpickbackend.Wiki.Query.Service.WikiDiffHighlightService;
+import com.notfound.lpickbackend.Wiki.Query.Service.WikiDiffService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,7 @@ public class RevisionService {
     private final RevisionRepository revisionRepository;
 
     private final WikiDiffService wikiDiffService;
+    private final WikiDiffHighlightService wikiDiffHighlightService;
 
     public PageRevisionResponse writeNewRevision(PageRevisionRequest request, String userId) {
 
@@ -67,6 +71,26 @@ public class RevisionService {
                 .toList();
 
         return wikiDiffService.computeInlineDiff(oldLines, newLines);
+    }
+
+    public List<HighLightedDiffLine> findRevisionDiffByWord(String wikiId,
+                                                            String oldVersionNumber,
+                                                            String newVersionNumber) {
+        PageRevision oldRevision = revisionRepository
+                .findByWikiIdAndRevisionNumber(wikiId, oldVersionNumber)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 리비전입니다."));
+        PageRevision newRevision = revisionRepository
+                .findByWikiIdAndRevisionNumber(wikiId, newVersionNumber)   // ← 여기를 newVersionNumber 로!
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 리비전입니다."));
+
+        List<String> oldLines = Arrays.stream(oldRevision.getContent().split("\n"))
+                .map(line -> line.replace("\\n","").trim())
+                .toList();
+        List<String> newLines = Arrays.stream(newRevision.getContent().split("\n"))
+                .map(line -> line.replace("\\n","").trim())
+                .toList();
+
+        return wikiDiffHighlightService.computeHighlightedDiff(oldLines, newLines);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.Wiki.Command.Application.Service;
+package com.notfound.lpickbackend.Wiki.Query.Service;
 
 import com.notfound.lpickbackend.Wiki.Command.Application.DTO.DiffWord;
 import com.notfound.lpickbackend.Wiki.Command.Application.DTO.InlineDiffLine;
