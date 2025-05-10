@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.Wiki.Command.Repository;
+package com.notfound.lpickbackend.Wiki.Query.Repository;
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.PageRevision;
 import org.springframework.data.jpa.repository.JpaRepository;

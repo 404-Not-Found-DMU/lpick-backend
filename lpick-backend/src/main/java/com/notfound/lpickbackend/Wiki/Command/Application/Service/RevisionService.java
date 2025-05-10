@@ -4,7 +4,7 @@ import com.notfound.lpickbackend.AUTO_ENTITIES.PageRevision;
 import com.notfound.lpickbackend.Wiki.Command.Application.DTO.InlineDiffLine;
 import com.notfound.lpickbackend.Wiki.Command.Application.DTO.Request.PageRevisionRequest;
 import com.notfound.lpickbackend.Wiki.Command.Application.DTO.Response.PageRevisionResponse;
-import com.notfound.lpickbackend.Wiki.Command.Repository.RevisionRepository;
+import com.notfound.lpickbackend.Wiki.Query.Repository.RevisionRepository;
 import com.notfound.lpickbackend.Wiki.Query.DTO.HighLightedDiffLine;
 import com.notfound.lpickbackend.Wiki.Query.Service.WikiDiffHighlightService;
 import com.notfound.lpickbackend.Wiki.Query.Service.WikiDiffService;

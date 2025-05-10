@@ -1,69 +1,88 @@
 package com.notfound.lpickbackend.Wiki.Query.Service;
 
-import name.fraser.neil.plaintext.diff_match_patch;
+import com.notfound.lpickbackend.AUTO_ENTITIES.PageRevision;
+import lombok.AllArgsConstructor;
+import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
+import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch.Operation;
+import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch.Diff;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class WikiDiffServiceV2 {
+    private final PageRevisionService pageRevisionService;
+    private final DiffMatchPatch dmp = new DiffMatchPatch();
 
-    private final diff_match_patch dmp = new diff_match_patch();
+
+    public String getTwoRevisionDiffHtml(String wikiId, String oldVersion, String newVersion) {
+        List<PageRevision> pageRevisionList = pageRevisionService.getTwoRevision(wikiId, oldVersion, newVersion);
+
+        String oldContent = pageRevisionList.get(0).getContent();
+        String newContent = pageRevisionList.get(1).getContent();
+
+        return generateDiffHtml(oldContent, newContent, oldVersion, newVersion);
+    }
+
 
     public String generateDiffHtml(String a, String b, String labelA, String labelB) {
         if (a.equals(b)) {
             return "";
         }
 
-        List<diff_match_patch.Diff> diffs = dmp.diff_main(a, b);
-        dmp.diff_cleanupSemantic(diffs);
+        // 1) diff 생성 및 정리
+        LinkedList<Diff> diffs = dmp.diffMain(a, b);
+        dmp.diffCleanupSemantic(diffs);
 
-        // Append newline to flush last line
-        diffs.add(new diff_match_patch.Diff(diff_match_patch.Operation.EQUAL, "\n"));
+        // 2) 마지막 줄 flush
+        diffs.add(new Diff(Operation.EQUAL, "\n"));
 
-        // Break into line-based segments
+        // 3) 라인 단위로 분할
         List<LineDiff> lineDiffs = parseLineDiffs(diffs);
 
-        // Build HTML
+        // 4) HTML 테이블 빌드
         StringBuilder sb = new StringBuilder();
         sb.append("<table style=\"width:100%; white-space:pre-wrap;\">")
-                .append("<tr><td colspan=\"2\">" + labelA + " ➤ " + labelB + "</td></tr>")
-                .append("<tr><td style=\"width:40px; user-select:none;\">");
+                .append("<tr><td colspan=\"2\">")
+                .append(labelA).append(" ➤ ").append(labelB)
+                .append("</td></tr><tr><td style=\"width:40px; user-select:none;\">");
 
         int currentLine = 0;
         for (LineDiff ld : lineDiffs) {
             if (currentLine != ld.getLine()) {
                 currentLine = ld.getLine();
-                sb.append("</td></tr><tr><td style=\"width:40px; user-select:none;\">" + currentLine + "</td><td>");
+                sb.append("</td></tr><tr><td style=\"width:40px; user-select:none;\">")
+                        .append(currentLine)
+                        .append("</td><td>");
             }
-            switch (ld.getOp()) {
-                case INSERT:
-                    sb.append("<span class=\"opennamu_diff_green\">" + escapeHtml(ld.getText()) + "</span>");
-                    break;
-                case DELETE:
-                    sb.append("<span class=\"opennamu_diff_red\">" + escapeHtml(ld.getText()) + "</span>");
-                    break;
-                default:
-                    sb.append(escapeHtml(ld.getText()));
+            String text = escapeHtml(ld.getText());
+            if (ld.getOp() == Operation.INSERT) {
+                sb.append("<span class=\"opennamu_diff_green\">").append(text).append("</span>");
+            } else if (ld.getOp() == Operation.DELETE) {
+                sb.append("<span class=\"opennamu_diff_red\">").append(text).append("</span>");
+            } else {
+                sb.append(text);
             }
         }
+
         sb.append("</td></tr></table>");
         return sb.toString();
     }
 
-    private List<LineDiff> parseLineDiffs(List<diff_match_patch.Diff> diffs) {
+    private List<LineDiff> parseLineDiffs(List<Diff> diffs) {
         List<LineDiff> result = new LinkedList<>();
         int line = 1;
         boolean pendingChange = false;
 
-        for (diff_match_patch.Diff diff : diffs) {
-            String text = diff.text;
-            String[] parts = text.split("(?<=\\n)"); // keep newline
+        for (Diff diff : diffs) {
+            String[] parts = diff.text.split("(?<=\\n)");
             for (String part : parts) {
                 boolean isLineEnd = part.endsWith("\n");
-                String content = isLineEnd ? part.substring(0, part.length()-1) : part;
+                String content   = isLineEnd ? part.substring(0, part.length() - 1) : part;
 
-                if (diff.operation != diff_match_patch.Operation.EQUAL) {
+                if (diff.operation != Operation.EQUAL) {
                     pendingChange = true;
                 }
 
@@ -76,6 +95,7 @@ public class WikiDiffServiceV2 {
                 }
             }
         }
+
         return result;
     }
 
@@ -89,16 +109,16 @@ public class WikiDiffServiceV2 {
 
     private static class LineDiff {
         private final int line;
-        private final diff_match_patch.Operation op;
+        private final Operation op;
         private final String text;
 
-        LineDiff(int line, diff_match_patch.Operation op, String text) {
+        LineDiff(int line, Operation op, String text) {
             this.line = line;
-            this.op = op;
+            this.op   = op;
             this.text = text;
         }
-        public int getLine() { return line; }
-        public diff_match_patch.Operation getOp() { return op; }
+        public int getLine()   { return line; }
+        public Operation getOp() { return op; }
         public String getText() { return text; }
     }
 }
