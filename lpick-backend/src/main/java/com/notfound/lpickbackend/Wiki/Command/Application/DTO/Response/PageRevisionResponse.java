@@ -5,7 +5,6 @@ import lombok.*;
 import java.time.Instant;
 
 @Getter
-@Setter
 public class PageRevisionResponse {
     @Builder
     public PageRevisionResponse(String revisionId, String content, Instant createdAt, String createWho) {
