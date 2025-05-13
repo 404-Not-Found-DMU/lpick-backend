@@ -7,8 +7,6 @@ import com.notfound.lpickbackend.Wiki.Command.Application.DTO.Request.PageRevisi
 import com.notfound.lpickbackend.Wiki.Command.Application.DTO.Response.PageRevisionResponse;
 import com.notfound.lpickbackend.Wiki.Command.Repository.PageRevisionCommandRepository;
 import com.notfound.lpickbackend.Wiki.Query.Repository.PageRevisionQueryRepository;
-
-
 import com.notfound.lpickbackend.Wiki.Query.Service.WikiPageQueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
-@Transactional
 @Service
 @RequiredArgsConstructor
 public class PageRevisionCommandService {

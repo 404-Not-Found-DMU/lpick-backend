@@ -3,10 +3,9 @@ package com.notfound.lpickbackend.Wiki.Query.Service;
 import com.notfound.lpickbackend.AUTO_ENTITIES.PageRevision;
 import lombok.AllArgsConstructor;
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
-import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch.Operation;
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch.Diff;
+import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch.Operation;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
