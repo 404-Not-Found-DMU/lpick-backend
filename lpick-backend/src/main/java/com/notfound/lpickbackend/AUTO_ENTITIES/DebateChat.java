@@ -1,14 +1,13 @@
 package com.notfound.lpickbackend.AUTO_ENTITIES;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.Instant;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -27,10 +26,12 @@ public class DebateChat {
     @Column(name = "is_blind", nullable = false, length = 10)
     private String isBlind;
 
-    @Column(name = "dt_id", nullable = false, length = 40)
-    private String dtId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "dt_id", nullable = false)
+    private Debate dt;
 
-    @Column(name = "oauth_id", nullable = false, length = 40)
-    private String oauthId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "oauth_id", nullable = false)
+    private UserInfo oauth;
 
 }

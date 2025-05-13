@@ -1,5 +1,7 @@
 package com.notfound.lpickbackend.Wiki.Command.Application.Controller;
 
+import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
+import com.notfound.lpickbackend.UserInfo.Query.Service.UserInfoQueryService;
 import com.notfound.lpickbackend.Wiki.Command.Application.DTO.Request.PageRevisionRequest;
 import com.notfound.lpickbackend.Wiki.Command.Application.DTO.Response.PageRevisionResponse;
 import com.notfound.lpickbackend.Wiki.Command.Application.Service.PageRevisionCommandService;
@@ -14,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 public class PageRevisionCommandController {
 
     private final PageRevisionCommandService pageRevisionCommandService;
+    
+    // 추후삭제 : spring security 기반의 context-holder 통한 사용자 정보 불러오기 구현 이후 삭제해야할 대상입니다.
+    private final UserInfoQueryService userInfoQueryService;
 
     // Swagger 도입 후에는 java doc 사용 여부 논의 필요할 듯 보임.
     /**
@@ -27,7 +32,10 @@ public class PageRevisionCommandController {
     @PostMapping("/page-revision")
     public ResponseEntity<PageRevisionResponse> dummyPageRevision(@RequestBody PageRevisionRequest request,
                                                                   @RequestParam("dummyUserId") String dummyUserId) {
-        PageRevisionResponse newRevision = pageRevisionCommandService.writeNewRevision(request, dummyUserId);
+
+        UserInfo user = userInfoQueryService.getUserInfoById(dummyUserId);
+
+        PageRevisionResponse newRevision = pageRevisionCommandService.writeNewRevision(request, user);
 
         return ResponseEntity.status(HttpStatus.OK).body(newRevision);
     }

@@ -1,12 +1,11 @@
 package com.notfound.lpickbackend.AUTO_ENTITIES;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -16,10 +15,12 @@ public class AlbumGenre {
     @Column(name = "album_genre_id", nullable = false, length = 40)
     private String albumGenreId;
 
-    @Column(name = "album_id", nullable = false, length = 40)
-    private String albumId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "album_id", nullable = false)
+    private Album album;
 
-    @Column(name = "genre_id", nullable = false, length = 40)
-    private String genreId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "genre_id", nullable = false)
+    private Genre genre;
 
 }

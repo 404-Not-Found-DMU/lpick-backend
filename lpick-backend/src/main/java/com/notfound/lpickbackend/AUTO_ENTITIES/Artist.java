@@ -1,14 +1,13 @@
 package com.notfound.lpickbackend.AUTO_ENTITIES;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.Instant;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -30,7 +29,8 @@ public class Artist {
     @Column(name = "company", length = 50)
     private String company;
 
-    @Column(name = "wiki_id", length = 40)
-    private String wikiId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "wiki_id")
+    private WikiPage wiki;
 
 }

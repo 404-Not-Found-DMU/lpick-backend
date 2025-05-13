@@ -15,10 +15,10 @@ public class PageRevisionQueryService {
 
     public List<PageRevision> getTwoRevision(String wikiId, String oldVersion, String newVersion) {
         PageRevision oldRevision = pageRevisionQueryRepository
-                .findByWikiIdAndRevisionNumber(wikiId, oldVersion)
+                .findByWiki_WikiIdAndRevisionNumber(wikiId, oldVersion)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 리비전입니다."));
         PageRevision newRevision = pageRevisionQueryRepository
-                .findByWikiIdAndRevisionNumber(wikiId, newVersion)   // ← 여기를 newVersionNumber 로!
+                .findByWiki_WikiIdAndRevisionNumber(wikiId, newVersion)   // ← 여기를 newVersionNumber 로!
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 리비전입니다."));
 
 

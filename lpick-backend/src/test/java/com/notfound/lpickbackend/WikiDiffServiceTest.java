@@ -20,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * 테스트 대상 : WikiDiffServiceV2
  * 목적 : getTwoRevisionDiffHtml()를 이용한 diff 비교 시의 로직 및 예외처리가 정상 동작하는지 확인한다.
  */
+
 @ExtendWith(MockitoExtension.class)
 class WikiDiffServiceTest {
 

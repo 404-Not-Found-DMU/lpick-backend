@@ -2,30 +2,27 @@ package com.notfound.lpickbackend.AUTO_ENTITIES;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 
+
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EntityListeners(AuditingEntityListener.class)
 @Table(name = "page_revision")
 public class PageRevision {
-
     @Builder
-    public PageRevision(String content, String revisionNumber, String wikiId, String oauthId) {
+    public PageRevision(String revisionId, String content, String revisionNumber, Instant createdAt, WikiPage wiki, UserInfo userInfo) {
+        this.revisionId = revisionId;
         this.content = content;
         this.revisionNumber = revisionNumber;
-        this.wikiId = wikiId;
-        this.oauthId = oauthId;
+        this.createdAt = createdAt;
+        this.wiki = wiki;
+        this.userInfo = userInfo;
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "revision_id", nullable = false, length = 40)
     private String revisionId;
 
@@ -35,14 +32,15 @@ public class PageRevision {
     @Column(name = "revision_number", nullable = false, length = 50)
     private String revisionNumber;
 
-    @CreatedDate
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
-    @Column(name = "wiki_id", nullable = false, length = 40)
-    private String wikiId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "wiki_id", nullable = false)
+    private WikiPage wiki;
 
-    @Column(name = "oauth_id", nullable = false, length = 40)
-    private String oauthId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "oauth_id", nullable = false)
+    private UserInfo userInfo;
 
 }

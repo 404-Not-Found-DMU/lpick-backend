@@ -13,6 +13,7 @@ public class WikiPageQueryService {
     private final WikiPageQueryRepository wikiPageQueryRepository;
     public WikiPage getWikiPageById(String wikiId) {
         return wikiPageQueryRepository.findById(wikiId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "WikiPageService, getWikiPageById : wikiId에 해당하는 WikiPage가 존재하지 않습니다."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "WikiPageQueryService, getWikiPageById : wikiId에 해당하는 WikiPage가 존재하지 않습니다."));
     }
 }

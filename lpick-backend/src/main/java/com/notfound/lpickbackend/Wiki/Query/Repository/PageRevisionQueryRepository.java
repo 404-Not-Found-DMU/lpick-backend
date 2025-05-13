@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface PageRevisionQueryRepository extends JpaRepository<PageRevision, String> {
 
-    long countByWikiId(String wikiId);
+    long countByWiki_WikiId(String wikiId);
 
-    Optional<PageRevision> findByWikiIdAndRevisionNumber(String wikiId, String revisionNumber);
+    Optional<PageRevision> findByWiki_WikiIdAndRevisionNumber(String wikiId, String revisionNumber);
 }
