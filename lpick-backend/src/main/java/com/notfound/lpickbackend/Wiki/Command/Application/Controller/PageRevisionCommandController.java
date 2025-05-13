@@ -24,7 +24,7 @@ public class PageRevisionCommandController {
      * @return PageRevisionResponse를 반환한다.
      * */
     // post임에도 requestParam이 쓰인이유는, SpringSecurity 기반 적용 이후 ContextHolder에서 ID 가져오기 위함. + 아직 사용자 기능 구현 안되어있음.
-    @PostMapping("/write-dummydata")
+    @PostMapping("/page-revision")
     public ResponseEntity<PageRevisionResponse> dummyPageRevision(@RequestBody PageRevisionRequest request,
                                                                   @RequestParam("dummyUserId") String dummyUserId) {
         PageRevisionResponse newRevision = pageRevisionCommandService.writeNewRevision(request, dummyUserId);
