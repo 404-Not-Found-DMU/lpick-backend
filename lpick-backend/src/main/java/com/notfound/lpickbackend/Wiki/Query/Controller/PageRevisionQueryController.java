@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class PageRevisionQueryController {
     private final WikiDiffServiceV2 WikiDiffServiceV2;
 
-    @GetMapping("/test-diff-with-google/{wikiId}")
+    @GetMapping("/pagerevision-difference/{wikiId}")
     public ResponseEntity<String> getDiffLineHtml(@PathVariable("wikiId") String wikiId,
                                                                          @RequestParam("old") String oldVersion,
                                                                          @RequestParam("new") String newVersion) {

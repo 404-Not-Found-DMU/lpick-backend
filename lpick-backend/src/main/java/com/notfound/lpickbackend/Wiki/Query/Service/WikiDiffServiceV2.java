@@ -6,6 +6,7 @@ import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch.Operation;
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch.Diff;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 

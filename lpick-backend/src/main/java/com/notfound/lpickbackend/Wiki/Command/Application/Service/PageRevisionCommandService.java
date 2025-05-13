@@ -13,8 +13,10 @@ import com.notfound.lpickbackend.Wiki.Query.Service.WikiPageQueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class PageRevisionCommandService {
@@ -24,6 +26,7 @@ public class PageRevisionCommandService {
     private final PageRevisionQueryRepository pageRevisionQueryRepository;
     private final PageRevisionCommandRepository pageRevisionCommandRepository;
 
+    @Transactional
     public PageRevisionResponse writeNewRevision(PageRevisionRequest request, UserInfo user) {
 
         // WikiId 값을 지니는 wikiPage 엔티티가 존재하는지 확인.
@@ -33,7 +36,7 @@ public class PageRevisionCommandService {
         // count vs 제일 높은값 1개 뽑기 중 하나 sql문 효율성 비교 필요
         // 문제점 : 리비전을 등록하는 순간 카운팅해오면, 여러 인원이 동시 수정시 문제가 발생할 수 있음.
         // 1. DB에 대한 동시성 관리 수행(낙관적/비관적락)하여 한 인원의 작성 요청 트랜잭션 종료시까지 DB 단위 잠그기
-        // 2. 다른 방법 찾기...
+        // 2. 다른 방법 찾기...?
         long revisionNumber = pageRevisionQueryRepository.countByWiki_WikiId(request.getWikiId());
 
         // entity 저장하여 id, createdAt 기입된채로 가져오기

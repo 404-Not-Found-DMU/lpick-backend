@@ -28,7 +28,7 @@ public class PageRevisionCommandController {
      * @param dummyUserId - 사용자의 primary key인 oauthId를 기입한다.
      * @return PageRevisionResponse를 반환한다.
      * */
-    // post임에도 requestParam이 쓰인이유는, SpringSecurity 기반 적용 이후 ContextHolder에서 ID 가져오기 위함. + 아직 사용자 기능 구현 안되어있음.
+    // post임에도 requestParam이 쓰인이유는, SpringSecurity 기반 적용 되지 않았기 때문.
     @PostMapping("/page-revision")
     public ResponseEntity<PageRevisionResponse> dummyPageRevision(@RequestBody PageRevisionRequest request,
                                                                   @RequestParam("dummyUserId") String dummyUserId) {
