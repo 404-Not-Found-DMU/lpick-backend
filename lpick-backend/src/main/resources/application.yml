@@ -4,11 +4,13 @@ spring:
       - optional:classpath:API-KEY.yml
   sql:
     init:
-      mode: never   # ← 최초에만 always로 실행, 이후 never로 설정
+      mode: always
+      encoding: UTF-8
       schema-locations:
         - classpath:schema.sql   # 스키마(DDL), 테이블 구조
-      #data-locations:
-      #  - classpath:data.sql     # 초기 데이터(DML), 실제 데이터 기입 sql
+      data-locations:
+        - classpath:data.sql     # 초기 데이터(DML), 실제 데이터 기입 sql
+      platform: postgresql # h2가 아닌 postgresql임을 명시적으로 설정
   jpa:
     defer-datasource-initialization: true
     hibernate:
