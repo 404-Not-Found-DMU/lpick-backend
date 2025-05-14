@@ -2,18 +2,20 @@ package com.notfound.lpickbackend.AUTO_ENTITIES;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.Hibernate;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Embeddable
 public class UserAuthId implements Serializable {
-    private static final long serialVersionUID = 1534237739702382332L;
+    private static final long serialVersionUID = 8263012687464182204L;
     @Column(name = "auth_id", nullable = false, length = 50)
     private String authId;
 

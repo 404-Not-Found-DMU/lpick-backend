@@ -1,14 +1,13 @@
 package com.notfound.lpickbackend.AUTO_ENTITIES;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.Instant;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -18,8 +17,9 @@ public class Report {
     @Column(name = "report_id", nullable = false, length = 40)
     private String reportId;
 
-    @Column(name = "oauth_id", nullable = false, length = 40)
-    private String oauthId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "oauth_id", nullable = false)
+    private UserInfo oauth;
 
     @Column(name = "report_why", nullable = false, length = 50)
     private String reportWhy;

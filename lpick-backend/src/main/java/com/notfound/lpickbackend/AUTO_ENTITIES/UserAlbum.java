@@ -1,12 +1,11 @@
 package com.notfound.lpickbackend.AUTO_ENTITIES;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -19,10 +18,12 @@ public class UserAlbum {
     @Column(name = "record_file", length = 200)
     private String recordFile;
 
-    @Column(name = "album_id", nullable = false, length = 40)
-    private String albumId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "album_id", nullable = false)
+    private Album album;
 
-    @Column(name = "oauth_id", nullable = false, length = 40)
-    private String oauthId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "oauth_id", nullable = false)
+    private UserInfo oauth;
 
 }

@@ -1,12 +1,11 @@
 package com.notfound.lpickbackend.AUTO_ENTITIES;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -34,7 +33,8 @@ public class UserInfo {
     @Column(name = "lpti", length = 4)
     private String lpti;
 
-    @Column(name = "tier_id", nullable = false, length = 40)
-    private String tierId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "tier_id", nullable = false)
+    private Tier tier;
 
 }

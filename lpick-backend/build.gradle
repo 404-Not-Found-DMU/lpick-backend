@@ -38,6 +38,9 @@ dependencies {
 
     // suitable driver class 자체 탐색 위한 psql 드라이버 추가
     implementation 'org.postgresql:postgresql:42.6.0'
+
+    // 위키 리비전 별 diff 기능 대리위한 외부 라이브러리
+    implementation 'org.bitbucket.cowwoc:diff-match-patch:1.2'
 }
 
 tasks.named('test') {

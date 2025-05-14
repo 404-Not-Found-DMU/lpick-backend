@@ -1,19 +1,39 @@
 package com.notfound.lpickbackend.AUTO_ENTITIES;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import com.notfound.lpickbackend.AUTO_ENTITIES.TOOL.IdPrefixUtil;
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
+import java.util.UUID;
 
+
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "page_revision")
 public class PageRevision {
+    @Builder
+    public PageRevision(String revisionId, String content, String revisionNumber, Instant createdAt, WikiPage wiki, UserInfo userInfo) {
+        this.revisionId = revisionId;
+        this.content = content;
+        this.revisionNumber = revisionNumber;
+        this.createdAt = createdAt;
+        this.wiki = wiki;
+        this.userInfo = userInfo;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (this.revisionId == null) {
+            this.revisionId = IdPrefixUtil.get(this.getClass().getSimpleName()) + "_" + UUID.randomUUID();
+        }
+    }
+
     @Id
     @Column(name = "revision_id", nullable = false, length = 40)
     private String revisionId;
@@ -24,13 +44,16 @@ public class PageRevision {
     @Column(name = "revision_number", nullable = false, length = 50)
     private String revisionNumber;
 
+    @CreatedDate
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
-    @Column(name = "wiki_id", nullable = false, length = 40)
-    private String wikiId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "wiki_id", nullable = false)
+    private WikiPage wiki;
 
-    @Column(name = "oauth_id", nullable = false, length = 40)
-    private String oauthId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "oauth_id", nullable = false)
+    private UserInfo userInfo;
 
 }
