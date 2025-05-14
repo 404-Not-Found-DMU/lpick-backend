@@ -13,7 +13,7 @@ import java.util.List;
 public class PageRevisionQueryService {
     private final PageRevisionQueryRepository pageRevisionQueryRepository;
 
-    public List<PageRevision> getTwoRevision(String wikiId, String oldVersion, String newVersion) {
+    public List<PageRevision> readTwoRevision(String wikiId, String oldVersion, String newVersion) {
         PageRevision oldRevision = pageRevisionQueryRepository
                 .findByWiki_WikiIdAndRevisionNumber(wikiId, oldVersion)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 리비전입니다."));

@@ -30,12 +30,12 @@ public class PageRevisionCommandController {
      * */
     // post임에도 requestParam이 쓰인이유는, SpringSecurity 기반 적용 되지 않았기 때문.
     @PostMapping("/page-revision")
-    public ResponseEntity<PageRevisionResponse> dummyPageRevision(@RequestBody PageRevisionRequest request,
+    public ResponseEntity<PageRevisionResponse> createPageRevision(@RequestBody PageRevisionRequest request,
                                                                   @RequestParam("dummyUserId") String dummyUserId) {
 
         UserInfo user = userInfoQueryService.getUserInfoById(dummyUserId);
 
-        PageRevisionResponse newRevision = pageRevisionCommandService.writeNewRevision(request, user);
+        PageRevisionResponse newRevision = pageRevisionCommandService.createNewRevision(request, user);
 
         return ResponseEntity.status(HttpStatus.OK).body(newRevision);
     }

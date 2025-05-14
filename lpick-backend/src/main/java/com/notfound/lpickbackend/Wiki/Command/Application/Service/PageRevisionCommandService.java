@@ -24,7 +24,7 @@ public class PageRevisionCommandService {
     private final PageRevisionCommandRepository pageRevisionCommandRepository;
 
     @Transactional
-    public PageRevisionResponse writeNewRevision(PageRevisionRequest request, UserInfo user) {
+    public PageRevisionResponse createNewRevision(PageRevisionRequest request, UserInfo user) {
 
         // WikiId 값을 지니는 wikiPage 엔티티가 존재하는지 확인.
         WikiPage targetWikiPage = wikiPageQueryService.getWikiPageById(request.getWikiId());

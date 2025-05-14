@@ -17,7 +17,7 @@ public class WikiDiffServiceV2 {
 
 
     public String getTwoRevisionDiffHtml(String wikiId, String oldVersion, String newVersion) {
-        List<PageRevision> pageRevisionList = pageRevisionQueryService.getTwoRevision(wikiId, oldVersion, newVersion);
+        List<PageRevision> pageRevisionList = pageRevisionQueryService.readTwoRevision(wikiId, oldVersion, newVersion);
 
         if(pageRevisionList.size() < 2) throw new IllegalArgumentException("리비전 비교대상이 정상적으로 불러와지지않음.");
 

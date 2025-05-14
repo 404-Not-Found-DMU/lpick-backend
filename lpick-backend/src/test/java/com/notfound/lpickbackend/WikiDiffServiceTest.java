@@ -36,7 +36,7 @@ class WikiDiffServiceTest {
     @Test
     void givenNoRevisions_whenGetTwoRevisionDiffHtml_thenThrowException() {
         // mock객체인 pageRevisionQueryService의 getTwoRevision()에 대한 input/output을 설정
-        given(pageRevisionQueryService.getTwoRevision(anyString(), anyString(), anyString()))
+        given(pageRevisionQueryService.readTwoRevision(anyString(), anyString(), anyString()))
                 .willReturn(Collections.emptyList());
         
         // 실행 시 특정 예외와 에러메시지가 나타나는지 확인
@@ -51,7 +51,7 @@ class WikiDiffServiceTest {
     @Test
     void givenOneRevision_whenGetTwoRevisionDiffHtml_thenThrowException() {
         PageRevision single = pageRevision("irrelevant");
-        given(pageRevisionQueryService.getTwoRevision(anyString(), anyString(), anyString()))
+        given(pageRevisionQueryService.readTwoRevision(anyString(), anyString(), anyString()))
                 .willReturn(Collections.singletonList(single));
 
         assertThatThrownBy(() ->
@@ -67,7 +67,7 @@ class WikiDiffServiceTest {
         PageRevision a = pageRevision("SAME");
         PageRevision b = pageRevision("SAME");
 
-        given(pageRevisionQueryService.getTwoRevision("wiki", "old", "new"))
+        given(pageRevisionQueryService.readTwoRevision("wiki", "old", "new"))
                 .willReturn(Arrays.asList(a, b));
 
         String html = wikiDiffService.getTwoRevisionDiffHtml("wiki", "old", "new");
@@ -79,7 +79,7 @@ class WikiDiffServiceTest {
         // "\n" 있어야 groupByLine()이 라인 단위로 묶습니다.
         PageRevision oldRev = pageRevision("Line1\n");
         PageRevision newRev = pageRevision("Line2\n");
-        given(pageRevisionQueryService.getTwoRevision("wiki", "old", "new"))
+        given(pageRevisionQueryService.readTwoRevision("wiki", "old", "new"))
                 .willReturn(List.of(oldRev, newRev));
 
         String html = wikiDiffService.getTwoRevisionDiffHtml("wiki", "old", "new");
