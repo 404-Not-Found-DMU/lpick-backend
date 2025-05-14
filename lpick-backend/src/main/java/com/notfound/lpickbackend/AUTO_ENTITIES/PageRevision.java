@@ -1,15 +1,20 @@
 package com.notfound.lpickbackend.AUTO_ENTITIES;
 
+import com.notfound.lpickbackend.AUTO_ENTITIES.TOOL.IdPrefixUtil;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
+import java.util.UUID;
 
 
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "page_revision")
 public class PageRevision {
     @Builder
@@ -22,6 +27,13 @@ public class PageRevision {
         this.userInfo = userInfo;
     }
 
+    @PrePersist
+    public void prePersist() {
+        if (this.revisionId == null) {
+            this.revisionId = IdPrefixUtil.get(this.getClass().getSimpleName()) + "_" + UUID.randomUUID();
+        }
+    }
+
     @Id
     @Column(name = "revision_id", nullable = false, length = 40)
     private String revisionId;
@@ -32,6 +44,7 @@ public class PageRevision {
     @Column(name = "revision_number", nullable = false, length = 50)
     private String revisionNumber;
 
+    @CreatedDate
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
