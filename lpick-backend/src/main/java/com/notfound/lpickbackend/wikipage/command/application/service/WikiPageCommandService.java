@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class WikiPageCommandService {
 
@@ -18,7 +17,6 @@ public class WikiPageCommandService {
     @Transactional
     public String createWikiPage(String title) {
 
-        log.warn(title);
         WikiPage newWikiPage = WikiPage.builder().
                 title(title).
                 currentRevision("r1"). // 초기 생성시 r1이라고 가정

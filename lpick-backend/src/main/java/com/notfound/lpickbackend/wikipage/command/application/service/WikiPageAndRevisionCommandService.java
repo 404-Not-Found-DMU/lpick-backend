@@ -39,6 +39,7 @@ public class WikiPageAndRevisionCommandService {
         pageRevisionCommandService.createNewRevision(pageRevisionRequestDTO, userInfo);
     }
 
+    // 유저 정보를 가져오기 위한 메소드
     private UserInfo getUserInfo(String userId) {
 
         return userInfoQueryService.getUserInfoById(userId);

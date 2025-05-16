@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.wikipage.command.application.controller;
 
+import com.notfound.lpickbackend.common.exception.SuccessCode;
 import com.notfound.lpickbackend.wikipage.command.application.dto.WikiPageCreateRequestDTO;
 import com.notfound.lpickbackend.wikipage.command.application.service.WikiPageAndRevisionCommandService;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +18,12 @@ public class WikiPageCommandController {
     private final WikiPageAndRevisionCommandService wikiPageAndRevisionCommandService;
 
     @PostMapping("WikiPage")
-    public ResponseEntity<?> createWikiPage(
+    public ResponseEntity<SuccessCode> createWikiPage(
             @RequestBody WikiPageCreateRequestDTO wikiPageCreateRequestDTO
     ) {
 
         wikiPageAndRevisionCommandService.createWikiPageAndRevision(wikiPageCreateRequestDTO);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(SuccessCode.SUCCESS);
     }
 }
