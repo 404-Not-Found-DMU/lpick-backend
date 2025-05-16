@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /*
-* WikiPage와 Revision 생성 서비스 로직을 하나의 트랜잭션에서 수행하기 위한 서비스
-* */
+ * WikiPage와 Revision 생성 서비스 로직을 하나의 트랜잭션에서 수행하기 위한 서비스
+ * */
 @Service
 @RequiredArgsConstructor
 public class WikiPageAndRevisionCommandService {
@@ -24,7 +24,7 @@ public class WikiPageAndRevisionCommandService {
     private final UserInfoQueryService userInfoQueryService;
 
     @Transactional
-    public void createWikiPageAndRevision (WikiPageCreateRequestDTO wikiRequestDTO) {
+    public void createWikiPageAndRevision(WikiPageCreateRequestDTO wikiRequestDTO) {
 
         String wikiId = wikiPageCommandService.createWikiPage(wikiRequestDTO.getTitle());
 

@@ -22,7 +22,7 @@ public class WikiPageCommandService {
         WikiPage newWikiPage = WikiPage.builder().
                 title(title).
                 currentRevision("r1"). // 초기 생성시 r1이라고 가정
-                status(Status.OPEN).
+                        status(Status.OPEN).
                 build();
 
         wikiPageCommandRepository.save(newWikiPage);
