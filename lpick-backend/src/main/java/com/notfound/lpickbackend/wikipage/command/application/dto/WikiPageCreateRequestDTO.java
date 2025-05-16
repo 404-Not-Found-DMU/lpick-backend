@@ -16,4 +16,7 @@ public class WikiPageCreateRequestDTO {
 
     // 문서 내용
     String content;
+
+    // 임시로 넣는 사용자 ID
+    String userId;
 }
