@@ -1,8 +1,8 @@
 package com.notfound.lpickbackend.wikipage.command.application.service;
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
-import com.notfound.lpickbackend.UserInfo.Query.Service.UserInfoQueryService;
-import com.notfound.lpickbackend.Wiki.Command.Application.Service.PageRevisionCommandService;
+import com.notfound.lpickbackend.userinfo.query.service.UserInfoQueryService;
+import com.notfound.lpickbackend.wiki.command.application.service.PageRevisionCommandService;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.wikipage.command.application.dto.WikiPageCreateRequestDTO;
