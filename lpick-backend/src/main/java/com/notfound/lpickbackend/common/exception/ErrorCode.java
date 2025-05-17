@@ -23,7 +23,7 @@ public enum ErrorCode {
     NOT_MATCH_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "허용되지 않은 확장자입니다."),
     INVALID_FIELD_DATA(HttpStatus.BAD_REQUEST, "잘못된 필드 데이터입니다."),
     ACCESS_DENIED(HttpStatus.BAD_REQUEST, "올바르지 않은 접근입니다. "),
-    NO_AUTHORITY(HttpStatus.NOT_FOUND, " 권한이 없습니다."),
+    EMPTY_TITLE(HttpStatus.BAD_REQUEST, "제목 값이 비어있습니다."),
 
     // 401 에러
     AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "인증 실패"),
@@ -33,7 +33,7 @@ public enum ErrorCode {
 
     // 404 에러
     NOT_FOUND_REVISION(HttpStatus.NOT_FOUND, "버전 정보를 찾을 수 없습니다."),
-    NOT_FOUND_WIKI(HttpStatus.NOT_FOUND, "위키 정보를 찾을 수 없습니다."),
+    NOT_FOUND_WIKI(HttpStatus.NOT_FOUND, "위키 정보를 찾을 수 없습니다.")
     ;
 
 
