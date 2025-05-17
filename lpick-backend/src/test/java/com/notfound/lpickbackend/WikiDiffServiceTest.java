@@ -7,9 +7,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.notfound.lpickbackend.AUTO_ENTITIES.PageRevision;
-import com.notfound.lpickbackend.Wiki.Query.Service.PageRevisionQueryService;
-import com.notfound.lpickbackend.Wiki.Query.Service.WikiDiffServiceV2;
+import com.notfound.lpickbackend.wiki.command.application.domain.PageRevision;
+import com.notfound.lpickbackend.wiki.query.service.PageRevisionQueryService;
+import com.notfound.lpickbackend.wiki.query.service.WikiDiffServiceV2;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

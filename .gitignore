@@ -24,3 +24,11 @@ hs_err_pid*
 replay_pid*
 
 API-KEY.yml
+
+# IntelliJ
+.idea/
+*.iml
+
+# Gradle
+.gradle/
+build/
