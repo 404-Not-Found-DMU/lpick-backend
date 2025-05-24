@@ -21,9 +21,11 @@ public class PageRevisionQueryController {
     private final WikiDiffServiceV2 WikiDiffServiceV2;
     private final PageRevisionQueryService pageRevisionQueryService;
     @GetMapping("/wiki/{wikiId}/revision")
-    public ResponseEntity<List<PageRevisionResponse>> getPageRevisionList(@PathVariable("wikiId") String wikiId,
-                                                                          @RequestParam(defaultValue = "0") int page,
-                                                                          @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<List<PageRevisionResponse>> getPageRevisionList(
+            @PathVariable("wikiId") String wikiId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
         Page<PageRevisionResponse> pageRevisionList = pageRevisionQueryService.getPageRevisionResponseList(PageRequest.of(page, size), wikiId);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -31,16 +33,20 @@ public class PageRevisionQueryController {
     }
 
     @GetMapping("/wiki/{wikiId}/revision/{version}")
-    public ResponseEntity<PageRevisionResponse> getPageRevision(@PathVariable("wikiId") String wikiId,
-                                                        @PathVariable("version") String version) {
+    public ResponseEntity<PageRevisionResponse> getPageRevision(
+            @PathVariable("wikiId") String wikiId,
+            @PathVariable("version") String version
+    ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(pageRevisionQueryService.getPageRevisionResponse(wikiId, version));
     }
 
     @GetMapping("/wiki/{wikiId}/revision/difference")
-    public ResponseEntity<String> getDiffLineHtml(@PathVariable("wikiId") String wikiId,
-                                                  @RequestParam("old") String oldVersion,
-                                                  @RequestParam("new") String newVersion) {
+    public ResponseEntity<String> getDiffLineHtml(
+            @PathVariable("wikiId") String wikiId,
+            @RequestParam("old") String oldVersion,
+            @RequestParam("new") String newVersion
+    ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(WikiDiffServiceV2.getTwoRevisionDiffHtml(wikiId, oldVersion, newVersion));
     }

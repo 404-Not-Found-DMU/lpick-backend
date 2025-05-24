@@ -30,8 +30,10 @@ public class PageRevisionCommandController {
      * */
     // post임에도 requestParam이 쓰인이유는, SpringSecurity 기반 적용 되지 않았기 때문.
     @PostMapping("/page-revision")
-    public ResponseEntity<PageRevisionResponse> createPageRevision(@RequestBody PageRevisionRequest request,
-                                                                   @RequestParam("dummyUserId") String dummyUserId) {
+    public ResponseEntity<PageRevisionResponse> createPageRevision(
+            @RequestBody PageRevisionRequest request,
+            @RequestParam("dummyUserId") String dummyUserId
+    ) {
 
         UserInfo user = userInfoQueryService.getUserInfoById(dummyUserId);
 
@@ -47,8 +49,10 @@ public class PageRevisionCommandController {
     // 어떤 사용자가 반달행위를 하였음을 입증하기위해서는 문제가되는 PageRevision이 남아있어야하므로, 개별삭제는 불가
     // BLIND나 DELETE와 같이 위키문서 전체에 대해 '서비스 운영진'의 삭제 조치가 행해지는 경우가 아래의 DELETE 요청.
     @DeleteMapping("/wiki/{wikiId}/revision")
-    public ResponseEntity<Void> deletePageRevisionData(@PathVariable("wikiId") String wikiId,
-                                                   @RequestParam("dummyUserId") String dummyUserId) {
+    public ResponseEntity<Void> deletePageRevisionData(
+            @PathVariable("wikiId") String wikiId,
+            @RequestParam("dummyUserId") String dummyUserId
+    ) {
         UserInfo userInfo = userInfoQueryService.getUserInfoById(dummyUserId);
 
         pageRevisionCommandService.deleteRevisionData(wikiId, dummyUserId);
