@@ -19,7 +19,7 @@ public enum ErrorCode {
     SECURITY_CONTEXT_NOT_FOUND(HttpStatus.UNAUTHORIZED, "Security Context에 인증 정보가 없습니다."),
     MISSING_AUTHORIZATION_HEADER(HttpStatus.BAD_REQUEST, "Authorization 헤더가 누락되었습니다."),
 
-    // 사용자 등급 관련 에러
+    // 서비스 내 사용자 권한 관련 에러
     INSUFFICIENT_ACCESS_LEVEL(HttpStatus.FORBIDDEN, "접근 권한이 부족합니다."),
 
     // 400 에러

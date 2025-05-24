@@ -31,7 +31,7 @@ public class PageRevisionQueryService {
     /** PageResponse entity를 findAll한 결과의 ResponseDTO 매핑된 페이징 객체 제공. */
     public Page<PageRevisionResponse> getPageRevisionResponseList(Pageable pageable, String wikiId) {
 
-        return pageRevisionQueryRepository.findAllByWikiId(wikiId, pageable)
+        return pageRevisionQueryRepository.findAllByWiki_WikiId(wikiId, pageable)
                 .map(this::toResponseDTO);
     }
 
@@ -40,7 +40,7 @@ public class PageRevisionQueryService {
                 .findByWiki_WikiIdAndRevisionNumber(wikiId, oldVersion)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_REVISION));
         PageRevision newRevision = pageRevisionQueryRepository
-                .findByWiki_WikiIdAndRevisionNumber(wikiId, newVersion)   // ← 여기를 newVersionNumber 로!
+                .findByWiki_WikiIdAndRevisionNumber(wikiId, newVersion)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_REVISION));
 
 
@@ -58,5 +58,10 @@ public class PageRevisionQueryService {
                         .nickName(entity.getUserInfo().getNickname())
                         .build())
                 .build();
+    }
+
+    public PageRevision getPageRevision(String wikiId) {
+        return pageRevisionQueryRepository.findByWiki_WikiId(wikiId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_REVISION));
     }
 }

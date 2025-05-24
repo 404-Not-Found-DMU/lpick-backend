@@ -70,6 +70,6 @@ public class PageRevisionCommandService {
     public long deleteRevisionData(String wikiId, String dummyUserId) {
         userAuthQueryService.requireAdmin(dummyUserId); // ADMIN이 아닌 경우 검증
 
-        return pageRevisionQueryRepository.deleteByWikiId(wikiId);
+        return pageRevisionQueryRepository.deleteByWiki_WikiId(wikiId);
     }
 }
