@@ -3,7 +3,7 @@ package com.notfound.lpickbackend.wiki.command.application.controller;
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
 import com.notfound.lpickbackend.userinfo.query.service.UserInfoQueryService;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.PageRevisionRequest;
-import com.notfound.lpickbackend.wiki.command.application.dto.response.PageRevisionResponse;
+import com.notfound.lpickbackend.wiki.query.dto.response.PageRevisionResponse;
 import com.notfound.lpickbackend.wiki.command.application.service.PageRevisionCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,7 +31,7 @@ public class PageRevisionCommandController {
     // post임에도 requestParam이 쓰인이유는, SpringSecurity 기반 적용 되지 않았기 때문.
     @PostMapping("/page-revision")
     public ResponseEntity<PageRevisionResponse> createPageRevision(@RequestBody PageRevisionRequest request,
-                                                                  @RequestParam("dummyUserId") String dummyUserId) {
+                                                                   @RequestParam("dummyUserId") String dummyUserId) {
 
         UserInfo user = userInfoQueryService.getUserInfoById(dummyUserId);
 

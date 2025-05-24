@@ -4,7 +4,7 @@ import com.notfound.lpickbackend.wiki.command.application.domain.PageRevision;
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
 import com.notfound.lpickbackend.wikipage.command.application.domain.WikiPage;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.PageRevisionRequest;
-import com.notfound.lpickbackend.wiki.command.application.dto.response.PageRevisionResponse;
+import com.notfound.lpickbackend.wiki.query.dto.response.PageRevisionResponse;
 import com.notfound.lpickbackend.wiki.command.repository.PageRevisionCommandRepository;
 import com.notfound.lpickbackend.wiki.query.repository.PageRevisionQueryRepository;
 import com.notfound.lpickbackend.wiki.query.service.WikiPageQueryService;

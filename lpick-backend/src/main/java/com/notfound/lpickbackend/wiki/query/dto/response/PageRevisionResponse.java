@@ -1,5 +1,6 @@
-package com.notfound.lpickbackend.wiki.command.application.dto.response;
+package com.notfound.lpickbackend.wiki.query.dto.response;
 
+import com.notfound.lpickbackend.userInfo.query.dto.response.UserIdNamePairResponse;
 import lombok.*;
 
 import java.time.Instant;
@@ -7,7 +8,7 @@ import java.time.Instant;
 @Getter
 public class PageRevisionResponse {
     @Builder
-    public PageRevisionResponse(String revisionId, String content, Instant createdAt, String createWho) {
+    public PageRevisionResponse(String revisionId, String content, Instant createdAt, UserIdNamePairResponse createWho) {
         this.revisionId = revisionId;
         this.content = content;
         this.createdAt = createdAt;
@@ -17,5 +18,5 @@ public class PageRevisionResponse {
     private String revisionId;
     private String content;
     private Instant createdAt;
-    private String createWho;
+    private UserIdNamePairResponse createWho;
 }
