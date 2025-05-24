@@ -1,5 +1,10 @@
 package com.notfound.lpickbackend.wiki.command.application.service;
 
+import com.notfound.lpickbackend.common.exception.CustomException;
+import com.notfound.lpickbackend.common.exception.ErrorCode;
+import com.notfound.lpickbackend.userInfo.query.dto.response.UserIdNamePairResponse;
+import com.notfound.lpickbackend.userInfo.query.service.UserAuthQueryService;
+import com.notfound.lpickbackend.userInfo.query.service.UserInfoQueryService;
 import com.notfound.lpickbackend.wiki.command.application.domain.PageRevision;
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
 import com.notfound.lpickbackend.wikipage.command.application.domain.WikiPage;
@@ -17,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class PageRevisionCommandService {
+
+    private final UserAuthQueryService userAuthQueryService;
 
     private final WikiPageQueryService wikiPageQueryService;
 
@@ -53,7 +60,16 @@ public class PageRevisionCommandService {
                 .revisionId(saveResult.getRevisionId())
                 .content(saveResult.getContent())
                 .createdAt(saveResult.getCreatedAt())
-                .createWho(saveResult.getUserInfo().getOauthId())
+                .createWho(UserIdNamePairResponse.builder()
+                        .oauthId(saveResult.getUserInfo().getOauthId())
+                        .nickName(saveResult.getUserInfo().getNickname())
+                        .build())
                 .build();
+    }
+
+    public long deleteRevisionData(String wikiId, String dummyUserId) {
+        userAuthQueryService.requireAdmin(dummyUserId); // ADMIN이 아닌 경우 검증
+
+        return pageRevisionQueryRepository.deleteByWikiId(wikiId);
     }
 }

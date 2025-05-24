@@ -5,3 +5,11 @@ INSERT INTO user_info(oauth_id, nickname, profile, point, stack_point, about, lp
 INSERT INTO wiki_page(wiki_id, title, current_revision, status) VALUES
                         ('1', 'dummy_wikipage', null, '') ON CONFLICT (wiki_id) DO NOTHING;
 
+-- Role 기입
+-- 중재자, 매니저, 어드민(본 서비스 개발자들)
+INSERT INTO auth(auth_id, name) VALUES
+                        ('1', 'MEDIATOR') ON CONFLICT (auth_id) DO NOTHING ;
+INSERT INTO auth(auth_id, name) VALUES
+                        ('2', 'MANAGER') ON CONFLICT (auth_id) DO NOTHING ;
+INSERT INTO auth(auth_id, name) VALUES
+                        ('3', 'ADMIN') ON CONFLICT (auth_id) DO NOTHING ;

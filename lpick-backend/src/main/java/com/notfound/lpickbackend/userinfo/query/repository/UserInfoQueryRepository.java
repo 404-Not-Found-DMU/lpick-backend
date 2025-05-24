@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.userinfo.query.repository;
+package com.notfound.lpickbackend.userInfo.query.repository;
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
 import org.springframework.data.jpa.repository.JpaRepository;

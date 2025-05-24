@@ -1,7 +1,7 @@
-package com.notfound.lpickbackend.userinfo.query.service;
+package com.notfound.lpickbackend.userInfo.query.service;
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
-import com.notfound.lpickbackend.userinfo.query.repository.UserInfoQueryRepository;
+import com.notfound.lpickbackend.userInfo.query.repository.UserInfoQueryRepository;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
