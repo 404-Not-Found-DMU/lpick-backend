@@ -22,22 +22,24 @@ public class PageRevisionCommandController {
 
     // Swagger 도입 후에는 java doc 사용 여부 논의 필요할 듯 보임.
     /**
-     * DB에 더미데이터 PageRevision을 만들기 위한 기능.
+     * 이미 존재하는 WikiPage에 대해 새 PageRevision을 만드는 경우 사용.
+     * 사용자기준, 위키 문서를 수정하는 경우이나 PageRevision은 Update가 아닌 새 버전을 Create 하는 방식이므로 본 요청 사용
      *
      * @param request - 리비전을 등록할 위키문서의 id, 위키문서 내역 content를 지니는 class
      * @param dummyUserId - 사용자의 primary key인 oauthId를 기입한다.
      * @return PageRevisionResponse를 반환한다.
      * */
     // post임에도 requestParam이 쓰인이유는, SpringSecurity 기반 적용 되지 않았기 때문.
-    @PostMapping("/page-revision")
+    @PostMapping("/wiki/{wikiId}/revision")
     public ResponseEntity<PageRevisionResponse> createPageRevision(
             @RequestBody PageRevisionRequest request,
+            @PathVariable("wikiId") String wikiId,
             @RequestParam("dummyUserId") String dummyUserId
     ) {
 
         UserInfo user = userInfoQueryService.getUserInfoById(dummyUserId);
 
-        PageRevisionResponse newRevision = pageRevisionCommandService.createNewRevision(request, user);
+        PageRevisionResponse newRevision = pageRevisionCommandService.createNewRevision(request, wikiId, user);
 
         return ResponseEntity.status(HttpStatus.OK).body(newRevision);
     }

@@ -60,8 +60,8 @@ public class PageRevisionQueryService {
                 .build();
     }
 
-    public PageRevision getPageRevision(String wikiId) {
-        return pageRevisionQueryRepository.findByWiki_WikiId(wikiId)
+    public PageRevision getPageRevisionById(String revisionId) {
+        return pageRevisionQueryRepository.findById(revisionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_REVISION));
     }
 }

@@ -3,9 +3,13 @@ package com.notfound.lpickbackend.wikipage.command.application.service;
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
 import com.notfound.lpickbackend.userInfo.query.service.UserInfoQueryService;
+import com.notfound.lpickbackend.wiki.command.application.domain.PageRevision;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.PageRevisionRequest;
 import com.notfound.lpickbackend.wiki.command.application.service.PageRevisionCommandService;
+import com.notfound.lpickbackend.wiki.query.service.PageRevisionQueryService;
+import com.notfound.lpickbackend.wikipage.command.application.domain.WikiPage;
 import com.notfound.lpickbackend.wikipage.command.application.dto.WikiPageCreateRequestDTO;
+import com.notfound.lpickbackend.wikipage.query.service.WikiPageQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,8 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class WikiPageAndRevisionCommandService {
 
     private final PageRevisionCommandService pageRevisionCommandService;
+    private final PageRevisionQueryService pageRevisionQueryService;
 
     private final WikiPageCommandService wikiPageCommandService;
+    private final WikiPageQueryService wikiPageQueryService;
 
     private final UserInfoQueryService userInfoQueryService;
 
@@ -30,18 +36,26 @@ public class WikiPageAndRevisionCommandService {
 
         PageRevisionRequest pageRevisionRequestDTO = PageRevisionRequest.
                 builder().
-                wikiId(wikiId).
                 content(wikiRequestDTO.getContent()).
                 build();
 
         UserInfo userInfo = getUserInfo(wikiRequestDTO.getUserId());
 
-        pageRevisionCommandService.createNewRevision(pageRevisionRequestDTO, userInfo);
+        pageRevisionCommandService.createNewRevision(pageRevisionRequestDTO, wikiId, userInfo);
     }
 
     // 유저 정보를 가져오기 위한 메소드
     private UserInfo getUserInfo(String userId) {
 
         return userInfoQueryService.getUserInfoById(userId);
+    }
+
+    public void revertWikiPageAndRevision(String wikiId, String targetRevisionId) {
+        WikiPage wikiPage = wikiPageQueryService.getWikiPageById(wikiId);
+        PageRevision revertRevision = pageRevisionQueryService.getPageRevisionById(targetRevisionId);
+
+        wikiPage.updateCurrentRevision(revertRevision.getRevisionId());
+
+        wikiPageCommandService.updateWikiPage(wikiPage);
     }
 }

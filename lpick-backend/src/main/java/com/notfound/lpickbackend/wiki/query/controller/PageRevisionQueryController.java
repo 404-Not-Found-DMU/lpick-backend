@@ -20,6 +20,7 @@ import java.util.List;
 public class PageRevisionQueryController {
     private final WikiDiffServiceV2 WikiDiffServiceV2;
     private final PageRevisionQueryService pageRevisionQueryService;
+
     @GetMapping("/wiki/{wikiId}/revision")
     public ResponseEntity<List<PageRevisionResponse>> getPageRevisionList(
             @PathVariable("wikiId") String wikiId,

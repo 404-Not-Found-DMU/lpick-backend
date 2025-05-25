@@ -35,4 +35,8 @@ public class WikiPage {
     @Column(name = "status", nullable = false, length = 10)
     private WikiStatus wikiStatus;
 
+
+    public void updateCurrentRevision(String newRevisionNumber) {
+        this.currentRevision = newRevisionNumber;
+    }
 }

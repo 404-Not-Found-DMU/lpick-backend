@@ -1,14 +1,12 @@
 package com.notfound.lpickbackend.wikipage.command.application.controller;
 
+import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.common.exception.SuccessCode;
 import com.notfound.lpickbackend.wikipage.command.application.dto.WikiPageCreateRequestDTO;
 import com.notfound.lpickbackend.wikipage.command.application.service.WikiPageAndRevisionCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -25,5 +23,16 @@ public class WikiPageCommandController {
         wikiPageAndRevisionCommandService.createWikiPageAndRevision(wikiPageCreateRequestDTO);
 
         return ResponseEntity.ok(SuccessCode.SUCCESS);
+    }
+
+    // 리비전 '되돌리기' 기능.
+    // r134가 최신인 위키에 대해 r132로 되돌리기 수행 시, r132내용 기반으로 r135를 만들어 새로 적용시키는 방식.
+    @PatchMapping("/wiki/{wikiId}/revert-revision/{targetRevisionId}")
+    public ResponseEntity<SuccessCode> revertWikiPageRevision(
+            @PathVariable("wikiId") String wikiId,
+            @PathVariable("targetRevisionId") String targetRevisionId
+    ) {
+        wikiPageAndRevisionCommandService.revertWikiPageAndRevision(wikiId, targetRevisionId);
+        return ResponseEntity.ok(SuccessCode.PAGE_REVISION_REVERT_SUCCESS);
     }
 }

@@ -69,10 +69,9 @@ class WikiPageAndRevisionCommandServiceTest {
         verify(wikiPageCommandService, times(1)).createWikiPage("테스트 문서");
         verify(userInfoQueryService, times(1)).getUserInfoById("user-123");
         verify(pageRevisionCommandService, times(1)).createNewRevision(
-                argThat(req ->
-                        req.getWikiId().equals(generatedWikiId)
-                                && req.getContent().equals("테스트 내용입니다.")
+                argThat(req -> req.getContent().equals("테스트 내용입니다.")
                 ),
+                eq(generatedWikiId),
                 eq(mockUserInfo)
         );
     }

@@ -12,8 +12,5 @@ import lombok.NoArgsConstructor;
 @Getter
 public class PageRevisionRequest {
     @NotEmpty
-    private String wikiId;
-
-    @NotEmpty
     private String content;
 }

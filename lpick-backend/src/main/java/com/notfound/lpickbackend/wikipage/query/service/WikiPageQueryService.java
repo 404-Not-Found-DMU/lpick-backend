@@ -18,12 +18,16 @@ public class WikiPageQueryService {
     private final WikiPageQueryRepository wikiPageQueryRepository;
 
     public WikiPageViewResponse getWikiPageView(String wikiId) {
-        WikiPage wikiPage = wikiPageQueryRepository.findById(wikiId)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_WIKI));
+        WikiPage wikiPage = getWikiPageById(wikiId);
 
-        PageRevision pageRevision = pageRevisionQueryService.getPageRevision(wikiId);
+        PageRevision pageRevision = pageRevisionQueryService.getPageRevisionById(wikiPage.getCurrentRevision());
 
         return this.toViewResponse(wikiPage, pageRevision);
+    }
+
+    public WikiPage getWikiPageById(String wikiId) {
+        return wikiPageQueryRepository.findById(wikiId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_WIKI));
     }
 
 
@@ -34,6 +38,4 @@ public class WikiPageQueryService {
                 .modifiedAt(revisionEntity.getCreatedAt())
                 .build();
     }
-
-
 }
