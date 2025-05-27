@@ -1,9 +1,12 @@
 package com.notfound.lpickbackend.wikipage.command.application.domain;
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.TOOL.IdPrefixUtil;
+import com.notfound.lpickbackend.common.exception.CustomException;
+import com.notfound.lpickbackend.common.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 @Builder
@@ -35,8 +38,20 @@ public class WikiPage {
     @Column(name = "status", nullable = false, length = 10)
     private WikiStatus wikiStatus;
 
-
     public void updateCurrentRevision(String newRevisionNumber) {
         this.currentRevision = newRevisionNumber;
+    }
+
+
+    public void updateWikiStatus(String wikiStatusStr) {
+        for(WikiStatus statusType : WikiStatus.values()) {
+            if(statusType.name().equals(wikiStatusStr.toUpperCase())) {
+                this.wikiStatus = statusType;
+                return;
+            }
+        }
+
+        // 규칙에 맞지 않는 Enum 기입된 경우 예외처리
+        throw new CustomException(ErrorCode.INVALID_FIELD_DATA);
     }
 }

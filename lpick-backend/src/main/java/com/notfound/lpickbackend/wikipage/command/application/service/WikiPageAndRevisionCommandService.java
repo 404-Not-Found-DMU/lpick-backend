@@ -8,7 +8,7 @@ import com.notfound.lpickbackend.wiki.command.application.dto.request.PageRevisi
 import com.notfound.lpickbackend.wiki.command.application.service.PageRevisionCommandService;
 import com.notfound.lpickbackend.wiki.query.service.PageRevisionQueryService;
 import com.notfound.lpickbackend.wikipage.command.application.domain.WikiPage;
-import com.notfound.lpickbackend.wikipage.command.application.dto.WikiPageCreateRequestDTO;
+import com.notfound.lpickbackend.wikipage.command.application.dto.request.WikiPageCreateRequestDTO;
 import com.notfound.lpickbackend.wikipage.query.service.WikiPageQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

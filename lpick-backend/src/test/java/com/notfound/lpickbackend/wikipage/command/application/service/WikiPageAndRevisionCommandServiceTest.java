@@ -5,7 +5,7 @@ import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.userInfo.query.service.UserInfoQueryService;
 import com.notfound.lpickbackend.wiki.command.application.service.PageRevisionCommandService;
-import com.notfound.lpickbackend.wikipage.command.application.dto.WikiPageCreateRequestDTO;
+import com.notfound.lpickbackend.wikipage.command.application.dto.request.WikiPageCreateRequestDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

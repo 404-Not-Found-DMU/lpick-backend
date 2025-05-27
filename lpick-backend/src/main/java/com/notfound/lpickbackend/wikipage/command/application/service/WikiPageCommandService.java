@@ -5,6 +5,7 @@ import com.notfound.lpickbackend.wikipage.command.application.domain.WikiPage;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.wikipage.command.application.domain.WikiStatus;
+import com.notfound.lpickbackend.wikipage.command.application.dto.request.WikiStatusRequest;
 import com.notfound.lpickbackend.wikipage.command.repository.WikiPageCommandRepository;
 import com.notfound.lpickbackend.wikipage.query.service.WikiPageQueryService;
 import lombok.RequiredArgsConstructor;
@@ -43,8 +44,6 @@ public class WikiPageCommandService {
 
     @Transactional
     public void updateWikiPageCurrentRevision(String wikiId, String newRevisionNumber) {
-
-
         try {
             WikiPage wikiPage = wikiPageQueryService.getWikiPageById(wikiId);
             wikiPage.updateCurrentRevision(newRevisionNumber);
@@ -53,7 +52,18 @@ public class WikiPageCommandService {
         } catch (Exception e) {
             throw new CustomException((ErrorCode.INTERNAL_SERVER_ERROR));
         }
+    }
 
+    @Transactional
+    public void updateWikiPageStatus(String wikiId, WikiStatusRequest req) {
+        try {
+            WikiPage wikiPage = wikiPageQueryService.getWikiPageById(wikiId);
+            wikiPage.updateWikiStatus(req.getStatus());
+
+            wikiPageCommandRepository.save(wikiPage);
+        } catch (Exception e) {
+            throw new CustomException((ErrorCode.INTERNAL_SERVER_ERROR));
+        }
     }
 
     public void updateWikiPage(WikiPage wikiPage) {
