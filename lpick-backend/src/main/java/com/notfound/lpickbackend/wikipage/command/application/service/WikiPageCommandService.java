@@ -1,9 +1,8 @@
 package com.notfound.lpickbackend.wikipage.command.application.service;
 
-import com.notfound.lpickbackend.wiki.command.application.domain.PageRevision;
-import com.notfound.lpickbackend.wikipage.command.application.domain.WikiPage;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
+import com.notfound.lpickbackend.wikipage.command.application.domain.WikiPage;
 import com.notfound.lpickbackend.wikipage.command.application.domain.WikiStatus;
 import com.notfound.lpickbackend.wikipage.command.application.dto.request.WikiStatusRequest;
 import com.notfound.lpickbackend.wikipage.command.repository.WikiPageCommandRepository;

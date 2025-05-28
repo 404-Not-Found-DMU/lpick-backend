@@ -8,6 +8,7 @@ import com.notfound.lpickbackend.wikipage.command.application.service.WikiPageCo
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -33,6 +34,7 @@ public class WikiPageCommandController {
      * ex. r134가 최신인 위키에 대해 r132로 되돌리기 수행 시, r132내용 기반으로 r135를 만들어 새로 적용시키는 방식.
      */
     @PatchMapping("/wiki/{wikiId}/current-revision/{targetRevisionId}")
+    @PreAuthorize("hasRole('TIER_SILVER')") // 임시 설정
     public ResponseEntity<SuccessCode> revertWikiPageRevision(
             @PathVariable("wikiId") String wikiId,
             @PathVariable("targetRevisionId") String targetRevisionId
@@ -46,6 +48,7 @@ public class WikiPageCommandController {
      *
      */
     @PatchMapping("/wiki/{wikiId}/status")
+    @PreAuthorize("hasAuthority('AUTH_ADMIN')")
     public ResponseEntity<SuccessCode> changeStatusWikiPage(
             @RequestBody @Valid WikiStatusRequest statusRequest,
             @PathVariable("wikiId") String wikiId
