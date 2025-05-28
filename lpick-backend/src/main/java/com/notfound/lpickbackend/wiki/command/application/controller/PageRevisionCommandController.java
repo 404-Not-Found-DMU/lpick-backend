@@ -3,8 +3,8 @@ package com.notfound.lpickbackend.wiki.command.application.controller;
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
 import com.notfound.lpickbackend.userInfo.query.service.UserInfoQueryService;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.PageRevisionRequest;
-import com.notfound.lpickbackend.wiki.query.dto.response.PageRevisionResponse;
 import com.notfound.lpickbackend.wiki.command.application.service.PageRevisionCommandService;
+import com.notfound.lpickbackend.wiki.query.dto.response.PageRevisionResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,14 +50,12 @@ public class PageRevisionCommandController {
     // 반달 == 도배, 뻘글테러, 문서 조작 등의 문제 행위를 총칭하여 일컫는 말.
     // 어떤 사용자가 반달행위를 하였음을 입증하기위해서는 문제가되는 PageRevision이 남아있어야하므로, 개별삭제는 불가
     // BLIND나 DELETE와 같이 위키문서 전체에 대해 '서비스 운영진'의 삭제 조치가 행해지는 경우가 아래의 DELETE 요청.
+    // @PreAuthorize("hasAuthority('AUTH_ADMIN')")
     @DeleteMapping("/wiki/{wikiId}/revision")
     public ResponseEntity<Void> deletePageRevisionData(
-            @PathVariable("wikiId") String wikiId,
-            @RequestParam("dummyUserId") String dummyUserId
+            @PathVariable("wikiId") String wikiId
     ) {
-        UserInfo userInfo = userInfoQueryService.getUserInfoById(dummyUserId);
-
-        pageRevisionCommandService.deleteRevisionData(wikiId, dummyUserId);
+        pageRevisionCommandService.deleteRevisionDataByWiki_WikiId(wikiId);
 
         return ResponseEntity.noContent().build();
     }

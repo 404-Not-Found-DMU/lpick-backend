@@ -30,6 +30,20 @@ public class WikiPageCommandController {
     }
 
     /**
+     * 위키페이지 표출, 가리기, 삭제 기능 구현.
+     *
+     */
+    @PatchMapping("/wiki/{wikiId}/status")
+    //@PreAuthorize("hasAuthority('AUTH_ADMIN')")
+    public ResponseEntity<SuccessCode> changeStatusWikiPage(
+            @RequestBody @Valid WikiStatusRequest statusRequest,
+            @PathVariable("wikiId") String wikiId
+    ) {
+        wikiPageCommandService.updateWikiPageStatus(wikiId, statusRequest);
+        return ResponseEntity.ok(SuccessCode.SUCCESS);
+    }
+
+    /**
      * 리비전 '되돌리기' 기능.
      * ex. r134가 최신인 위키에 대해 r132로 되돌리기 수행 시, r132내용 기반으로 r135를 만들어 새로 적용시키는 방식.
      */
@@ -43,17 +57,12 @@ public class WikiPageCommandController {
         return ResponseEntity.ok(SuccessCode.SUCCESS);
     }
 
-    /**
-     * 위키페이지 표출, 가리기, 삭제 기능 구현.
-     *
-     */
-    @PatchMapping("/wiki/{wikiId}/status")
-    //@PreAuthorize("hasAuthority('AUTH_ADMIN')")
-    public ResponseEntity<SuccessCode> changeStatusWikiPage(
-            @RequestBody @Valid WikiStatusRequest statusRequest,
+    // @PreAuthorize("hasAuthority('AUTH_ADMIN')")
+    @DeleteMapping("/wiki/{wikiId}")
+    public ResponseEntity<SuccessCode> hardDeleteWikiPage(
             @PathVariable("wikiId") String wikiId
     ) {
-        wikiPageCommandService.updateWikiPageStatus(wikiId, statusRequest);
+        wikiPageAndRevisionCommandService.hardDeleteWikiPage(wikiId);
         return ResponseEntity.ok(SuccessCode.SUCCESS);
     }
 }

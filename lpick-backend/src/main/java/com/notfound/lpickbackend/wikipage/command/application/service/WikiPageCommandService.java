@@ -65,7 +65,15 @@ public class WikiPageCommandService {
         }
     }
 
-    public void updateWikiPage(WikiPage wikiPage) {
-        wikiPageCommandRepository.save(wikiPage);
+    public void deleteWikiPageById(String wikiId) {
+        try {
+            wikiPageCommandRepository.deleteById(wikiId);
+        } catch (Exception e) {
+            throw new CustomException((ErrorCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    public WikiPage updateWikiPage(WikiPage wikiPage) {
+        return wikiPageCommandRepository.save(wikiPage);
     }
 }

@@ -6,7 +6,6 @@ import com.notfound.lpickbackend.common.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 @Builder

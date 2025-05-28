@@ -1,14 +1,13 @@
 package com.notfound.lpickbackend.wiki.command.application.service;
 
-import com.notfound.lpickbackend.userInfo.query.dto.response.UserIdNamePairResponse;
-import com.notfound.lpickbackend.userInfo.query.service.UserAuthQueryService;
-import com.notfound.lpickbackend.wiki.command.application.domain.PageRevision;
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
-import com.notfound.lpickbackend.wikipage.command.application.domain.WikiPage;
+import com.notfound.lpickbackend.userInfo.query.dto.response.UserIdNamePairResponse;
+import com.notfound.lpickbackend.wiki.command.application.domain.PageRevision;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.PageRevisionRequest;
-import com.notfound.lpickbackend.wiki.query.dto.response.PageRevisionResponse;
 import com.notfound.lpickbackend.wiki.command.repository.PageRevisionCommandRepository;
+import com.notfound.lpickbackend.wiki.query.dto.response.PageRevisionResponse;
 import com.notfound.lpickbackend.wiki.query.repository.PageRevisionQueryRepository;
+import com.notfound.lpickbackend.wikipage.command.application.domain.WikiPage;
 import com.notfound.lpickbackend.wikipage.command.application.service.WikiPageCommandService;
 import com.notfound.lpickbackend.wikipage.query.service.WikiPageQueryService;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class PageRevisionCommandService {
-
-    private final UserAuthQueryService userAuthQueryService;
 
     private final WikiPageCommandService wikiPageCommandService;
     private final WikiPageQueryService wikiPageQueryService;
@@ -68,9 +65,7 @@ public class PageRevisionCommandService {
                 .build();
     }
 
-    public long deleteRevisionData(String wikiId, String dummyUserId) {
-        userAuthQueryService.requireAdmin(dummyUserId); // ADMIN이 아닌 경우 검증
-
+    public long deleteRevisionDataByWiki_WikiId(String wikiId) {
         return pageRevisionQueryRepository.deleteByWiki_WikiId(wikiId);
     }
 }
