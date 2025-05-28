@@ -41,6 +41,14 @@ dependencies {
 
     // 위키 리비전 별 diff 기능 대리위한 외부 라이브러리
     implementation 'org.bitbucket.cowwoc:diff-match-patch:1.2'
+
+    // 위부 http 통신을 위한 webclient(RestTemplate 대체)
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // jwt 관련
+    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
 }
 
 tasks.named('test') {

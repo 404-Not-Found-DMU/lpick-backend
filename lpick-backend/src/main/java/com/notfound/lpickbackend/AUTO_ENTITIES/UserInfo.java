@@ -15,6 +15,9 @@ public class UserInfo {
     @Column(name = "oauth_id", nullable = false, length = 40)
     private String oauthId;
 
+    @Column(name = "oauth_type", nullable = false, length = 10)
+    private String oauthType;
+
     @Column(name = "nickname", nullable = false, length = 50)
     private String nickname;
 

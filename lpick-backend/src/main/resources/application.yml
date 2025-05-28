@@ -11,7 +11,31 @@ spring:
       data-locations:
         - classpath:data.sql     # 초기 데이터(DML), 실제 데이터 기입 sql
       platform: postgresql # h2가 아닌 postgresql임을 명시적으로 설정
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: e4df92c302870147c229ce5820de8930
+            authorization-grant-type: authorization_code
+            client-name: kakao
+            # client-secret: mfsMufEudnpsyFejqxvNPnKDsnTE2DFz
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+              - profile_nickname
+              - profile_image
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
   jpa:
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: none
+
+
+logging:
+  level:
+    org.springframework.security.web.DefaultSecurityFilterChain: debug
