@@ -30,7 +30,7 @@ public class Artist {
     @Column(name = "company", length = 50)
     private String company;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "wiki_id")
     private WikiPage wiki;
 

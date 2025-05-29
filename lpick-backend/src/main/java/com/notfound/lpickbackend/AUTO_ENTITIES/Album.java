@@ -33,7 +33,7 @@ public class Album {
     @Column(name = "label", length = 50)
     private String label;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "wiki_id")
     private WikiPage wiki;
 

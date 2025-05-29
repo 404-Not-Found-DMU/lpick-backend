@@ -1,6 +1,9 @@
 package com.notfound.lpickbackend.wikipage.command.application.service;
 
 
+import com.notfound.lpickbackend.AUTO_ENTITIES.Album;
+import com.notfound.lpickbackend.AUTO_ENTITIES.Artist;
+import com.notfound.lpickbackend.AUTO_ENTITIES.Gear;
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
 import com.notfound.lpickbackend.userInfo.query.service.UserInfoQueryService;
 import com.notfound.lpickbackend.wiki.command.application.domain.PageRevision;
@@ -28,6 +31,7 @@ public class WikiPageAndRevisionCommandService {
     private final WikiPageQueryService wikiPageQueryService;
 
     private final UserInfoQueryService userInfoQueryService;
+    private final WikiBookmarkCommandService wikiBookmarkCommandService;
 
     @Transactional
     public void createWikiPageAndRevision(WikiPageCreateRequestDTO wikiRequestDTO) {
@@ -62,7 +66,23 @@ public class WikiPageAndRevisionCommandService {
         // wikiPage를 hardDelete 할 일은 많지 않다. 본 서비스가 아티스트나 음향기기 업체 등의 별도 요청으로 인해 hardDelete를 수행해야 하는 경우 정도.
         // 위와 같은 일이 일어나려면 서비스 인지도가 높아야하며, 이는 여러 사람이 이용함을 의미한다. 즉, 이 기능이 실제로 활용될 경우 페이지 리비전 버전이 매우 많을 가능성이 높다.
 
+        WikiPage targetWikiPage = wikiPageQueryService.getWikiPageById(wikiId); // cascade 및 연관 엔티티 null 처리 목적으로 read 진행
+
+        // 별도 save 하지않아도 영속성 컨텍스트에서 이미 관리되도록 본 트랜잭션 내에서 끌어와졌으니 상관 X
+        Artist artist = targetWikiPage.getArtist();
+        Album album = targetWikiPage.getAlbum();
+        Gear gear = targetWikiPage.getGear();
+
+        if(artist != null) artist.setWiki(null);
+        if(album != null) album.setWiki(null);
+        if(gear != null) gear.setWiki(null);
+
+
+        // bulk delete 수행
         pageRevisionCommandService.deleteRevisionDataByWiki_WikiId(wikiId);
+        wikiBookmarkCommandService.deleteBookmarkDataByWiki_WikiId(wikiId);
+        // Debate는 Cascade 기반 연계 삭제 수행. DebateChat에 대한 bulk delete 구현은 Debate 관련 진행하며 구현 예정.
+        // 삭제 대상에 대한 삭제 수행.
         wikiPageCommandService.deleteWikiPageById(wikiId);
     }
 

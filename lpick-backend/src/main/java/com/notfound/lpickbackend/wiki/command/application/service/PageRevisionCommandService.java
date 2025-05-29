@@ -67,11 +67,7 @@ public class PageRevisionCommandService {
                 .build();
     }
 
-    public long deleteRevisionDataByWiki_WikiId(String wikiId) {
-        try {
-            return pageRevisionQueryRepository.deleteByWiki_WikiId(wikiId);
-        } catch(Exception e) {
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
+    public void deleteRevisionDataByWiki_WikiId(String wikiId) {
+        pageRevisionQueryRepository.deleteByWiki_WikiId(wikiId);
     }
 }

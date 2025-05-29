@@ -29,7 +29,7 @@ public class Gear {
     @JoinColumn(name = "eq_class", nullable = false)
     private GearClass eqClass;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "wiki_id")
     private WikiPage wiki;
 

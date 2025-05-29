@@ -1,11 +1,17 @@
 package com.notfound.lpickbackend.wikipage.command.application.domain;
 
+import com.notfound.lpickbackend.AUTO_ENTITIES.Album;
+import com.notfound.lpickbackend.AUTO_ENTITIES.Artist;
+import com.notfound.lpickbackend.AUTO_ENTITIES.Debate;
+import com.notfound.lpickbackend.AUTO_ENTITIES.Gear;
 import com.notfound.lpickbackend.AUTO_ENTITIES.TOOL.IdPrefixUtil;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Builder
@@ -36,6 +42,22 @@ public class WikiPage {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 10)
     private WikiStatus wikiStatus;
+
+    // debate는 debateChat에 비하면 양이 많지 않으므로, debate의 remove 자체는 cascade로 구현해도 성능 손해 심하지 않을 듯하다.
+    @OneToMany(mappedBy = "wiki", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Debate> debates = new ArrayList<>();
+
+    @OneToOne(mappedBy = "artistId",
+            fetch = FetchType.LAZY)
+    private Artist artist;
+
+    @OneToOne(mappedBy = "albumId",
+            fetch = FetchType.LAZY)
+    private Album album;
+
+    @OneToOne(mappedBy = "eqId",
+            fetch = FetchType.LAZY)
+    private Gear gear;
 
     public void updateCurrentRevision(String newRevisionNumber) {
         this.currentRevision = newRevisionNumber;
