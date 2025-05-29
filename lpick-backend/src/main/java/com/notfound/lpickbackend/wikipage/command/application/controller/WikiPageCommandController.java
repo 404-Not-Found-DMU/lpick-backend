@@ -19,7 +19,7 @@ public class WikiPageCommandController {
     private final WikiPageAndRevisionCommandService wikiPageAndRevisionCommandService;
     private final WikiPageCommandService wikiPageCommandService;
 
-    @PostMapping("/wiki-page")
+    @PostMapping("/wiki")
     public ResponseEntity<SuccessCode> createWikiPage(
             @RequestBody WikiPageCreateRequestDTO wikiPageCreateRequestDTO
     ) {

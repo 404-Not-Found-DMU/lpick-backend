@@ -1,6 +1,8 @@
 package com.notfound.lpickbackend.wiki.command.application.service;
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
+import com.notfound.lpickbackend.common.exception.CustomException;
+import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.userInfo.query.dto.response.UserIdNamePairResponse;
 import com.notfound.lpickbackend.wiki.command.application.domain.PageRevision;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.PageRevisionRequest;
@@ -66,6 +68,10 @@ public class PageRevisionCommandService {
     }
 
     public long deleteRevisionDataByWiki_WikiId(String wikiId) {
-        return pageRevisionQueryRepository.deleteByWiki_WikiId(wikiId);
+        try {
+            return pageRevisionQueryRepository.deleteByWiki_WikiId(wikiId);
+        } catch(Exception e) {
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
     }
 }
