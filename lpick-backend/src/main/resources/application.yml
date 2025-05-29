@@ -35,6 +35,10 @@ spring:
     hibernate:
       ddl-auto: none
 
+token:
+  secret:
+  access_token_expiration_time: 3600000 # 60 * 60 * 1000 1시간
+  refresh_token_expiration_time: 604,800,000 # 7 * 24 * 60 * 60 * 1000 1주
 
 logging:
   level:

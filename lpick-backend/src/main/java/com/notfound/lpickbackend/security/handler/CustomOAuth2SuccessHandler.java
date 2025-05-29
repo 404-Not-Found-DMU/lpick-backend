@@ -24,7 +24,7 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException {
-        
+
         // OAuth2AuthenticationToken 으로 캐스팅
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
 
