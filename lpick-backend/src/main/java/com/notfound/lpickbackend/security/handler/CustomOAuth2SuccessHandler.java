@@ -79,7 +79,7 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
         addCookie(response, "refresh_token", refreshToken, refreshTokenValidity); // 7일
 
         // redis whiteList에 refreshToken 저장
-        redisService.saveWhitelistRefreshToken(oAuthId, refreshToken, 7, TimeUnit.DAYS);
+        redisService.saveWhitelistRefreshToken(oAuthId, refreshToken, accessTokenValidity, TimeUnit.MICROSECONDS);
 
         // redirect : 아직 보낼곳이 없어서 임시로 작성
         response.sendRedirect("/");

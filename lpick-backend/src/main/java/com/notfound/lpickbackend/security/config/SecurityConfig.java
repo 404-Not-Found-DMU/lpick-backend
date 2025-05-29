@@ -4,7 +4,6 @@ import com.notfound.lpickbackend.security.filter.JwtFilter;
 import com.notfound.lpickbackend.security.handler.CustomOAuth2SuccessHandler;
 import com.notfound.lpickbackend.security.service.CustomOAuth2UserService;
 import com.notfound.lpickbackend.security.util.JwtUtil;
-import com.notfound.lpickbackend.userinfo.command.application.service.OAuth2UserCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

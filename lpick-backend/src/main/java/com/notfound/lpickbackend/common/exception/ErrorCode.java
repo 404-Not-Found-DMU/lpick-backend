@@ -30,6 +30,7 @@ public enum ErrorCode {
 
     // 403 에러
     AUTHORIZATION_FAILED(HttpStatus.FORBIDDEN, "인가 실패"),
+    TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "AccessToken이 쿠키에 존재하지 않습니다."),
 
     // 404 에러
     NOT_FOUND_REVISION(HttpStatus.NOT_FOUND, "버전 정보를 찾을 수 없습니다."),
