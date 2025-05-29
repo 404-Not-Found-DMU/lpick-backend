@@ -35,7 +35,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         log.info("loadUser : " + userRequest.getClientRegistration().getRegistrationId());
 
-        OAuth2User oAuth2User = super.loadUser(userRequest);
+        OAuth2User oAuth2User = getOAuth2User(userRequest);
 
         String oAuthType = userRequest.getClientRegistration().getRegistrationId();
 
@@ -85,5 +85,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         );
 
         return new OAuth2UserDetails(userInfo);
+    }
+
+    // 테스트 시 Mock 처리할 수 있도록 protected로 분리
+    protected OAuth2User getOAuth2User(OAuth2UserRequest userRequest) {
+        return super.loadUser(userRequest);
     }
 }

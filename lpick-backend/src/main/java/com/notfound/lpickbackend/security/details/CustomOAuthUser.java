@@ -1,6 +1,7 @@
 package com.notfound.lpickbackend.security.details;
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
@@ -8,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+@Getter
 public class CustomOAuthUser implements OAuth2User {
 
     private final UserInfo userInfo;
@@ -30,4 +32,5 @@ public class CustomOAuthUser implements OAuth2User {
     public String getName() {
         return userInfo.getOauthId();
     }
+
 }
