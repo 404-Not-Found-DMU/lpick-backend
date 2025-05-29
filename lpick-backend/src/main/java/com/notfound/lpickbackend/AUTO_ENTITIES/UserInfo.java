@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.AUTO_ENTITIES;
 
+import com.notfound.lpickbackend.security.util.UserInfoCreateDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -40,4 +41,16 @@ public class UserInfo {
     @JoinColumn(name = "tier_id", nullable = false)
     private Tier tier;
 
+    // dto를 사용한 생성자 (추후 수정?)
+    public UserInfo(UserInfoCreateDTO dto) {
+        this.oauthId = dto.getOauthId();
+        this.oauthType = dto.getOauthType();
+        this.nickname = dto.getNickname();
+        this.profile = dto.getProfile();
+        this.point = dto.getPoint();
+        this.stackPoint = dto.getStackPoint();
+        this.about = dto.getAbout();
+        this.lpti = dto.getLpti();
+        this.tier = dto.getTier();
+    }
 }

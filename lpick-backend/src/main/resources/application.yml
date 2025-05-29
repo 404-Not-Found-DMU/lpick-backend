@@ -36,9 +36,9 @@ spring:
       ddl-auto: none
 
 token:
-  secret:
+  secret: ${secret.token}
   access_token_expiration_time: 3600000 # 60 * 60 * 1000 1시간
-  refresh_token_expiration_time: 604,800,000 # 7 * 24 * 60 * 60 * 1000 1주
+  refresh_token_expiration_time: 604800000 # 7 * 24 * 60 * 60 * 1000 1주
 
 logging:
   level:

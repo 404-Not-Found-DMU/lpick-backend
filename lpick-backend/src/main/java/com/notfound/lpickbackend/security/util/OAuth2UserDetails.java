@@ -7,12 +7,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-public class OAuthUserDetails implements UserDetails {
+/* LPick에서 발급하는 JWT 인증을 위한 UserDetails */
+public class OAuth2UserDetails implements UserDetails {
 
-    private final UserInfo userInfo;
+    UserInfo userInfo;
 
-    public OAuthUserDetails(UserInfo userInfo) {
-
+    public OAuth2UserDetails(UserInfo userInfo) {
         this.userInfo = userInfo;
     }
 
@@ -23,11 +23,11 @@ public class OAuthUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return "";
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return userInfo.getOauthId();
     }
 }

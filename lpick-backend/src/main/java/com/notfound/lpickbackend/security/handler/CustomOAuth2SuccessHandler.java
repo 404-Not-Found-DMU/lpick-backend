@@ -1,6 +1,11 @@
 package com.notfound.lpickbackend.security.handler;
 
+import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
+import com.notfound.lpickbackend.common.exception.CustomException;
+import com.notfound.lpickbackend.common.exception.ErrorCode;
+import com.notfound.lpickbackend.security.util.CustomOAuthUser;
 import com.notfound.lpickbackend.userinfo.command.application.service.OAuth2UserCommandService;
+import com.notfound.lpickbackend.userinfo.command.repository.UserInfoCommandRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -12,31 +17,34 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
-    OAuth2UserCommandService userCommandService;
+    UserInfoCommandRepository userInfoCommandRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException {
+        log.info("oauth2 success");
 
-        // OAuth2AuthenticationToken 으로 캐스팅
-        OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
+        CustomOAuthUser oAuthUser = (CustomOAuthUser) authentication.getPrincipal();
 
-        String oauthType = oauthToken.getAuthorizedClientRegistrationId();
+        String oAuthId = oAuthUser.getName(); // CustomOAuthUser의 oAuthID return받음
 
-        // OAuth2User 정보 꺼내기
-        OAuth2User oauthUser = oauthToken.getPrincipal();
-        // 사용자 정보 예: 카카오 id
-        Object id = oauthUser.getAttribute("id");
+        UserInfo userInfo = userInfoCommandRepository.findById(oAuthId).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO)
+        );
 
-        log.info("oauthType={}", oauthType);
-        log.info("OAuth2User id = {}", id);
-
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("oAuthId", userInfo.getOauthType());
+        claims.put("oAuthType", userInfo.getOauthType());
+        claims.put("Tier", userInfo.getTier());
     }
 }

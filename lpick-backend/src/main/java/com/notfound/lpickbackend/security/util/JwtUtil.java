@@ -2,7 +2,7 @@ package com.notfound.lpickbackend.security.util;
 
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
-import com.notfound.lpickbackend.security.service.OAuthUserDetailService;
+import com.notfound.lpickbackend.security.service.CustomOAuth2UserService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -20,10 +19,10 @@ import java.security.Key;
 public class JwtUtil {
 
     private final Key key;
-    private final OAuthUserDetailService userDetailService;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
-    public JwtUtil(@Value("${token.secret}") String secretKey, OAuthUserDetailService userDetailService) {
-        this.userDetailService = userDetailService;
+    public JwtUtil(@Value("${token.secret}") String secretKey, CustomOAuth2UserService customOAuth2UserService) {
+        this.customOAuth2UserService = customOAuth2UserService;
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
@@ -52,9 +51,9 @@ public class JwtUtil {
     public Authentication getAuthentication(String token) {
 
         /* 토큰을 들고 왔던 들고 오지 않았던(로그인 시) 동일하게 security가 관리 할 UserDetails 타입을 정의 */
-        UserDetails empDetails = userDetailService.loadUserByUsername(token);
+        OAuth2UserDetails oAuth2UserDetails = customOAuth2UserService.getUserDetails(getOAuthId(token));
 
-        return new UsernamePasswordAuthenticationToken(empDetails, "", empDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(oAuth2UserDetails, "", oAuth2UserDetails.getAuthorities());
     }
 
     /* Token에서 Claims 추출 */
@@ -67,5 +66,4 @@ public class JwtUtil {
     public String getOAuthId(String token) {
         return parseClaims(token).getSubject();
     }
-
 }
