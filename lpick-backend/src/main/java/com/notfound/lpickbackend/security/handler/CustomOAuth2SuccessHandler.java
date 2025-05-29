@@ -3,6 +3,7 @@ package com.notfound.lpickbackend.security.handler;
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
+import com.notfound.lpickbackend.common.redis.RedisService;
 import com.notfound.lpickbackend.security.details.CustomOAuthUser;
 import com.notfound.lpickbackend.security.util.JwtTokenProvider;
 import com.notfound.lpickbackend.userinfo.command.repository.UserInfoCommandRepository;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @Slf4j
@@ -28,6 +30,7 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
 
     private final UserInfoCommandRepository userInfoCommandRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RedisService redisService;
 
     private final int accessTokenValidity;
     private final int refreshTokenValidity;
@@ -38,12 +41,14 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
                             @Value("${token.refresh_token_expiration_time}"
                             ) int refreshTokenValidity,
                             UserInfoCommandRepository userInfoCommandRepository,
-                            JwtTokenProvider jwtTokenProvider
+                            JwtTokenProvider jwtTokenProvider,
+                            RedisService redisService
     ) {
         this.accessTokenValidity = accessTokenValidity;
         this.refreshTokenValidity = refreshTokenValidity;
         this.userInfoCommandRepository = userInfoCommandRepository;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.redisService = redisService;
     }
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -72,6 +77,9 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
         // 쿠키에 저장
         addCookie(response, "access_token", accessToken, accessTokenValidity); // 15분
         addCookie(response, "refresh_token", refreshToken, refreshTokenValidity); // 7일
+
+        // redis whiteList에 refreshToken 저장
+        redisService.saveWhitelistRefreshToken(oAuthId, refreshToken, 7, TimeUnit.DAYS);
 
         // redirect : 아직 보낼곳이 없어서 임시로 작성
         response.sendRedirect("/");
