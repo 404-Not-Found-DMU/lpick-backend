@@ -1,7 +1,7 @@
-package com.notfound.lpickbackend.wikipage.query.controller;
+package com.notfound.lpickbackend.wiki.query.controller;
 
-import com.notfound.lpickbackend.wikipage.query.dto.WikiPageViewResponse;
-import com.notfound.lpickbackend.wikipage.query.service.WikiPageQueryService;
+import com.notfound.lpickbackend.wiki.query.dto.response.WikiPageViewResponse;
+import com.notfound.lpickbackend.wiki.query.service.WikiPageQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

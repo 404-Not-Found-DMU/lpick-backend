@@ -5,7 +5,9 @@ import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.userInfo.query.service.UserInfoQueryService;
 import com.notfound.lpickbackend.wiki.command.application.service.PageRevisionCommandService;
-import com.notfound.lpickbackend.wikipage.command.application.dto.request.WikiPageCreateRequestDTO;
+import com.notfound.lpickbackend.wiki.command.application.dto.request.WikiPageCreateRequestDTO;
+import com.notfound.lpickbackend.wiki.command.application.service.WikiDomainCommandService;
+import com.notfound.lpickbackend.wiki.command.application.service.WikiPageCommandService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class WikiPageAndRevisionCommandServiceTest {
+class WikiDomainCommandServiceTest {
 
     @Mock
     private WikiPageCommandService wikiPageCommandService;
@@ -30,7 +32,7 @@ class WikiPageAndRevisionCommandServiceTest {
     private UserInfoQueryService userInfoQueryService;
 
     @InjectMocks
-    private WikiPageAndRevisionCommandService wikiPageAndRevisionCommandService;
+    private WikiDomainCommandService wikiDomainCommandService;
 
     private WikiPageCreateRequestDTO requestDTO;
 
@@ -63,7 +65,7 @@ class WikiPageAndRevisionCommandServiceTest {
                 .thenReturn(mockUserInfo);
 
         // when
-        wikiPageAndRevisionCommandService.createWikiPageAndRevision(requestDTO);
+        wikiDomainCommandService.createWikiPageAndRevision(requestDTO);
 
         // then
         verify(wikiPageCommandService, times(1)).createWikiPage("테스트 문서");
@@ -86,7 +88,7 @@ class WikiPageAndRevisionCommandServiceTest {
 
         // when & then
         CustomException exception = assertThrows(CustomException.class, () -> {
-            wikiPageAndRevisionCommandService.createWikiPageAndRevision(expectedRequestDTO);
+            wikiDomainCommandService.createWikiPageAndRevision(expectedRequestDTO);
         });
 
         assertEquals(ErrorCode.AUTHENTICATION_FAILED, exception.getErrorCode());

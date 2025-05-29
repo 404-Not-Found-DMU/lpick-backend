@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.wikipage.query.dto;
+package com.notfound.lpickbackend.wiki.query.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;

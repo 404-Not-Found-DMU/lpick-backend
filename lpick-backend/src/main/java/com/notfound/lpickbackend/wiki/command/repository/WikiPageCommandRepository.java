@@ -1,6 +1,6 @@
-package com.notfound.lpickbackend.wikipage.command.repository;
+package com.notfound.lpickbackend.wiki.command.repository;
 
-import com.notfound.lpickbackend.wikipage.command.application.domain.WikiPage;
+import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

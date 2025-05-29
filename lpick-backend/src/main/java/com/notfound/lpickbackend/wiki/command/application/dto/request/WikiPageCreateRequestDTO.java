@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.wikipage.command.application.dto.request;
+package com.notfound.lpickbackend.wiki.command.application.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,17 +1,14 @@
 package com.notfound.lpickbackend.wiki.command.application.service;
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
-import com.notfound.lpickbackend.common.exception.CustomException;
-import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.userInfo.query.dto.response.UserIdNamePairResponse;
 import com.notfound.lpickbackend.wiki.command.application.domain.PageRevision;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.PageRevisionRequest;
 import com.notfound.lpickbackend.wiki.command.repository.PageRevisionCommandRepository;
 import com.notfound.lpickbackend.wiki.query.dto.response.PageRevisionResponse;
 import com.notfound.lpickbackend.wiki.query.repository.PageRevisionQueryRepository;
-import com.notfound.lpickbackend.wikipage.command.application.domain.WikiPage;
-import com.notfound.lpickbackend.wikipage.command.application.service.WikiPageCommandService;
-import com.notfound.lpickbackend.wikipage.query.service.WikiPageQueryService;
+import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
+import com.notfound.lpickbackend.wiki.query.service.WikiPageQueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,14 +1,13 @@
-package com.notfound.lpickbackend.wikipage.command.application.controller;
+package com.notfound.lpickbackend.wiki.command.application.controller;
 
 import com.notfound.lpickbackend.common.exception.SuccessCode;
-import com.notfound.lpickbackend.wikipage.command.application.dto.request.WikiPageCreateRequestDTO;
-import com.notfound.lpickbackend.wikipage.command.application.dto.request.WikiStatusRequest;
-import com.notfound.lpickbackend.wikipage.command.application.service.WikiPageAndRevisionCommandService;
-import com.notfound.lpickbackend.wikipage.command.application.service.WikiPageCommandService;
+import com.notfound.lpickbackend.wiki.command.application.dto.request.WikiPageCreateRequestDTO;
+import com.notfound.lpickbackend.wiki.command.application.dto.request.WikiStatusRequest;
+import com.notfound.lpickbackend.wiki.command.application.service.WikiDomainCommandService;
+import com.notfound.lpickbackend.wiki.command.application.service.WikiPageCommandService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class WikiPageCommandController {
 
-    private final WikiPageAndRevisionCommandService wikiPageAndRevisionCommandService;
+    private final WikiDomainCommandService wikiDomainCommandService;
     private final WikiPageCommandService wikiPageCommandService;
 
     @PostMapping("/wiki")
@@ -24,7 +23,7 @@ public class WikiPageCommandController {
             @RequestBody WikiPageCreateRequestDTO wikiPageCreateRequestDTO
     ) {
 
-        wikiPageAndRevisionCommandService.createWikiPageAndRevision(wikiPageCreateRequestDTO);
+        wikiDomainCommandService.createWikiPageAndRevision(wikiPageCreateRequestDTO);
 
         return ResponseEntity.ok(SuccessCode.SUCCESS);
     }
@@ -53,7 +52,7 @@ public class WikiPageCommandController {
             @PathVariable("wikiId") String wikiId,
             @PathVariable("targetRevisionId") String targetRevisionId
     ) {
-        wikiPageAndRevisionCommandService.revertWikiPageAndRevision(wikiId, targetRevisionId);
+        wikiDomainCommandService.revertWikiPageAndRevision(wikiId, targetRevisionId);
         return ResponseEntity.ok(SuccessCode.SUCCESS);
     }
 
@@ -62,7 +61,7 @@ public class WikiPageCommandController {
     public ResponseEntity<SuccessCode> hardDeleteWikiPage(
             @PathVariable("wikiId") String wikiId
     ) {
-        wikiPageAndRevisionCommandService.hardDeleteWikiPage(wikiId);
+        wikiDomainCommandService.hardDeleteWikiPage(wikiId);
         return ResponseEntity.ok(SuccessCode.SUCCESS);
     }
 }

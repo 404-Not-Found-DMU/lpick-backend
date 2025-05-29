@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.wikipage.command.application.service;
+package com.notfound.lpickbackend.wiki.command.application.service;
 
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.Album;
@@ -8,11 +8,10 @@ import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
 import com.notfound.lpickbackend.userInfo.query.service.UserInfoQueryService;
 import com.notfound.lpickbackend.wiki.command.application.domain.PageRevision;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.PageRevisionRequest;
-import com.notfound.lpickbackend.wiki.command.application.service.PageRevisionCommandService;
 import com.notfound.lpickbackend.wiki.query.service.PageRevisionQueryService;
-import com.notfound.lpickbackend.wikipage.command.application.domain.WikiPage;
-import com.notfound.lpickbackend.wikipage.command.application.dto.request.WikiPageCreateRequestDTO;
-import com.notfound.lpickbackend.wikipage.query.service.WikiPageQueryService;
+import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
+import com.notfound.lpickbackend.wiki.command.application.dto.request.WikiPageCreateRequestDTO;
+import com.notfound.lpickbackend.wiki.query.service.WikiPageQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
  * */
 @Service
 @RequiredArgsConstructor
-public class WikiPageAndRevisionCommandService {
+public class WikiDomainCommandService {
 
     private final PageRevisionCommandService pageRevisionCommandService;
     private final PageRevisionQueryService pageRevisionQueryService;

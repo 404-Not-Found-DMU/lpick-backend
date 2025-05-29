@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.wikipage.command.application.domain;
+package com.notfound.lpickbackend.wiki.command.application.domain;
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.Album;
 import com.notfound.lpickbackend.AUTO_ENTITIES.Artist;
