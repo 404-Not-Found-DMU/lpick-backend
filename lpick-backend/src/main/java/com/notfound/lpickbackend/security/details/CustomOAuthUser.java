@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.security.util;
+package com.notfound.lpickbackend.security.details;
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
 import org.springframework.security.core.GrantedAuthority;

@@ -2,6 +2,7 @@ package com.notfound.lpickbackend.security.util;
 
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
+import com.notfound.lpickbackend.security.details.OAuth2UserDetails;
 import com.notfound.lpickbackend.security.service.CustomOAuth2UserService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;

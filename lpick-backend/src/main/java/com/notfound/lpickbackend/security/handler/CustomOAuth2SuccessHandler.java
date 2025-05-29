@@ -3,31 +3,48 @@ package com.notfound.lpickbackend.security.handler;
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
-import com.notfound.lpickbackend.security.util.CustomOAuthUser;
-import com.notfound.lpickbackend.userinfo.command.application.service.OAuth2UserCommandService;
+import com.notfound.lpickbackend.security.details.CustomOAuthUser;
+import com.notfound.lpickbackend.security.util.JwtTokenProvider;
 import com.notfound.lpickbackend.userinfo.command.repository.UserInfoCommandRepository;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Component
 @Slf4j
-@RequiredArgsConstructor
 public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
-    UserInfoCommandRepository userInfoCommandRepository;
+    private final UserInfoCommandRepository userInfoCommandRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
+    private final int accessTokenValidity;
+    private final int refreshTokenValidity;
+
+    public CustomOAuth2SuccessHandler(
+                            @Value("${token.access_token_expiration_time}"
+                            ) int accessTokenValidity,
+                            @Value("${token.refresh_token_expiration_time}"
+                            ) int refreshTokenValidity,
+                            UserInfoCommandRepository userInfoCommandRepository,
+                            JwtTokenProvider jwtTokenProvider
+    ) {
+        this.accessTokenValidity = accessTokenValidity;
+        this.refreshTokenValidity = refreshTokenValidity;
+        this.userInfoCommandRepository = userInfoCommandRepository;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
@@ -42,9 +59,31 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
                 () -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO)
         );
 
+        // Token에 담을 Claim 생성
         Map<String, Object> claims = new HashMap<>();
         claims.put("oAuthId", userInfo.getOauthType());
         claims.put("oAuthType", userInfo.getOauthType());
-        claims.put("Tier", userInfo.getTier());
+        claims.put("Tier", userInfo.getTier().getTierId());
+
+        // accessToken, refreshToken 생성
+        String accessToken = jwtTokenProvider.createAccessToken(oAuthId, claims);
+        String refreshToken = jwtTokenProvider.createRefreshToken(oAuthId, claims);
+
+        // 쿠키에 저장
+        addCookie(response, "access_token", accessToken, accessTokenValidity); // 15분
+        addCookie(response, "refresh_token", refreshToken, refreshTokenValidity); // 7일
+
+        // redirect : 아직 보낼곳이 없어서 임시로 작성
+        response.sendRedirect("/");
+    }
+
+    // 쿠키 추가 메소드
+    private void addCookie(HttpServletResponse response, String name, String value, int maxAgeInSec) {
+        Cookie cookie = new Cookie(name, value);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(maxAgeInSec);
+        response.addCookie(cookie);
     }
 }
