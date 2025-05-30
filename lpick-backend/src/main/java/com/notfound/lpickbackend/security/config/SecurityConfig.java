@@ -26,7 +26,7 @@ public class SecurityConfig {
 
         http.csrf(csrf -> csrf.disable());
         http.authorizeHttpRequests(config -> config.anyRequest().permitAll()
-        )
+                )
                 .formLogin(config -> config.disable()) // 폼 로그인 비활성화
                 .httpBasic(config -> config.disable()) // HTTP Basic 인증 비활성화
         ;

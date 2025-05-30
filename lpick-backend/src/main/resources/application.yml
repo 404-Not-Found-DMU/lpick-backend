@@ -16,10 +16,9 @@ spring:
       client:
         registration:
           kakao:
-            client-id: e4df92c302870147c229ce5820de8930
-            authorization-grant-type: authorization_code
+            client-id: ${oauth2.client.kakao.client-id}
+            authorization-grant-type: ${oauth2.client.kakao.authorization-grant-type}
             client-name: kakao
-            # client-secret: mfsMufEudnpsyFejqxvNPnKDsnTE2DFz
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope:
               - profile_nickname

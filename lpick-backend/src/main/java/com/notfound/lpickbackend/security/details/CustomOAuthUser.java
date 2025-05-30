@@ -3,11 +3,13 @@ package com.notfound.lpickbackend.security.details;
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Getter
 public class CustomOAuthUser implements OAuth2User {
@@ -25,6 +27,10 @@ public class CustomOAuthUser implements OAuth2User {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+// 추후 권한 생성시 활용
+//        return userInfo.getUserAuthList().stream()
+//                .map(userAuth -> new SimpleGrantedAuthority(userAuth.getAuth().getName()))
+//                .collect(Collectors.toList());
         return List.of();
     }
 

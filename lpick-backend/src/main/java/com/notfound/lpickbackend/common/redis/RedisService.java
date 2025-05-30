@@ -1,7 +1,7 @@
 package com.notfound.lpickbackend.common.redis;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -9,10 +9,13 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class RedisService {
 
     private final RedisTemplate<String, String> redisTemplate;
+
+    public RedisService(@Qualifier("redisTemplate") RedisTemplate<String, String> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     // 블랙리스트 등록
     public void saveBlacklistAccessToken(String accessToken, long duration, TimeUnit unit) {
@@ -29,7 +32,6 @@ public class RedisService {
     // Refresh 토큰 저장
     public void saveWhitelistRefreshToken(String userId, String refreshToken, long duration, TimeUnit unit) {
         String key = "refresh:" + userId;
-        log.info("white : {}", refreshToken);
         redisTemplate.opsForValue().set(key, refreshToken, duration, unit);
     }
 

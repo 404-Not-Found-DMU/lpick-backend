@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserInfoCommandController {
 
-    UserInfoCommandService userCommandService;
+    private final UserInfoCommandService userCommandService;
 
     @PostMapping("/logout")
     ResponseEntity<SuccessCode> oAuthLogoutRequest(HttpServletRequest request) {

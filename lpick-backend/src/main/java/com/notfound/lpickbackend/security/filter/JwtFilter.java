@@ -45,7 +45,7 @@ public class JwtFilter extends OncePerRequestFilter {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
             /* jwt 검증 후 인증객체로 등록 */
-            if(jwtUtil.validateToken(token)) {
+            if (jwtUtil.validateToken(token)) {
                 Authentication authentication = jwtUtil.getAuthentication(token);
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);

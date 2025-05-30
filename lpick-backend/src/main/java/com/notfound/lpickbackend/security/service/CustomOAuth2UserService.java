@@ -6,7 +6,6 @@ import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.security.details.CustomOAuthUser;
 import com.notfound.lpickbackend.security.details.OAuth2UserDetails;
-import com.notfound.lpickbackend.security.util.UserInfoCreateDTO;
 import com.notfound.lpickbackend.tier.query.repository.TierCommandRepository;
 import com.notfound.lpickbackend.userinfo.command.repository.UserInfoCommandRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,14 +40,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         // 추후 Google 추가를 위한 switch case문
         switch (oAuthType) {
-            case "kakao": oAuthId = oAuth2User.getAttribute("id").toString(); break;
+            case "kakao":
+                oAuthId = oAuth2User.getAttribute("id").toString();
+                break;
         }
 
-        Optional<UserInfo> optionalUserInfo = userInfoCommandRepository.findById(oAuthId);
+        Optional<UserInfo> optionalUserInfo = userInfoCommandRepository.findByOauthId(oAuthId);
 
         UserInfo userInfo = null;
 
-        if(!optionalUserInfo.isEmpty()) { // 유저가 있을 때
+        if (optionalUserInfo.isPresent()) { // 유저가 있을 때
             userInfo = optionalUserInfo.get();
         } else { // 유저가 없을 때 (최초 로그인)
             // default
@@ -57,9 +58,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             );
 
             // 기본값으로 회원가입 처리
-            UserInfoCreateDTO dto = UserInfoCreateDTO.builder()
-                    .oauthId(oAuthId)
-                    .oauthType(oAuthType)
+            userInfo = UserInfo.builder()
+                    .oauthId(oAuthType + oAuthId) // 전치사로 OAuthType 추가
                     .nickname("")
                     .profile("")
                     .point(0)
@@ -68,8 +68,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .lpti("")
                     .tier(defaultTier)
                     .build();
-
-            userInfo = new UserInfo(dto);
             userInfoCommandRepository.save(userInfo);
         }
 
@@ -78,7 +76,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     public OAuth2UserDetails getUserDetails(String oAuthId) {
 
-        UserInfo userInfo = userInfoCommandRepository.findById(oAuthId).orElseThrow(
+        UserInfo userInfo = userInfoCommandRepository.findByOauthId(oAuthId).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO)
         );
 

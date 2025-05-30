@@ -24,6 +24,6 @@ public class UserInfoCommandService extends DefaultOAuth2UserService {
         // whiteList에서 OAuthId로 RefreshToken 삭제
         redisService.deleteRefreshToken(logoutRequestDTO.getOAuthId());
         // BlackList에 AccessToken 추가
-        redisService.saveBlacklistAccessToken(logoutRequestDTO.getAccessToken(), accessTokenValidity, TimeUnit.MICROSECONDS);
+        redisService.saveBlacklistAccessToken(logoutRequestDTO.getAccessToken(), accessTokenValidity, TimeUnit.MILLISECONDS);
     }
 }

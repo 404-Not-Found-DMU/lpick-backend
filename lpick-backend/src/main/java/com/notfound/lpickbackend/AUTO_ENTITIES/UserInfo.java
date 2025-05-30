@@ -1,23 +1,25 @@
 package com.notfound.lpickbackend.AUTO_ENTITIES;
 
-import com.notfound.lpickbackend.security.util.UserInfoCreateDTO;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 @Entity
 @Table(name = "user_info")
 public class UserInfo {
     @Id
-    @Column(name = "oauth_id", nullable = false, length = 40)
+    @Column(name = "oauth_id", nullable = false, length = 50)
     private String oauthId;
-
-    @Column(name = "oauth_type", nullable = false, length = 10)
-    private String oauthType;
 
     @Column(name = "nickname", nullable = false, length = 50)
     private String nickname;
@@ -41,16 +43,12 @@ public class UserInfo {
     @JoinColumn(name = "tier_id", nullable = false)
     private Tier tier;
 
-    // dto를 사용한 생성자 (추후 수정?)
-    public UserInfo(UserInfoCreateDTO dto) {
-        this.oauthId = dto.getOauthId();
-        this.oauthType = dto.getOauthType();
-        this.nickname = dto.getNickname();
-        this.profile = dto.getProfile();
-        this.point = dto.getPoint();
-        this.stackPoint = dto.getStackPoint();
-        this.about = dto.getAbout();
-        this.lpti = dto.getLpti();
-        this.tier = dto.getTier();
+    @OneToMany(mappedBy = "oauth", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<UserAuth> userAuthList = new ArrayList<>();
+
+    public List<Auth> getAuthorities() {
+        return userAuthList.stream()
+                .map(UserAuth::getAuth)
+                .collect(Collectors.toList());
     }
 }
