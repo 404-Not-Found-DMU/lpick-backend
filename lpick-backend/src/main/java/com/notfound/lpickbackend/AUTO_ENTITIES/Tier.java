@@ -14,6 +14,7 @@ import lombok.*;
 @Entity
 @Table(name = "tier")
 public class Tier {
+
     @Id
     @Column(name = "tier_id", nullable = false, length = 40)
     private String tierId;
