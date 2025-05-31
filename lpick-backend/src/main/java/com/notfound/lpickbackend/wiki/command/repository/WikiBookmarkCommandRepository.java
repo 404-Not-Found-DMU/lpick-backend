@@ -5,7 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface WikiBookmarkRepository extends JpaRepository<WikiBookmark, String> {
+public interface WikiBookmarkCommandRepository extends JpaRepository<WikiBookmark, String> {
 
     long deleteAllByWiki_WikiId(String wikiId);
+
+    void deleteByWiki_wikiIdAndOauth_oauthId(String wikiId, String oauthId);
 }
