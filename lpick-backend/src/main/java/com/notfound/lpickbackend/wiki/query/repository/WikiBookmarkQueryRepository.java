@@ -1,14 +1,11 @@
 package com.notfound.lpickbackend.wiki.query.repository;
 
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiBookmark;
-import com.notfound.lpickbackend.wiki.query.dto.response.WikiBookmarkResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface WikiBookmarkQueryRepository extends JpaRepository<WikiBookmark, String> {

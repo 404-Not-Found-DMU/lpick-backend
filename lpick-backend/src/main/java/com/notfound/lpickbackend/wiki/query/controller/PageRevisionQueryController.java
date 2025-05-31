@@ -1,6 +1,5 @@
 package com.notfound.lpickbackend.wiki.query.controller;
 
-import com.notfound.lpickbackend.wiki.command.application.domain.PageRevision;
 import com.notfound.lpickbackend.wiki.query.dto.response.PageRevisionResponse;
 import com.notfound.lpickbackend.wiki.query.service.PageRevisionQueryService;
 import com.notfound.lpickbackend.wiki.query.service.WikiDiffServiceV2;
@@ -11,9 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Pageable;
-import java.util.List;
-
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
 @RestController
@@ -22,7 +18,7 @@ public class PageRevisionQueryController {
     private final PageRevisionQueryService pageRevisionQueryService;
 
     @GetMapping("/wiki/{wikiId}/revision")
-    public ResponseEntity<List<PageRevisionResponse>> getPageRevisionList(
+    public ResponseEntity<Page<PageRevisionResponse>> getPageRevisionList(
             @PathVariable("wikiId") String wikiId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
@@ -30,7 +26,7 @@ public class PageRevisionQueryController {
         Page<PageRevisionResponse> pageRevisionList = pageRevisionQueryService.getPageRevisionResponseList(PageRequest.of(page, size), wikiId);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(pageRevisionList.getContent());
+                .body(pageRevisionList);
     }
 
     @GetMapping("/wiki/{wikiId}/revision/{version}")

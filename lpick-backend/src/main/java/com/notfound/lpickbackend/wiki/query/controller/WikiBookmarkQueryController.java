@@ -2,7 +2,6 @@ package com.notfound.lpickbackend.wiki.query.controller;
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
 import com.notfound.lpickbackend.userInfo.query.service.UserInfoQueryService;
-import com.notfound.lpickbackend.wiki.query.dto.response.WikiBookmarkResponse;
 import com.notfound.lpickbackend.wiki.query.dto.response.WikiPageBookmarkListResponse;
 import com.notfound.lpickbackend.wiki.query.service.WikiBookmarkQueryService;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

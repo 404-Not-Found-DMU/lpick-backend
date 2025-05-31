@@ -47,7 +47,7 @@ public class PageRevisionQueryService {
         return Arrays.asList(oldRevision, newRevision);
     }
 
-
+    // 중복되고 너무 길어져서 가독성 획득 위해 메소드로 분리
     private PageRevisionResponse toResponseDTO(PageRevision entity) {
         return PageRevisionResponse.builder()
                 .revisionId(entity.getRevisionId())
