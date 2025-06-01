@@ -7,10 +7,16 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface WikiBookmarkQueryRepository extends JpaRepository<WikiBookmark, String> {
 
     boolean existsByWiki_WikiIdAndOauth_oauthId(String wikiId, String oauthId);
+
+    boolean existsById(String bookmarkId);
+
+    Optional<WikiBookmark> findByWiki_wikiIdAndOauth_oauthId(String wikiId, String oauthId);
 
     @EntityGraph(attributePaths = {"wiki"})
     Page<WikiBookmark> findByOauth_OauthId(String oauthId, Pageable pageable);

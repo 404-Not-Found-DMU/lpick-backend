@@ -26,8 +26,12 @@ public class WikiBookmarkCommandService {
 
     }
 
-    public void deleteWikiBookmark(String wikiId, UserInfo userInfo) {
+    public void deleteWikiBookmarkByWiki_wikiIdAndOauth_oauthId(String wikiId, UserInfo userInfo) {
         wikiBookmarkCommandRepository.deleteByWiki_wikiIdAndOauth_oauthId(wikiId, userInfo.getOauthId());
+    }
+
+    public void deleteWikiBookmarkById(String bookmarkId) {
+        wikiBookmarkCommandRepository.deleteById(bookmarkId);
     }
 
     public void deleteAllBookmarkDataByWiki_WikiId(String wikiId) {
