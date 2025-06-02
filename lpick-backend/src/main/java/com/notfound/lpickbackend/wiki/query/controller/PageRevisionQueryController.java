@@ -2,7 +2,7 @@ package com.notfound.lpickbackend.wiki.query.controller;
 
 import com.notfound.lpickbackend.wiki.query.dto.response.PageRevisionResponse;
 import com.notfound.lpickbackend.wiki.query.service.PageRevisionQueryService;
-import com.notfound.lpickbackend.wiki.query.service.WikiDiffServiceV2;
+import com.notfound.lpickbackend.wiki.query.service.logic.WikiDiffServiceV2;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

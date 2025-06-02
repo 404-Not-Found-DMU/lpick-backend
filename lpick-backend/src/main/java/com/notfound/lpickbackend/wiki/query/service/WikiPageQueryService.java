@@ -19,4 +19,8 @@ public class WikiPageQueryService {
         return wikiPageQueryRepository.findById(wikiId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_WIKI));
     }
+
+    public boolean isExsistsById(String wikiId) {
+        return wikiPageQueryRepository.existsById(wikiId);
+    }
 }

@@ -1,6 +1,7 @@
-package com.notfound.lpickbackend.wiki.query.service;
+package com.notfound.lpickbackend.wiki.query.service.logic;
 
 import com.notfound.lpickbackend.wiki.command.application.domain.PageRevision;
+import com.notfound.lpickbackend.wiki.query.service.PageRevisionQueryService;
 import lombok.AllArgsConstructor;
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch.Diff;

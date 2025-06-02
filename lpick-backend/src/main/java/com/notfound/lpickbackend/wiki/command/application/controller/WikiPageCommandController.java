@@ -25,7 +25,7 @@ public class WikiPageCommandController {
 
         wikiDomainCommandService.createWikiPageAndRevision(wikiPageCreateRequestDTO);
 
-        return ResponseEntity.ok(SuccessCode.SUCCESS);
+        return ResponseEntity.ok(SuccessCode.CREATE_SUCCESS);
     }
 
     /**

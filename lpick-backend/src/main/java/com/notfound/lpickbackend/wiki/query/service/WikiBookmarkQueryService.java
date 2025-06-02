@@ -33,7 +33,7 @@ public class WikiBookmarkQueryService {
 
     public Page<WikiPageBookmarkListResponse> getWikiBookmarkListByUserId(Pageable pageable, UserInfo userInfo) {
 
-        Page<WikiBookmark> wikiBookmarkList = wikiBookmarkQueryRepository.findByOauth_OauthId(userInfo.getOauthId(), pageable);
+        Page<WikiBookmark> wikiBookmarkList = wikiBookmarkQueryRepository.findAllByOauth_OauthId(userInfo.getOauthId(), pageable);
 
         return wikiBookmarkList.map(bookmark -> {
             // findByOauth_OauthId()로 불러와진 WikiBookmark Entity는 EntityGraph("wiki")를 사용했으므로 N+1 문제 걱정 없음

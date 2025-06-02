@@ -1,8 +1,11 @@
-package com.notfound.lpickbackend.AUTO_ENTITIES;
+package com.notfound.lpickbackend.wiki.command.application.domain;
 
+import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.Instant;
 
 @Builder
 @AllArgsConstructor
@@ -21,6 +24,9 @@ public class Review {
 
     @Column(name = "content", nullable = false, length = Integer.MAX_VALUE)
     private String content;
+
+    @Column(name="created_at", nullable = false)
+    private Instant createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "oauth_id", nullable = false)

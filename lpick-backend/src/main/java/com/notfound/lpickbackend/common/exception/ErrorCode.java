@@ -27,6 +27,7 @@ public enum ErrorCode {
     INVALID_FIELD_DATA(HttpStatus.BAD_REQUEST, "잘못된 필드 데이터입니다."),
     ACCESS_DENIED(HttpStatus.BAD_REQUEST, "올바르지 않은 접근입니다. "),
     EMPTY_TITLE(HttpStatus.BAD_REQUEST, "제목 값이 비어있습니다."),
+    ALREADY_HAS_REVIEW_IN_WIKIPAGE(HttpStatus.BAD_REQUEST, "이미 리뷰를 작성했습니다."),
 
     // 401 에러
     AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "인증 실패"),
@@ -38,6 +39,7 @@ public enum ErrorCode {
     NOT_FOUND_REVISION(HttpStatus.NOT_FOUND, "버전 정보를 찾을 수 없습니다."),
     NOT_FOUND_WIKI(HttpStatus.NOT_FOUND, "위키 정보를 찾을 수 없습니다."),
     NOT_FOUND_WIKIBOOKMARK(HttpStatus.NOT_FOUND, "북마크 정보를 찾을 수 없습니다."),
+    NOT_FOUND_REVIEW(HttpStatus.NOT_FOUND, "리뷰 정보를 찾을 수 없습니다."),
 
     // 처리 방법에 논의가 필요한 에러 코드
     DO_NOT_KEEP_UP_THIS_ERROR_WHEN_MERGE(HttpStatus.I_AM_A_TEAPOT, "이 에러 코드는 실제 사용 목적이 아닙니다.")

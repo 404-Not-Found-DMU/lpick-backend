@@ -153,6 +153,7 @@ CREATE TABLE IF NOT EXISTS review (
                         star	real		NOT NULL,
                         content	text		NOT NULL,
                         oauth_id	varchar(40)		NOT NULL,
+                        created_at  timestamp      NOT NULL,
                         wiki_id	varchar(40)		NOT NULL
 );
 

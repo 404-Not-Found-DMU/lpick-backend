@@ -19,5 +19,5 @@ public interface WikiBookmarkQueryRepository extends JpaRepository<WikiBookmark,
     Optional<WikiBookmark> findByWiki_wikiIdAndOauth_oauthId(String wikiId, String oauthId);
 
     @EntityGraph(attributePaths = {"wiki"})
-    Page<WikiBookmark> findByOauth_OauthId(String oauthId, Pageable pageable);
+    Page<WikiBookmark> findAllByOauth_OauthId(String oauthId, Pageable pageable);
 }
