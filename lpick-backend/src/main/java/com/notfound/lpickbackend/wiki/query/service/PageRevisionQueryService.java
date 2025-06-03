@@ -2,6 +2,7 @@ package com.notfound.lpickbackend.wiki.query.service;
 
 import com.notfound.lpickbackend.userInfo.query.dto.response.UserIdNamePairResponse;
 import com.notfound.lpickbackend.wiki.command.application.domain.PageRevision;
+import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
 import com.notfound.lpickbackend.wiki.query.dto.response.PageRevisionResponse;
 import com.notfound.lpickbackend.wiki.query.repository.PageRevisionQueryRepository;
 import com.notfound.lpickbackend.common.exception.CustomException;
@@ -45,6 +46,10 @@ public class PageRevisionQueryService {
 
 
         return Arrays.asList(oldRevision, newRevision);
+    }
+
+    public Page<PageRevision> getRecentlyCreatedPageRevision(Pageable pageable) {
+        return pageRevisionQueryRepository.findLatestRevisionPerWiki(pageable);
     }
 
     // 중복되고 너무 길어져서 가독성 획득 위해 메소드로 분리

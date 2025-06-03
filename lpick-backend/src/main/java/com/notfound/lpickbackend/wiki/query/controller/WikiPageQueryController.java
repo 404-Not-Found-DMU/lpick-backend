@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.wiki.query.controller;
 
+import com.notfound.lpickbackend.wiki.query.dto.response.WikiPageTitleResponse;
 import com.notfound.lpickbackend.wiki.query.dto.response.WikiPageViewResponse;
 import com.notfound.lpickbackend.wiki.query.service.WikiDomainQueryService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +28,16 @@ public class WikiPageQueryController {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(wikiDomainQueryService.getWikiPageView(wikiId, userId));
+    }
+
+    // 최근에 수정된 문서 10개를 집계하여 제공.
+    // requestparam 기반의 분류별 집계는 실제 분류 기준 설정 후 구현하기
+    // ex. 분류가 단순히 앨범/기기/가수? 아니면 재즈/힙합/밴드 등으로 상세 구분?
+    @GetMapping("/wiki/recent-modify")
+    public ResponseEntity<List<WikiPageTitleResponse>> getRecentlyModifiedWikiPageList(
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(wikiDomainQueryService.getRecentlyModifiedWikiPageList(10));
     }
 
 

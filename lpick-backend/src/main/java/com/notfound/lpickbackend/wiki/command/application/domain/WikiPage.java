@@ -47,15 +47,15 @@ public class WikiPage {
     @OneToMany(mappedBy = "wiki", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Debate> debates = new ArrayList<>();
 
-    @OneToOne(mappedBy = "artistId",
+    @OneToOne(mappedBy = "wiki",
             fetch = FetchType.LAZY)
     private Artist artist;
 
-    @OneToOne(mappedBy = "albumId",
+    @OneToOne(mappedBy = "wiki",
             fetch = FetchType.LAZY)
     private Album album;
 
-    @OneToOne(mappedBy = "eqId",
+    @OneToOne(mappedBy = "wiki",
             fetch = FetchType.LAZY)
     private Gear gear;
 

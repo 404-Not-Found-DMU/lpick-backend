@@ -36,7 +36,7 @@ public class WikiReviewQueryService {
     }
 
     public Review findByWikiIdAndUserId(String wikiId, String userId) {
-        return wikiReviewQueryRepository.findByWiki_wikiIdANdOauth_oauthId(wikiId, userId)
+        return wikiReviewQueryRepository.findByWiki_wikiIdAndOauth_oauthId(wikiId, userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_REVIEW));
     }
 }

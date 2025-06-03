@@ -13,7 +13,7 @@ public interface WikiReviewQueryRepository extends JpaRepository<Review, String>
 
     boolean existsByWiki_wikiIdAndOauth_oauthId(String wikiId, String oauthId);
 
-    Optional<Review> findByWiki_wikiIdANdOauth_oauthId(String wikiId, String oauthId);
+    Optional<Review> findByWiki_wikiIdAndOauth_oauthId(String wikiId, String oauthId);
 
     Page<Review> findAllByWiki_wikiId(String wikiId, Pageable pageable);
 }
