@@ -54,13 +54,11 @@ public class WikiBookmarkCommandController {
     // -> 지니지 않는 경우 대리키의 의미 없어짐.
     // -> 지니는 경우 클라이언트 업데이트 부담 + url의 wikiId 굳이 필요?(특정 위키에 대한 북마크 해제함을 확인하기위한 검증 체계 추가 가능)
     // 2. wikiId로 반드시 검증해야하는가?
-    @DeleteMapping("/api/v1/wiki-bookmark/{bookmarkId}")
+    @DeleteMapping("/wiki-bookmark/{bookmarkId}")
     public ResponseEntity<SuccessCode> unsubscribeWikiBookmark(
             @PathVariable("bookmarkId") String bookmarkId,
             @RequestParam("dummyUserId") String userId
     ) {
-//        wikiPageQueryService.getWikiPageById(wikiId); // 존재하는 wiki에 대한 delete 요청인지 검증
-
         UserInfo userInfo = userInfoQueryService.getUserInfoById(userId); // security 기반 코드와 병합 시 수정 예정
 
         // 해당 요청은 프론트 상태를 기반으로 POST 또는 DELETE를 받아옴.

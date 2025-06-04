@@ -45,16 +45,12 @@ public class WikiReviewCommandController {
 
     // 리뷰는 수정 없이 작성/삭제만 가능.. 으로 기억합니다.
 
-    @DeleteMapping("/wiki/{wikiId}/review/{reviewId}")
+    @DeleteMapping("/review/{reviewId}")
     public ResponseEntity<SuccessCode> deleteReview(
-            @PathVariable("wikiId") String wikiId,
             @PathVariable("reviewId") String reviewId,
             @RequestParam("userId") String userId
     ) {
         UserInfo userInfo = userInfoQueryService.getUserInfoById(userId);
-
-        if(!wikiPageQueryService.isExsistsById(wikiId))
-            throw new CustomException(ErrorCode.NOT_FOUND_REVIEW);
 
         wikiReviewCommandService.deleteById(reviewId);
 
