@@ -6,6 +6,7 @@ import lombok.*;
 import java.time.Instant;
 
 @Getter
+@EqualsAndHashCode // 테스트 비교목적
 public class PageRevisionResponse {
     @Builder
     public PageRevisionResponse(String revisionId, String content, Instant createdAt, UserIdNamePairResponse createWho) {

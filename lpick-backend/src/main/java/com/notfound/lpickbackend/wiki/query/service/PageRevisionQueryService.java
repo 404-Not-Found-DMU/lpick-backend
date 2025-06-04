@@ -69,4 +69,8 @@ public class PageRevisionQueryService {
         return pageRevisionQueryRepository.findById(revisionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_REVISION));
     }
+
+    public long wikicountByWiki_WikiId(String wikiId) {
+        return pageRevisionQueryRepository.countByWiki_WikiId(wikiId);
+    }
 }

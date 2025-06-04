@@ -18,8 +18,6 @@ public interface PageRevisionQueryRepository extends JpaRepository<PageRevision,
 
     Page<PageRevision> findAllByWiki_WikiId(String wikiId, Pageable pageable);
 
-    long deleteByWiki_WikiId(String wikiId);
-
     Optional<PageRevision> findByWiki_WikiId(String wikiId);
 
     @EntityGraph(attributePaths = {"wiki"})  // 이미 WikiPage를 페치하도록 설정

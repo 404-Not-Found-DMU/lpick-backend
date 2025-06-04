@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface PageRevisionCommandRepository extends JpaRepository<PageRevision, String> {
 
 
+    void deleteByWiki_WikiId(String wikiId);
 }

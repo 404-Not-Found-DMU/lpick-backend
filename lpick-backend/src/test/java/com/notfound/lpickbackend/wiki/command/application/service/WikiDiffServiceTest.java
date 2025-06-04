@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend;
+package com.notfound.lpickbackend.wiki.command.application.service;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;

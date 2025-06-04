@@ -1,9 +1,11 @@
 package com.notfound.lpickbackend.userInfo.query.dto.response;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
+@EqualsAndHashCode
 public class UserIdNamePairResponse {
     @Builder
     public UserIdNamePairResponse(String oauthId, String nickName) {

@@ -3,11 +3,11 @@ package com.notfound.lpickbackend.wiki.command.application.service;
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
 import com.notfound.lpickbackend.userInfo.query.dto.response.UserIdNamePairResponse;
 import com.notfound.lpickbackend.wiki.command.application.domain.PageRevision;
+import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.PageRevisionRequest;
 import com.notfound.lpickbackend.wiki.command.repository.PageRevisionCommandRepository;
 import com.notfound.lpickbackend.wiki.query.dto.response.PageRevisionResponse;
-import com.notfound.lpickbackend.wiki.query.repository.PageRevisionQueryRepository;
-import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
+import com.notfound.lpickbackend.wiki.query.service.PageRevisionQueryService;
 import com.notfound.lpickbackend.wiki.query.service.WikiPageQueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,9 @@ public class PageRevisionCommandService {
     private final WikiPageCommandService wikiPageCommandService;
     private final WikiPageQueryService wikiPageQueryService;
 
-    private final PageRevisionQueryRepository pageRevisionQueryRepository;
+    private final PageRevisionQueryService pageRevisionQueryService;
+
+
     private final PageRevisionCommandRepository pageRevisionCommandRepository;
 
     @Transactional
@@ -36,7 +38,7 @@ public class PageRevisionCommandService {
         // 문제점 : 리비전을 등록하는 순간 카운팅해오면, 여러 인원이 동시 수정시 문제가 발생할 수 있음.
         // 1. DB에 대한 동시성 관리 수행(낙관적/비관적락)하여 한 인원의 작성 요청 트랜잭션 종료시까지 DB 단위 잠그기
         // 2. 다른 방법 찾기...?
-        long revisionNumber = pageRevisionQueryRepository.countByWiki_WikiId(wikiId);
+        long revisionNumber = pageRevisionQueryService.wikicountByWiki_WikiId(wikiId);
 
         // entity 저장하여 id, createdAt 기입된채로 가져오기
         PageRevision newPageRevision = PageRevision.builder()
@@ -65,6 +67,6 @@ public class PageRevisionCommandService {
     }
 
     public void deleteRevisionDataByWiki_WikiId(String wikiId) {
-        pageRevisionQueryRepository.deleteByWiki_WikiId(wikiId);
+        pageRevisionCommandRepository.deleteByWiki_WikiId(wikiId);
     }
 }
