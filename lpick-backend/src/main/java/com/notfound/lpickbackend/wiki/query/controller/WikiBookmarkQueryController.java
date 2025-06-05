@@ -38,7 +38,7 @@ public class WikiBookmarkQueryController {
     }
 
     /** 현재 위키 페이지에 대한 사용자의 북마크 존재여부 검증 - 프론트 측 상태 관리되지 않은경우 업데이트 참조 목적 */
-    @GetMapping("/wiki/{wikiId}/book-mark")
+    @GetMapping("/wiki/{wikiId}/bookmark")
     public ResponseEntity<WikiBookmarkResponse> checkWikiBookmarkStatus(
             @PathVariable("wikiId") String wikiId,
             @RequestParam("dummyUserId") String userId
