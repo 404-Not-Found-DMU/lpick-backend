@@ -2,7 +2,6 @@ package com.notfound.lpickbackend.wiki.command.application.domain;
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.TOOL.IdPrefixUtil;
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
-import com.notfound.lpickbackend.wikipage.command.application.domain.WikiPage;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;

@@ -13,10 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.time.Instant;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -55,7 +53,7 @@ class CustomOAuth2UserServiceTest {
         when(mockedOAuth2User.getAttribute("id")).thenReturn(kakaoId);
 
         // 해당 id의 유저가 이미 DB에 존재한다고 가정
-        when(userInfoCommandRepository.findById(kakaoId))
+        when(userInfoCommandRepository.findByOauthId(kakaoId))
                 .thenReturn(Optional.of(UserInfo.builder().oauthId(kakaoId).build()));
 
         // CustomOAuth2UserService를 Spy로 생성, super.loadUser 대신 mock 반환 (super.loadUser 실행하면 진짜로 외부 api 통신해버림)
@@ -86,7 +84,7 @@ class CustomOAuth2UserServiceTest {
         when(mockedOAuth2User.getAttribute("id")).thenReturn(kakaoId);
 
         // 유저가 DB에 존재하지 않음
-        when(userInfoCommandRepository.findById(kakaoId)).thenReturn(Optional.empty());
+        when(userInfoCommandRepository.findByOauthId(kakaoId)).thenReturn(Optional.empty());
 
         // 기본 Tier 정보를 반환
         Tier defaultTier = Tier.builder().tierId("1").build();
@@ -105,7 +103,7 @@ class CustomOAuth2UserServiceTest {
 
         // 새로 저장된 유저 정보 확인
         UserInfo saved = captor.getValue();
-        assertEquals(kakaoId, saved.getOauthId());
+        assertEquals("kakao" + kakaoId, saved.getOauthId());
         assertEquals(defaultTier, saved.getTier());
 
         // 반환 타입 및 래핑된 정보 확인

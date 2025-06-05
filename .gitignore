@@ -24,6 +24,7 @@ hs_err_pid*
 replay_pid*
 
 API-KEY.yml
+application-test.yml
 
 # IntelliJ
 .idea/

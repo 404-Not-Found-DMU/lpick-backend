@@ -1,6 +1,6 @@
 package com.notfound.lpickbackend.AUTO_ENTITIES;
 
-import com.notfound.lpickbackend.wikipage.command.application.domain.WikiPage;
+import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,7 +30,7 @@ public class Artist {
     @Column(name = "company", length = 50)
     private String company;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "wiki_id")
     private WikiPage wiki;
 
