@@ -2,7 +2,6 @@ package com.notfound.lpickbackend.wiki.query.service;
 
 import com.notfound.lpickbackend.wiki.command.application.domain.PageRevision;
 import com.notfound.lpickbackend.wiki.query.repository.PageRevisionQueryRepository;
-import com.notfound.lpickbackend.wiki.query.service.PageRevisionQueryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,14 +15,19 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ActiveProfiles("test") // test 프로파일 설정 기반으로 동작하는 테스트코드
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Transactional // 테스트가 종료되면 DB 상태를 테스트 동작 이전으로 롤백
-class PageRevisionQueryServiceTest_JPA {
+class PageRevisionQueryServiceJPATest {
+
+    // slf4j 로깅 활용 위한 직접 임포트 및 static화 진행(lombok을 test에서도 쓸 수 있도록 build.gradle에서 dependencies 수정 시 lombok 전체 끌어와야해서 테스트 실행이 무거워짐)
+//    private static final Logger log = LoggerFactory.getLogger(PageRevisionQueryServiceJPATest.class);
 
     private PageRevisionQueryService pageRevisionQueryService;
 

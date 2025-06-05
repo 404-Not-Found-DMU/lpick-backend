@@ -39,12 +39,10 @@ public class WikiDomainQueryService {
     
     // 최근에 수정된 wikiPage 10개의 리스트를 제공. '최근 수정된 위키문서' 란에 표기하기위한 목적
     // 장르별(앨범(힙합, 재즈 등), 음향기기(턴테이블, 스피커 등), 아티스트 등) 상세 READ는 추후 구현
-    public List<WikiPageTitleResponse> getRecentlyModifiedWikiPageList(int pageAmount) {
+    public List<WikiPageTitleResponse> getRecentlyModifiedWikiPageList(int pageAmount, Instant now) {
         List<PageRevision> revisionList = pageRevisionQueryService.getLatestRevisionPerWiki(
                 PageRequest.of(0, pageAmount)
         ).getContent();
-
-        Instant now = Instant.now();
 
         return revisionList.stream().map(i -> {
             Instant updateRevisionAt = i.getCreatedAt();
