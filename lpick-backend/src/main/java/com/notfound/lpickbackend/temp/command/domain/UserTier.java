@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.userInfo.command.domain;
+package com.notfound.lpickbackend.temp.command.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

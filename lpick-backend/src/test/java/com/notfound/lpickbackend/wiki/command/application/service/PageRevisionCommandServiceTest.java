@@ -1,7 +1,7 @@
 package com.notfound.lpickbackend.wiki.command.application.service;
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
-import com.notfound.lpickbackend.userInfo.query.dto.response.UserIdNamePairResponse;
+import com.notfound.lpickbackend.temp.query.dto.response.UserIdNamePairResponse;
 import com.notfound.lpickbackend.wiki.command.application.domain.PageRevision;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.PageRevisionRequest;
@@ -46,9 +46,12 @@ class PageRevisionCommandServiceTest {
         WikiPage mockWikiPage = mock(WikiPage.class);
         when(mockWikiPage.getWikiId()).thenReturn(dummyWikiId);
 
+
+        String oauthId = "dummyUserId";
+        String nickname = ("더미유저닉네임");
         UserInfo mockUserInfo = mock(UserInfo.class);
-        mockUserInfo.setOauthId("dummyUserId");
-        mockUserInfo.setNickname("더미유저닉네임");
+        when(mockUserInfo.getOauthId()).thenReturn(oauthId);
+        when(mockUserInfo.getNickname()).thenReturn(nickname);
 
         when(wikiPageQueryService.getWikiPageById(dummyWikiId))
                 .thenReturn(mockWikiPage);

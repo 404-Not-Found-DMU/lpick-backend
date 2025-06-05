@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.userinfo.command.application.dto;
+package com.notfound.lpickbackend.temp.command.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

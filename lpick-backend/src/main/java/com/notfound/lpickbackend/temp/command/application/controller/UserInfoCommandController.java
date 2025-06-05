@@ -1,16 +1,15 @@
-package com.notfound.lpickbackend.userinfo.command.application.controller;
+package com.notfound.lpickbackend.temp.command.application.controller;
 
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.common.exception.SuccessCode;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
-import com.notfound.lpickbackend.userinfo.command.application.dto.LogoutRequestDTO;
-import com.notfound.lpickbackend.userinfo.command.application.service.UserInfoCommandService;
+import com.notfound.lpickbackend.temp.command.application.dto.LogoutRequestDTO;
+import com.notfound.lpickbackend.temp.command.application.service.UserInfoCommandService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

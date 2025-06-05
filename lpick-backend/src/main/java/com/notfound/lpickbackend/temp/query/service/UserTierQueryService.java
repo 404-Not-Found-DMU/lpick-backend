@@ -1,6 +1,6 @@
-package com.notfound.lpickbackend.userInfo.query.service;
+package com.notfound.lpickbackend.temp.query.service;
 
-import com.notfound.lpickbackend.userInfo.query.repository.UserTierRepository;
+import com.notfound.lpickbackend.temp.query.repository.UserTierRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

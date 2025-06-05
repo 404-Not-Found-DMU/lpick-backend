@@ -1,7 +1,7 @@
 package com.notfound.lpickbackend.wiki.command.application.service;
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
-import com.notfound.lpickbackend.userInfo.query.dto.response.UserIdNamePairResponse;
+import com.notfound.lpickbackend.temp.query.dto.response.UserIdNamePairResponse;
 import com.notfound.lpickbackend.wiki.command.application.domain.PageRevision;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.PageRevisionRequest;

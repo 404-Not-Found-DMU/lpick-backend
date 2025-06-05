@@ -4,7 +4,7 @@ import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.common.exception.SuccessCode;
-import com.notfound.lpickbackend.userInfo.query.service.UserInfoQueryService;
+import com.notfound.lpickbackend.temp.query.service.UserInfoQueryService;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.ReviewPostRequest;
 import com.notfound.lpickbackend.wiki.command.application.service.WikiReviewCommandService;
 import com.notfound.lpickbackend.wiki.query.service.WikiPageQueryService;
@@ -12,7 +12,6 @@ import com.notfound.lpickbackend.wiki.query.service.WikiReviewQueryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

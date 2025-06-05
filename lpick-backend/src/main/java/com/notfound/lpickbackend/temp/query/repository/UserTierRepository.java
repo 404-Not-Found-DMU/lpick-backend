@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.userInfo.query.repository;
+package com.notfound.lpickbackend.temp.query.repository;
 
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.Tier;

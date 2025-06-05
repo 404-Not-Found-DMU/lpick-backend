@@ -1,7 +1,7 @@
-package com.notfound.lpickbackend.userinfo.command.application.service;
+package com.notfound.lpickbackend.temp.command.application.service;
 
 import com.notfound.lpickbackend.common.redis.RedisService;
-import com.notfound.lpickbackend.userinfo.command.application.dto.LogoutRequestDTO;
+import com.notfound.lpickbackend.temp.command.application.dto.LogoutRequestDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.stereotype.Service;

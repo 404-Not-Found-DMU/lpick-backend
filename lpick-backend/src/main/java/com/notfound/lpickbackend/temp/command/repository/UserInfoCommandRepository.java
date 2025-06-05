@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.userinfo.command.repository;
+package com.notfound.lpickbackend.temp.command.repository;
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
 import org.springframework.data.jpa.repository.EntityGraph;

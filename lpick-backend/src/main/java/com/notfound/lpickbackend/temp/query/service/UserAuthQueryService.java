@@ -1,10 +1,10 @@
-package com.notfound.lpickbackend.userInfo.query.service;
+package com.notfound.lpickbackend.temp.query.service;
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserAuth;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
-import com.notfound.lpickbackend.userInfo.command.domain.UserAuthentication;
-import com.notfound.lpickbackend.userInfo.query.repository.UserAuthQueryRepository;
+import com.notfound.lpickbackend.temp.command.domain.UserAuthentication;
+import com.notfound.lpickbackend.temp.query.repository.UserAuthQueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

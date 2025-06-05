@@ -1,6 +1,6 @@
 package com.notfound.lpickbackend.wiki.query.dto.response;
 
-import com.notfound.lpickbackend.userInfo.query.dto.response.UserIdNamePairResponse;
+import com.notfound.lpickbackend.temp.query.dto.response.UserIdNamePairResponse;
 import lombok.*;
 
 import java.time.Instant;
