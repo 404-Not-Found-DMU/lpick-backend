@@ -1,32 +1,29 @@
-package com.notfound.lpickbackend.wiki.query.repository;
+package com.notfound.lpickbackend.wiki.query.service;
 
 import com.notfound.lpickbackend.wiki.command.application.domain.PageRevision;
-import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
+import com.notfound.lpickbackend.wiki.query.repository.PageRevisionQueryRepository;
 import com.notfound.lpickbackend.wiki.query.service.PageRevisionQueryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-import java.time.Instant;
 import java.util.List;
 
 @ActiveProfiles("test") // test 프로파일 설정 기반으로 동작하는 테스트코드
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Transactional // 테스트가 종료되면 DB 상태를 테스트 동작 이전으로 롤백
-class PageRevisionQueryRepositoryTest {
+class PageRevisionQueryServiceTest_JPA {
 
     private PageRevisionQueryService pageRevisionQueryService;
 
