@@ -1,15 +1,18 @@
 package com.notfound.lpickbackend.wiki.query.dto.response;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
 
 import java.time.Instant;
 
 @Getter
+@EqualsAndHashCode
 public class WikiPageViewResponse {
     @Builder
-    public WikiPageViewResponse(String title, String content, Instant modifiedAt, String bookmarkId, Page<ReviewResponse> reviewList) {
+    public WikiPageViewResponse(String wikiId, String title, String content, Instant modifiedAt, String bookmarkId, Page<ReviewResponse> reviewList) {
+        this.wikiId = wikiId;
         this.title = title;
         this.content = content;
         this.modifiedAt = modifiedAt;
@@ -17,6 +20,7 @@ public class WikiPageViewResponse {
         this.reviewList = reviewList;
     }
 
+    private String wikiId;
     private String title;
     private String content;
     private Instant modifiedAt;

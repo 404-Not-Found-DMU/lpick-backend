@@ -28,7 +28,7 @@ public class WikiDomainQueryService {
     public WikiPageViewResponse getWikiPageView(String wikiId, String userId) {
         WikiPage wikiPage = wikiPageQueryService.getWikiPageById(wikiId);
 
-        PageRevision pageRevision = pageRevisionQueryService.getPageRevisionById(wikiPage.getCurrentRevision());
+        PageRevision pageRevision = pageRevisionQueryService.findByPageRevision_revisionNumberAndWiki_wikiId(wikiPage.getCurrentRevision(), wikiId);
 
         Optional<WikiBookmark> bookmarkOptional = wikiBookmarkQueryService.findByWiki_WikiIdAndOauth_oauthId(wikiId, userId);
 
@@ -36,12 +36,12 @@ public class WikiDomainQueryService {
                 PageRequest.of(0, 10, Sort.by("createdAt").descending()), wikiId);
         return this.toViewResponse(wikiPage, pageRevision, bookmarkOptional, reviewList);
     }
-
+    
+    // 최근에 수정된 wikiPage 10개의 리스트를 제공. '최근 수정된 위키문서' 란에 표기하기위한 목적
+    // 장르별(앨범(힙합, 재즈 등), 음향기기(턴테이블, 스피커 등), 아티스트 등) 상세 READ는 추후 구현
     public List<WikiPageTitleResponse> getRecentlyModifiedWikiPageList(int pageAmount) {
-        List<PageRevision> revisionList = pageRevisionQueryService.getRecentlyCreatedPageRevision(
-                PageRequest.of(0,
-                        pageAmount,
-                        Sort.by("createdAt").descending())
+        List<PageRevision> revisionList = pageRevisionQueryService.getLatestRevisionPerWiki(
+                PageRequest.of(0, pageAmount)
         ).getContent();
 
         Instant now = Instant.now();
@@ -60,6 +60,7 @@ public class WikiDomainQueryService {
 
     private WikiPageViewResponse toViewResponse(WikiPage wikiEntity, PageRevision revisionEntity, Optional<WikiBookmark> bookmarkOptionalEntity, Page<ReviewResponse> reviewResponses) {
         return WikiPageViewResponse.builder()
+                .wikiId(wikiEntity.getWikiId())
                 .title(wikiEntity.getTitle())
                 .content(revisionEntity.getContent())
                 .modifiedAt(revisionEntity.getCreatedAt())
