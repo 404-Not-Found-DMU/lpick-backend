@@ -5,7 +5,7 @@ import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
 import com.notfound.lpickbackend.TestUtil;
 import com.notfound.lpickbackend.security.details.CustomOAuthUser;
 import com.notfound.lpickbackend.tier.query.repository.TierCommandRepository;
-import com.notfound.lpickbackend.temp.command.repository.UserInfoCommandRepository;
+import com.notfound.lpickbackend.userinfo.command.repository.UserInfoCommandRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

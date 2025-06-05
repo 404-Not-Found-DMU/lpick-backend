@@ -7,7 +7,7 @@ import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.security.details.CustomOAuthUser;
 import com.notfound.lpickbackend.security.details.OAuth2UserDetails;
 import com.notfound.lpickbackend.tier.query.repository.TierCommandRepository;
-import com.notfound.lpickbackend.temp.command.repository.UserInfoCommandRepository;
+import com.notfound.lpickbackend.userinfo.command.repository.UserInfoCommandRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

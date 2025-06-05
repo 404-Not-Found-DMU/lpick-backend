@@ -4,7 +4,7 @@ import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.common.exception.SuccessCode;
-import com.notfound.lpickbackend.temp.query.service.UserInfoQueryService;
+import com.notfound.lpickbackend.userinfo.query.service.UserInfoQueryService;
 import com.notfound.lpickbackend.wiki.command.application.service.WikiBookmarkCommandService;
 import com.notfound.lpickbackend.wiki.query.service.WikiBookmarkQueryService;
 import com.notfound.lpickbackend.wiki.query.service.WikiPageQueryService;

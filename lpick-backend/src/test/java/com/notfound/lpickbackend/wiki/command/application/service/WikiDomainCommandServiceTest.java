@@ -6,7 +6,7 @@ import com.notfound.lpickbackend.AUTO_ENTITIES.Gear;
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
-import com.notfound.lpickbackend.temp.query.service.UserInfoQueryService;
+import com.notfound.lpickbackend.userinfo.query.service.UserInfoQueryService;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.WikiPageCreateRequestDTO;
 import com.notfound.lpickbackend.wiki.query.service.PageRevisionQueryService;

@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.temp.query.dto.response;
+package com.notfound.lpickbackend.userinfo.query.dto.response;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
