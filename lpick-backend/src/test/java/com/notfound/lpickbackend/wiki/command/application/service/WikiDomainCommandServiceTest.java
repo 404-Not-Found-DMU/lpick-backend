@@ -118,7 +118,7 @@ class WikiDomainCommandServiceTest {
     }
 
     @Test
-    void hardDeleteWikiPageTestWhenArtist_Album_Gear_NotNull() {
+    void hardDeleteWikiPageTestWhenArtist_Album_Gear() {
         // given : artist, album, gear가 null이 아닌 경우
         // 주의사항 : wikipage는 실제로는 artist 또는 album 또는 gear 중 하나와만 연관관계를 지니도록 설계됨.
         // 즉, 실제로는 artist 만, album 만, gear 만 관계를 지니나 테스트 확인 위해 세가지 모두 설정
@@ -156,49 +156,6 @@ class WikiDomainCommandServiceTest {
                 .deleteAllBookmarkDataByWiki_WikiId(dummyWikiId);
 
         // 최종 삭제 잘 호출하는지 검증
-        verify(wikiPageCommandService, times(1))
-                .deleteWikiPageById(dummyWikiId);
-    }
-
-
-
-    @Test
-    void hardDeleteWikiPageTestWhenArtist_Album_Gear_Null() {
-        // given : artist, album, gear가 null이 아닌 경우
-        // 주의사항 : wikipage는 실제로는 artist 또는 album 또는 gear 중 하나와만 연관관계를 지니도록 설계됨.
-        // 즉, 실제로는 artist 만, album 만, gear 만 관계를 지니나 테스트 확인 위해 세가지 모두 설정
-        Artist artist = mock(Artist.class);
-        artist.setArtistId("artist-1");
-        artist.setWiki(dummyWiki);
-
-        Album album = mock(Album.class);
-        album.setAlbumId("album-1");
-        album.setWiki(dummyWiki);
-
-        Gear gear = mock(Gear.class);
-        gear.setEqId("album-1");
-        gear.setWiki(dummyWiki);
-
-        dummyWiki.setArtist(artist);
-        dummyWiki.setAlbum(album);
-        dummyWiki.setGear(gear);
-
-        // hardDeleteWikiPage에서 return 값과 함께 사용되는 메소드들의 return 값 설정
-        when(wikiPageQueryService.getWikiPageById(dummyWikiId))
-                .thenReturn(dummyWiki);
-
-        //when : hardDeleteWikiPage 설정 한 경우
-        wikiDomainCommandService.hardDeleteWikiPage(dummyWikiId);
-
-        // then
-        // 1. Null 접근 예외 나는지 검증 == if문 정상동작 검증
-        assertNull(artist.getWiki(), "Artist가 Null인지 검증");
-
-        // 2. 1회만 불러지는지 검증
-        verify(pageRevisionCommandService, times(1))
-                .deleteRevisionDataByWiki_WikiId(dummyWikiId);
-        verify(wikiBookmarkCommandService, times(1))
-                .deleteAllBookmarkDataByWiki_WikiId(dummyWikiId);
         verify(wikiPageCommandService, times(1))
                 .deleteWikiPageById(dummyWikiId);
     }
