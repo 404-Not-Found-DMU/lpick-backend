@@ -12,6 +12,7 @@ import com.notfound.lpickbackend.wiki.query.service.WikiReviewQueryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,11 +28,11 @@ public class WikiReviewCommandController {
 
 
     @PostMapping("/wiki/{wikiId}/review")
+    //@PreAuthorize("hasRole('TIER_SILVER')") // 임시 설정
     public ResponseEntity<SuccessCode> writeReview(
             @PathVariable("wikiId") String wikiId,
             @RequestParam("userId") String userId,
-            @RequestBody @Valid ReviewPostRequest req,
-            @RequestParam("sort") String sortBy
+            @RequestBody @Valid ReviewPostRequest req
     ) {
         UserInfo userInfo = userInfoQueryService.getUserInfoById(userId); // security 추가후 리팩
 
@@ -43,9 +44,19 @@ public class WikiReviewCommandController {
         return ResponseEntity.ok(SuccessCode.CREATE_SUCCESS);
     }
 
-    // 리뷰는 수정 없이 작성/삭제만 가능.. 으로 기억합니다.
+    @PatchMapping("/review/{reviewId}")
+    //@PreAuthorize("hasRole('TIER_SILVER')") // 임시 설정
+    public ResponseEntity<SuccessCode> updateReview(
+            @PathVariable("reviewId") String reviewId,
+            @RequestBody @Valid ReviewPostRequest req
+    ) {
+        wikiReviewCommandService.updateReview(reviewId,req);
+
+        return ResponseEntity.ok(SuccessCode.NO_CONTENT);
+    }
 
     @DeleteMapping("/review/{reviewId}")
+    //@PreAuthorize("hasRole('TIER_SILVER')") // 임시 설정
     public ResponseEntity<SuccessCode> deleteReview(
             @PathVariable("reviewId") String reviewId,
             @RequestParam("userId") String userId
@@ -54,7 +65,7 @@ public class WikiReviewCommandController {
 
         wikiReviewCommandService.deleteById(reviewId);
 
-        return ResponseEntity.ok(SuccessCode.SUCCESS);
+        return ResponseEntity.ok(SuccessCode.NO_CONTENT);
     }
 
 

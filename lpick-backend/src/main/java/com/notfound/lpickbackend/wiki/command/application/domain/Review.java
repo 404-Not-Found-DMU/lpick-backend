@@ -2,6 +2,7 @@ package com.notfound.lpickbackend.wiki.command.application.domain;
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
+import com.notfound.lpickbackend.wiki.command.application.dto.request.ReviewPostRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,5 +36,11 @@ public class Review {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "wiki_id", nullable = false)
     private WikiPage wiki;
+
+    public void updateReview(ReviewPostRequest req) {
+        this.star = req.getStarScore();
+        this.content = req.getContent();
+        this.createdAt = Instant.now();
+    }
 
 }

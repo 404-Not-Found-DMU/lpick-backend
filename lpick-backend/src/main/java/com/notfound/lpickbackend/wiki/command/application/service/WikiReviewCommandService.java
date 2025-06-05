@@ -8,6 +8,7 @@ import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.ReviewPostRequest;
 import com.notfound.lpickbackend.wiki.command.repository.WikiReviewCommandRepository;
 import com.notfound.lpickbackend.wiki.query.service.WikiPageQueryService;
+import com.notfound.lpickbackend.wiki.query.service.WikiReviewQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class WikiReviewCommandService {
 
     private final WikiPageQueryService wikiPageQueryService;
+
+    private final WikiReviewQueryService wikiReviewQueryService;
     private final WikiReviewCommandRepository wikiReviewCommandRepository;
 
     @Transactional
@@ -35,6 +38,19 @@ public class WikiReviewCommandService {
         } catch(Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public void updateReview(String reviewId, ReviewPostRequest req) {
+        try {
+            Review review = wikiReviewQueryService.findById(reviewId);
+
+            review.updateReview(req);
+
+            wikiReviewCommandRepository.save(review);
+        } catch(Exception e) {
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     public void deleteById(String reviewId) {
