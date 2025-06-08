@@ -32,7 +32,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(csrf -> csrf.disable());
-        http.authorizeHttpRequests(config -> config.anyRequest().permitAll()
+        http.authorizeHttpRequests(config -> config
+                        .requestMatchers("/api/v1/auth/logout", "/api/v1/auth/refresh").authenticated() // 테스트를 위해 임시로 설정
+                        .anyRequest().permitAll()
                 )
                 .formLogin(config -> config.disable()) // 폼 로그인 비활성화
                 .httpBasic(config -> config.disable()) // HTTP Basic 인증 비활성화

@@ -1,13 +1,11 @@
 package com.notfound.lpickbackend.security.details;
 
-import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
+import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /* LPick에서 발급하는 JWT 인증을 위한 UserDetails */
 public class OAuth2UserDetails implements UserDetails {

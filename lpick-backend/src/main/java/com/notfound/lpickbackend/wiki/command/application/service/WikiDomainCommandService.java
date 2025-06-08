@@ -4,7 +4,7 @@ package com.notfound.lpickbackend.wiki.command.application.service;
 import com.notfound.lpickbackend.AUTO_ENTITIES.Album;
 import com.notfound.lpickbackend.AUTO_ENTITIES.Artist;
 import com.notfound.lpickbackend.AUTO_ENTITIES.Gear;
-import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
+import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import com.notfound.lpickbackend.userinfo.query.service.UserInfoQueryService;
 import com.notfound.lpickbackend.wiki.command.application.domain.PageRevision;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.PageRevisionRequest;

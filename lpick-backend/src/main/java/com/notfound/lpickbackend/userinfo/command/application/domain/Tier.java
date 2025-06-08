@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.AUTO_ENTITIES;
+package com.notfound.lpickbackend.userinfo.command.application.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,13 +12,17 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "auth")
-public class Auth {
+@Table(name = "tier")
+public class Tier {
+
     @Id
-    @Column(name = "auth_id", nullable = false, length = 40)
-    private String authId;
+    @Column(name = "tier_id", nullable = false, length = 40)
+    private String tierId;
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;
+
+    @Column(name = "point_scope", nullable = false)
+    private Integer pointScope;
 
 }

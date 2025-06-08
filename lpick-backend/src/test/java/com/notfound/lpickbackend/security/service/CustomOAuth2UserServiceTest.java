@@ -1,7 +1,7 @@
 package com.notfound.lpickbackend.security.service;
 
-import com.notfound.lpickbackend.AUTO_ENTITIES.Tier;
-import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
+import com.notfound.lpickbackend.userinfo.command.application.domain.Tier;
+import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import com.notfound.lpickbackend.TestUtil;
 import com.notfound.lpickbackend.security.details.CustomOAuthUser;
 import com.notfound.lpickbackend.tier.query.repository.TierCommandRepository;

@@ -1,6 +1,6 @@
 package com.notfound.lpickbackend.userinfo.query.service;
 
-import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
+import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import com.notfound.lpickbackend.userinfo.query.repository.UserInfoQueryRepository;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
