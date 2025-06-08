@@ -1,5 +1,7 @@
 package com.notfound.lpickbackend.security.util;
 
+import com.notfound.lpickbackend.userinfo.command.application.domain.Auth;
+import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -9,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -32,7 +36,9 @@ public class JwtTokenProvider {
     }
 
     // Access Token 생성 메서드
-    public String createAccessToken(String subject, Map<String, Object> claims) {
+    public String createAccessToken(String subject, UserInfo userInfo) {
+
+        Map<String,Object> claims = createClaims(userInfo);
 
         Date now = new Date();
         return Jwts.builder()
@@ -45,7 +51,9 @@ public class JwtTokenProvider {
     }
 
     // Refresh Token 생성 메서드
-    public String createRefreshToken(String subject, Map<String, Object> claims) {
+    public String createRefreshToken(String subject, UserInfo userInfo) {
+
+        Map<String,Object> claims = createClaims(userInfo);
 
         Date now = new Date();
         return Jwts.builder()
@@ -55,5 +63,22 @@ public class JwtTokenProvider {
                 .setExpiration(new Date(now.getTime() + refreshTokenValidity)) // 만료 시간
                 .signWith(key, SignatureAlgorithm.HS512) // 서명 알고리즘
                 .compact();
+    }
+
+    private Map<String, Object> createClaims(UserInfo userInfo) {
+
+        // Claims에 넣기 위해 List<Auth>에서 List<String>으로 변경
+        List<String> authList = userInfo.getAuthorities() // List<Auth>
+                .stream()
+                .map(Auth::getName) // 권한 이름만 추출
+                .toList();
+
+        // Token에 담을 Claim 생성
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("oAuthId", userInfo.getOauthId());
+        claims.put("Tier", userInfo.getTier().getTierId());
+        claims.put("authList", authList);
+
+        return claims;
     }
 }

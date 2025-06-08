@@ -1,6 +1,6 @@
 package com.notfound.lpickbackend.wiki.command.application.service;
 
-import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
+import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiBookmark;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
 import com.notfound.lpickbackend.wiki.command.repository.WikiBookmarkCommandRepository;

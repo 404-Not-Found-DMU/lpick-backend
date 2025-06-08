@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.AUTO_ENTITIES;
 
+import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import jakarta.persistence.*;
 import lombok.*;
 

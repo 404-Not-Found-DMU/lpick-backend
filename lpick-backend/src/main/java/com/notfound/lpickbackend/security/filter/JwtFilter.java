@@ -3,6 +3,7 @@ package com.notfound.lpickbackend.security.filter;
 import com.notfound.lpickbackend.security.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +27,9 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        String path = request.getRequestURI();
-        String method = request.getMethod();
+        log.info("jwtFilter start");
 
-//        log.warn(path + " " + method);
+        String path = request.getRequestURI();
 
         // oath2 코드 요청 리다이렉트는 건너 뛰기
         if (pathMatcher.match("/oauth2/code/**", path) || path.equals("/")) {
@@ -37,22 +37,39 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 요청 헤더에서 Authorization Header 추출
-        String authorizationHeader = request.getHeader("Authorization");
-//        log.info("Authorization header: {}", authorizationHeader);
+        // 요청 헤더에서 Cookies 추출
+        Cookie[] cookies = request.getCookies();
 
-        // Authorization Header에서 Bearer 토큰 추출
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String token = authorizationHeader.substring(7);
-            /* jwt 검증 후 인증객체로 등록 */
+        String tokenValue = null;
+
+        String token = null;
+
+        // refresh 요청일 경우 refreshToken를, 그 외에는 accessToken을 추출
+        if(pathMatcher.match("/api/v1/auth/refresh/**", path)) {
+            tokenValue = "refresh_token";
+        } else {
+            tokenValue = "access_token";
+        }
+
+        // cookie에서 토큰 추출
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (tokenValue.equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    log.info("{} : {}", tokenValue, token);
+                }
+            }
+        }
+
+        // Token에서 토큰 추출
+        if (token != null) {
+
             if (jwtUtil.validateToken(token)) {
                 Authentication authentication = jwtUtil.getAuthentication(token);
-
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
 
-//        log.info("Jwt Filter doFilter 실행");
         filterChain.doFilter(request, response);
     }
 }

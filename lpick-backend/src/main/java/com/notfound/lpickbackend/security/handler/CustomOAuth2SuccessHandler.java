@@ -1,14 +1,14 @@
 package com.notfound.lpickbackend.security.handler;
 
-import com.notfound.lpickbackend.AUTO_ENTITIES.Auth;
-import com.notfound.lpickbackend.AUTO_ENTITIES.UserInfo;
+import com.notfound.lpickbackend.security.util.CookieUtil;
+import com.notfound.lpickbackend.userinfo.command.application.domain.Auth;
+import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.common.redis.RedisService;
 import com.notfound.lpickbackend.security.details.CustomOAuthUser;
 import com.notfound.lpickbackend.security.util.JwtTokenProvider;
 import com.notfound.lpickbackend.userinfo.command.repository.UserInfoCommandRepository;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -63,25 +63,13 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
                 () -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO)
         );
 
-        // Claims에 넣기 위해 List<Auth>에서 List<String>으로 변경
-        List<String> authList = userInfo.getAuthorities() // List<Auth>
-                .stream()
-                .map(Auth::getName) // 권한 이름만 추출
-                .toList();
-
-        // Token에 담을 Claim 생성
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("oAuthId", userInfo.getOauthId());
-        claims.put("Tier", userInfo.getTier().getTierId());
-        claims.put("authList", authList);
-
         // accessToken, refreshToken 생성
-        String accessToken = jwtTokenProvider.createAccessToken(oAuthId, claims);
-        String refreshToken = jwtTokenProvider.createRefreshToken(oAuthId, claims);
+        String accessToken = jwtTokenProvider.createAccessToken(oAuthId, userInfo);
+        String refreshToken = jwtTokenProvider.createRefreshToken(oAuthId, userInfo);
 
         // 쿠키에 저장
-        addCookie(response, "access_token", accessToken, accessTokenValidity); // 1시간
-        addCookie(response, "refresh_token", refreshToken, refreshTokenValidity); // 7일
+        CookieUtil.addCookie(response, "access_token", accessToken, accessTokenValidity); // 1시간
+        CookieUtil.addCookie(response, "refresh_token", refreshToken, refreshTokenValidity); // 7일
 
         // redis whiteList에 refreshToken 저장
         redisService.saveWhitelistRefreshToken(oAuthId, refreshToken, refreshTokenValidity, TimeUnit.MILLISECONDS);
@@ -90,13 +78,4 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
         response.sendRedirect("/");
     }
 
-    // 쿠키 추가 메소드
-    private void addCookie(HttpServletResponse response, String name, String value, int maxAgeInSec) {
-        Cookie cookie = new Cookie(name, value);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(maxAgeInSec);
-        response.addCookie(cookie);
-    }
 }
