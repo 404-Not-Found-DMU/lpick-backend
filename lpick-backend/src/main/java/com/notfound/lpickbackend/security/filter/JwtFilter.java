@@ -27,12 +27,14 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        log.info("jwtFilter start");
-
         String path = request.getRequestURI();
 
         // oath2 코드 요청 리다이렉트는 건너 뛰기
-        if (pathMatcher.match("/oauth2/code/**", path) || path.equals("/")) {
+        // 개발자 전용 토큰 요청도 건너 뛰기
+        if (pathMatcher.match("/oauth2/code/**", path) || 
+                path.equals("/") || 
+                pathMatcher.match("/api/v1/developer-token", path)
+        ) {
             filterChain.doFilter(request, response);
             return;
         }

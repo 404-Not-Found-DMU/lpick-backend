@@ -9,14 +9,14 @@ import com.notfound.lpickbackend.userinfo.command.application.dto.LogoutRequestD
 import com.notfound.lpickbackend.userinfo.command.application.dto.TokenRefreshRequestDTO;
 import com.notfound.lpickbackend.userinfo.command.application.dto.TokenResponseDTO;
 import com.notfound.lpickbackend.userinfo.command.application.service.UserInfoCommandService;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
@@ -81,16 +81,41 @@ public class UserInfoCommandController {
                 response,
                 "access_token",
                 tokenResponseDTO.getAccessToken(),
-                accessTokenValidity
+                accessTokenValidity/1000 // 초 단위라 나누기 1000
         );
         CookieUtil.addCookie(
                 response,
                 "refresh_token",
                 tokenResponseDTO.getRefreshToken(),
-                refreshTokenValidity
+                refreshTokenValidity/1000 // 초 단위라 나누기 1000
         );
 
-        return null;
+        return ResponseEntity.ok(SuccessCode.REFRESH_SUCCESS);
+    }
+
+    /* 개발자 전용 토큰 요청 api */
+    @PostMapping("/developer-token")
+    ResponseEntity<SuccessCode> developerTokenRequest(
+            HttpServletResponse response
+    ) {
+
+        TokenResponseDTO tokenResponseDTO = userCommandService.getDeveloperToken();
+
+        // 쿠키 추가
+        CookieUtil.addCookie(
+                response,
+                "access_token",
+                tokenResponseDTO.getAccessToken(),
+                31536000 // 1년
+        );
+        CookieUtil.addCookie(
+                response,
+                "refresh_token",
+                tokenResponseDTO.getRefreshToken(),
+                31536000 // 1년
+        );
+
+        return ResponseEntity.ok(SuccessCode.DEV_TOKEN_CREATE_SUCCESS);
     }
 
 }

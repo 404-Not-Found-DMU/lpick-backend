@@ -65,6 +65,36 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    // Access Token 생성 메서드
+    public String createDevAccessToken(String subject, UserInfo userInfo) {
+
+        Map<String,Object> claims = createClaims(userInfo);
+
+        Date now = new Date();
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(subject) // 사용자 식별자
+                .setIssuedAt(now) // 발급 시간
+                .setExpiration(new Date(now.getTime() + 31536000000L)) // 만료 시간
+                .signWith(key, SignatureAlgorithm.HS512) // 서명 알고리즘
+                .compact();
+    }
+
+    // Refresh Token 생성 메서드
+    public String createDevRefreshToken(String subject, UserInfo userInfo) {
+
+        Map<String,Object> claims = createClaims(userInfo);
+
+        Date now = new Date();
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(subject) // 사용자 식별자
+                .setIssuedAt(now) // 발급 시간
+                .setExpiration(new Date(now.getTime() + 31536000000L)) // 만료 시간
+                .signWith(key, SignatureAlgorithm.HS512) // 서명 알고리즘
+                .compact();
+    }
+
     private Map<String, Object> createClaims(UserInfo userInfo) {
 
         // Claims에 넣기 위해 List<Auth>에서 List<String>으로 변경
