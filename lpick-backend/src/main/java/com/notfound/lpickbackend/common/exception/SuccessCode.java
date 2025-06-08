@@ -13,6 +13,8 @@ public enum SuccessCode {
     // 200
     SUCCESS(HttpStatus.OK, "OK"),
     LOGOUT_SUCCESS(HttpStatus.OK, "로그아웃 성공"),
+    REFRESH_SUCCESS(HttpStatus.OK, "Refresh 요청 성공"),
+    DEV_TOKEN_CREATE_SUCCESS(HttpStatus.OK, "개발자 전용 토큰 생성 성공"),
 
     // 201
     CREATE_SUCCESS(HttpStatus.CREATED, "Created"),

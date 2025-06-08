@@ -16,7 +16,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -33,8 +32,8 @@ public class SecurityConfig {
 
         http.csrf(csrf -> csrf.disable());
         http.authorizeHttpRequests(config -> config
-                        .requestMatchers("/api/v1/auth/logout", "/api/v1/auth/refresh").authenticated() // 테스트를 위해 임시로 설정
-                        .anyRequest().permitAll()
+                        .requestMatchers("/api/v1/developer-token").permitAll() // 개발자용 토큰 요청 허용
+                        .anyRequest().authenticated() // 테스트를 위해 임시로 설정
                 )
                 .formLogin(config -> config.disable()) // 폼 로그인 비활성화
                 .httpBasic(config -> config.disable()) // HTTP Basic 인증 비활성화

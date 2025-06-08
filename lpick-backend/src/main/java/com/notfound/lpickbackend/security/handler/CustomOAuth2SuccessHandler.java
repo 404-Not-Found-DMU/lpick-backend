@@ -1,13 +1,12 @@
 package com.notfound.lpickbackend.security.handler;
 
-import com.notfound.lpickbackend.security.util.CookieUtil;
-import com.notfound.lpickbackend.userinfo.command.application.domain.Auth;
-import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.common.redis.RedisService;
 import com.notfound.lpickbackend.security.details.CustomOAuthUser;
+import com.notfound.lpickbackend.security.util.CookieUtil;
 import com.notfound.lpickbackend.security.util.JwtTokenProvider;
+import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import com.notfound.lpickbackend.userinfo.command.repository.UserInfoCommandRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,9 +17,6 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -68,8 +64,8 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
         String refreshToken = jwtTokenProvider.createRefreshToken(oAuthId, userInfo);
 
         // 쿠키에 저장
-        CookieUtil.addCookie(response, "access_token", accessToken, accessTokenValidity); // 1시간
-        CookieUtil.addCookie(response, "refresh_token", refreshToken, refreshTokenValidity); // 7일
+        CookieUtil.addCookie(response, "access_token", accessToken, accessTokenValidity/1000); // 1시간
+        CookieUtil.addCookie(response, "refresh_token", refreshToken, refreshTokenValidity/1000); // 7일
 
         // redis whiteList에 refreshToken 저장
         redisService.saveWhitelistRefreshToken(oAuthId, refreshToken, refreshTokenValidity, TimeUnit.MILLISECONDS);
