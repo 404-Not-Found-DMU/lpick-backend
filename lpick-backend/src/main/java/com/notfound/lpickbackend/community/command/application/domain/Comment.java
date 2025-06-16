@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.AUTO_ENTITIES;
+package com.notfound.lpickbackend.community.command.application.domain;
 
 import jakarta.persistence.*;
 import lombok.*;

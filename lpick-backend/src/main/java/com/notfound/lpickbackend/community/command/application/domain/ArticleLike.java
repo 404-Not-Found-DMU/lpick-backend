@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.AUTO_ENTITIES;
+package com.notfound.lpickbackend.community.command.application.domain;
 
 import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import jakarta.persistence.*;
@@ -10,11 +10,11 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "article_bookmark")
-public class ArticleBookmark {
+@Table(name = "article_like")
+public class ArticleLike {
     @Id
-    @Column(name = "article_bookmark_id", nullable = false, length = 40)
-    private String articleBookmarkId;
+    @Column(name = "article_like_id", nullable = false, length = 40)
+    private String articleLikeId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "oauth_id", nullable = false)
