@@ -54,4 +54,9 @@ public class Article {
     public void preUpdate() {
         this.modifiedAt = Instant.now();
     }
+
+    public void updateContent(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }

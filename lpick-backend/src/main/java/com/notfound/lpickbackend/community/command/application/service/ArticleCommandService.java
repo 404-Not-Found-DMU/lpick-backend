@@ -4,7 +4,8 @@ import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.community.command.application.domain.Article;
 import com.notfound.lpickbackend.community.command.application.domain.ArticleStatus;
-import com.notfound.lpickbackend.community.command.application.dto.ArticleRequest;
+import com.notfound.lpickbackend.community.command.application.dto.ArticleCreateRequest;
+import com.notfound.lpickbackend.community.command.application.dto.ArticleUpdateRequest;
 import com.notfound.lpickbackend.community.command.repository.ArticleCommandRepository;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
 import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
@@ -28,13 +29,13 @@ public class ArticleCommandService {
     *  4. img 태그가 포함된 content 자체를 DB에 저장
     * */
     @Transactional
-    public void createArticle(ArticleRequest articleRequest) {
+    public void createArticle(ArticleCreateRequest articleCreateRequest) {
 
         UserInfo userInfo = getUserInfo();
 
         Article newArticle = Article.builder()
-                .title(articleRequest.getTitle())
-                .content(articleRequest.getContent())
+                .title(articleCreateRequest.getTitle())
+                .content(articleCreateRequest.getContent())
                 .oauth(userInfo)
                 .isDel(ArticleStatus.N)
                 .build();
@@ -42,11 +43,37 @@ public class ArticleCommandService {
         articleCommandRepository.save(newArticle);
     }
 
+    @Transactional
+    public void updateArticle(String articleId, ArticleUpdateRequest articleUpdateRequest) {
+
+        String oAuthId = UserInfoUtil.getOAuthId();
+        Article article = getArticle(articleId);
+
+        if(!article.getOauth().getOauthId().equals(oAuthId)) { // 수정 요청이 작성자와 맞지 않는 경우
+            throw new CustomException(ErrorCode.FORBIDDEN_RESOURCE_ACCESS);
+        }
+
+        article.updateContent(
+                articleUpdateRequest.getTitle(),
+                articleUpdateRequest.getContent()
+        );
+
+        articleCommandRepository.save(article);
+    }
+
     // 서비스 내부에서 사용할 UserInfo 찾는 메소드
     private UserInfo getUserInfo() {
 
         return userInfoQueryRepository.findById(UserInfoUtil.getOAuthId()).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO)
+        );
+    }
+
+    // 서비스 내부에서 사용할 Article 찾는 메소드
+    private Article getArticle(String articleId) {
+
+        return articleCommandRepository.findById(articleId).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND_ARTICLE)
         );
     }
 }
