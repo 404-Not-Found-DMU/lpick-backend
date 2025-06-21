@@ -22,7 +22,7 @@ public class ArticleCommandController {
 
         articleCommandService.createArticle(articleCreateRequest);
 
-        return ResponseEntity.ok(SuccessCode.SUCCESS);
+        return ResponseEntity.ok(SuccessCode.ARTICLE_CREATE_SUCCESS);
     }
 
     @PutMapping("/{articleId}")
@@ -33,6 +33,16 @@ public class ArticleCommandController {
 
         articleCommandService.updateArticle(articleId, articleUpdateRequest);
 
-        return ResponseEntity.ok(SuccessCode.SUCCESS);
+        return ResponseEntity.ok(SuccessCode.ARTICLE_UPDATE_SUCESS);
+    }
+
+    @DeleteMapping("/{articleId}")
+    public ResponseEntity<SuccessCode> deleteArticle(
+            @PathVariable String articleId
+    ) {
+
+        articleCommandService.deleteArticle(articleId);
+
+        return ResponseEntity.ok(SuccessCode.ARTICLE_DELETE_SUCCESS);
     }
 }

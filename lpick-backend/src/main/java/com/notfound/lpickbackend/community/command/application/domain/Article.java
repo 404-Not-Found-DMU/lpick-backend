@@ -4,6 +4,8 @@ import com.notfound.lpickbackend.AUTO_ENTITIES.TOOL.IdPrefixUtil;
 import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -14,6 +16,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
+@SQLDelete(sql = "UPDATE article SET is_del = 'Y' WHERE article_id = ?") // repository.delete 호출시 사용됨.
 @Table(name = "article")
 public class Article {
     @Id
@@ -58,5 +61,10 @@ public class Article {
     public void updateContent(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    // 게시글의 삭제 여부 체크 메소드
+    public boolean checkIsDel() {
+        return isDel.equals(ArticleStatus.Y);
     }
 }

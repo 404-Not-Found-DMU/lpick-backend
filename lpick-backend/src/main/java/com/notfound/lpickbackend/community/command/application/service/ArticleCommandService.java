@@ -46,10 +46,15 @@ public class ArticleCommandService {
     @Transactional
     public void updateArticle(String articleId, ArticleUpdateRequest articleUpdateRequest) {
 
-        String oAuthId = UserInfoUtil.getOAuthId();
         Article article = getArticle(articleId);
 
-        if(!article.getOauth().getOauthId().equals(oAuthId)) { // 수정 요청이 작성자와 맞지 않는 경우
+        // 이미 삭제된 데이터에 대한 접근인지 확인
+        if(article.checkIsDel()) {
+            throw new CustomException(ErrorCode.NOT_FOUND_ARTICLE);
+        }
+
+        // 접근 가능한 유저인지 확인
+        if(checkUserInfo(article)) {
             throw new CustomException(ErrorCode.FORBIDDEN_RESOURCE_ACCESS);
         }
 
@@ -59,6 +64,24 @@ public class ArticleCommandService {
         );
 
         articleCommandRepository.save(article);
+    }
+
+    @Transactional
+    public void deleteArticle(String articleId) {
+
+        Article article = getArticle(articleId);
+
+        // 이미 삭제된 데이터에 대한 접근인지 확인
+        if(article.checkIsDel()) {
+            throw new CustomException(ErrorCode.NOT_FOUND_ARTICLE);
+        }
+
+        // 접근 가능한 유저인지 확인
+        if(checkUserInfo(article)) {
+            throw new CustomException(ErrorCode.FORBIDDEN_RESOURCE_ACCESS);
+        }
+
+        articleCommandRepository.delete(article);
     }
 
     // 서비스 내부에서 사용할 UserInfo 찾는 메소드
@@ -75,5 +98,10 @@ public class ArticleCommandService {
         return articleCommandRepository.findById(articleId).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_ARTICLE)
         );
+    }
+
+    private boolean checkUserInfo(Article article) {
+
+        return !article.getOauth().getOauthId().equals(UserInfoUtil.getOAuthId());
     }
 }
