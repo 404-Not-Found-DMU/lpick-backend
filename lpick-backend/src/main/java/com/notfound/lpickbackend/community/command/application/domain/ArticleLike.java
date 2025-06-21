@@ -1,8 +1,11 @@
 package com.notfound.lpickbackend.community.command.application.domain;
 
+import com.notfound.lpickbackend.AUTO_ENTITIES.TOOL.IdPrefixUtil;
 import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.UUID;
 
 @Builder
 @AllArgsConstructor
@@ -24,4 +27,9 @@ public class ArticleLike {
     @JoinColumn(name = "article_id", nullable = false)
     private Article article;
 
+    @PrePersist
+    public void prePersist() {
+        if (this.articleLikeId == null)
+            this.articleLikeId = IdPrefixUtil.get(this.getClass().getSimpleName()) + "_" + UUID.randomUUID();
+    }
 }

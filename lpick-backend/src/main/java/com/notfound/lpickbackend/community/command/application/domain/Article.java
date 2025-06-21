@@ -16,7 +16,15 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@SQLDelete(sql = "UPDATE article SET is_del = 'Y' WHERE article_id = ?") // repository.delete 호출시 사용됨.
+// repository.delete 호출시 사용됨. Soft Delete를 위해 사용
+@SQLDelete(sql = "UPDATE article SET is_del = 'Y' WHERE article_id = ?")
+/*
+* @Where
+* 해당 엔티티에 대해 전역적으로 조회 시 조건을 걸어주는 어노테이션 쓸지말지 정해지면 수정하겠습니다.
+* 장점 : 쓰기 간편
+* 단점 : 추후 Spring boot 버전부터 지원하지 않음, 삭제된 데이터 조회 필요시 @Query로 nativeQuery 작성해야함
+* */
+// @Where(clause = "is_del = 'N'")
 @Table(name = "article")
 public class Article {
     @Id

@@ -48,27 +48,4 @@ public class ArticleCommandController {
 
         return ResponseEntity.ok(SuccessCode.ARTICLE_DELETE_SUCCESS);
     }
-
-    // 북마크 생성
-    @PostMapping("/{articleId}/bookmark")
-    public ResponseEntity<SuccessCode> createBookmark(
-            @PathVariable String articleId,
-            @AuthenticationPrincipal OAuth2UserDetails userDetail
-    ) {
-
-        articleCommandService.createBookmark(articleId);
-
-        return ResponseEntity.ok(SuccessCode.BOOKMARK_CREATE_SUCCESS);
-    }
-
-    // 북마크 제거
-    @DeleteMapping("/{articleId}/bookmark")
-    public ResponseEntity<SuccessCode> deleteBookmark(
-            @PathVariable String articleId
-    ) {
-
-        articleCommandService.deleteBookmark(articleId);
-
-        return ResponseEntity.ok(SuccessCode.BOOKMARK_DELETE_SUCCESS);
-    }
 }
