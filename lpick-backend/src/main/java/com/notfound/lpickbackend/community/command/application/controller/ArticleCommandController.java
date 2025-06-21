@@ -4,8 +4,11 @@ import com.notfound.lpickbackend.common.exception.SuccessCode;
 import com.notfound.lpickbackend.community.command.application.dto.ArticleCreateRequest;
 import com.notfound.lpickbackend.community.command.application.dto.ArticleUpdateRequest;
 import com.notfound.lpickbackend.community.command.application.service.ArticleCommandService;
+import com.notfound.lpickbackend.security.details.OAuth2UserDetails;
+import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -44,5 +47,28 @@ public class ArticleCommandController {
         articleCommandService.deleteArticle(articleId);
 
         return ResponseEntity.ok(SuccessCode.ARTICLE_DELETE_SUCCESS);
+    }
+
+    // 북마크 생성
+    @PostMapping("/{articleId}/bookmark")
+    public ResponseEntity<SuccessCode> createBookmark(
+            @PathVariable String articleId,
+            @AuthenticationPrincipal OAuth2UserDetails userDetail
+    ) {
+
+        articleCommandService.createBookmark(articleId);
+
+        return ResponseEntity.ok(SuccessCode.BOOKMARK_CREATE_SUCCESS);
+    }
+
+    // 북마크 제거
+    @DeleteMapping("/{articleId}/bookmark")
+    public ResponseEntity<SuccessCode> deleteBookmark(
+            @PathVariable String articleId
+    ) {
+
+        articleCommandService.deleteBookmark(articleId);
+
+        return ResponseEntity.ok(SuccessCode.BOOKMARK_DELETE_SUCCESS);
     }
 }

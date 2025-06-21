@@ -3,9 +3,11 @@ package com.notfound.lpickbackend.community.command.application.service;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.community.command.application.domain.Article;
+import com.notfound.lpickbackend.community.command.application.domain.ArticleBookmark;
 import com.notfound.lpickbackend.community.command.application.domain.ArticleStatus;
 import com.notfound.lpickbackend.community.command.application.dto.ArticleCreateRequest;
 import com.notfound.lpickbackend.community.command.application.dto.ArticleUpdateRequest;
+import com.notfound.lpickbackend.community.command.repository.ArticleBookmarkCommandRepository;
 import com.notfound.lpickbackend.community.command.repository.ArticleCommandRepository;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
 import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
@@ -14,12 +16,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ArticleCommandService {
 
     private final UserInfoQueryRepository userInfoQueryRepository;
     private final ArticleCommandRepository articleCommandRepository;
+    private final ArticleBookmarkCommandRepository articleBookmarkCommandRepository;
 
     /* 이미지 처리 로직은 추후 프론트엔드와 협의 후 진행
     *  생각중인 로직은(게시글에 에디터 사용한다는 가정)
@@ -84,6 +89,40 @@ public class ArticleCommandService {
         articleCommandRepository.delete(article);
     }
 
+    @Transactional
+    public void createBookmark(String articleId) {
+
+        UserInfo userInfo = getUserInfo();
+        Article article = getArticle(articleId);
+        Optional<ArticleBookmark> bookmark = getBookmark(userInfo, article);
+
+        // 북마크가 존재하지 않는다면 추가
+        // 만약 존재하지 않는 게시글인 경우 getArticle()에서 예외처리 가능
+        if(bookmark.isEmpty()) {
+
+            ArticleBookmark newBookmark = ArticleBookmark.builder()
+                    .article(article)
+                    .oauth(userInfo)
+                    .build();
+
+            articleBookmarkCommandRepository.save(newBookmark);
+        } else {
+            throw new CustomException(ErrorCode.ALREADY_HAS_BOOKMARK);
+        }
+    }
+
+    @Transactional
+    public void deleteBookmark(String articleId) {
+
+        UserInfo userInfo = getUserInfo();
+        Article article = getArticle(articleId);
+        Optional<ArticleBookmark> bookmark = getBookmark(userInfo, article);
+
+        // 북마크가 존재한다면 삭제
+        // 만약 이미 존재하지 않더라도 삭제 처리와 다른게 없기때문에 예외처리 X
+        bookmark.ifPresent(articleBookmarkCommandRepository::delete);
+    }
+
     // 서비스 내부에서 사용할 UserInfo 찾는 메소드
     private UserInfo getUserInfo() {
 
@@ -98,6 +137,11 @@ public class ArticleCommandService {
         return articleCommandRepository.findById(articleId).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_ARTICLE)
         );
+    }
+
+    private Optional<ArticleBookmark> getBookmark(UserInfo userInfo, Article article) {
+
+        return articleBookmarkCommandRepository.findByOauthAndArticle(userInfo, article);
     }
 
     private boolean checkUserInfo(Article article) {

@@ -29,6 +29,7 @@ public enum ErrorCode {
     ACCESS_DENIED(HttpStatus.BAD_REQUEST, "올바르지 않은 접근입니다. "),
     EMPTY_TITLE(HttpStatus.BAD_REQUEST, "제목 값이 비어있습니다."),
     ALREADY_HAS_REVIEW_IN_WIKIPAGE(HttpStatus.BAD_REQUEST, "이미 리뷰를 작성했습니다."),
+    ALREADY_HAS_BOOKMARK(HttpStatus.BAD_REQUEST, "이미 추가되어있는 북마크입니다."),
 
     // 401 에러
     AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "인증 실패"),
@@ -48,6 +49,7 @@ public enum ErrorCode {
 
     NOT_FOUND_USER_INFO(HttpStatus.NOT_FOUND, "유저 정보를 찾을 수 없습니다."),
     NOT_FOUND_TIER(HttpStatus.NOT_FOUND, "티어 정보를 찾을 수 없습니다."),
+    NOT_FOUND_BOOKMARK(HttpStatus.NOT_FOUND, "북마크 정보를 찾을 수 없습니다."),
 
     // 처리 방법에 논의가 필요한 에러 코드 임시할당용
     DO_NOT_KEEP_UP_THIS_ERROR_WHEN_MERGE(HttpStatus.I_AM_A_TEAPOT, "이 에러 코드는 실제 사용 목적이 아닙니다.")
