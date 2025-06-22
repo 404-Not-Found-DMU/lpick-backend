@@ -18,6 +18,7 @@ public enum SuccessCode {
 
     // 201
     CREATE_SUCCESS(HttpStatus.CREATED, "Created"),
+    USER_ALBUM_CREATE_SUCCESS(HttpStatus.CREATED, "사용자 소유 앨범 등록 성공"),
     WIKI_PAGE_CREATE_SUCCESS(HttpStatus.CREATED, "위키 문서 생성 성공"),
 
     // PAGE_REVISION_REVERT_SUCCESS(HttpStatus.OK, "대상 버전으로 되돌리기 성공");
