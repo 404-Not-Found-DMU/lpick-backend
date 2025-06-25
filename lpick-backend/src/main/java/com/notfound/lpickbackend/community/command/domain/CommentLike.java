@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.community.command.application.domain;
+package com.notfound.lpickbackend.community.command.domain;
 
 import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import jakarta.persistence.*;

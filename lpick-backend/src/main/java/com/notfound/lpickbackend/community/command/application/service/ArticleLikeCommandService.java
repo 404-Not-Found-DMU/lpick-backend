@@ -2,8 +2,8 @@ package com.notfound.lpickbackend.community.command.application.service;
 
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
-import com.notfound.lpickbackend.community.command.application.domain.Article;
-import com.notfound.lpickbackend.community.command.application.domain.ArticleLike;
+import com.notfound.lpickbackend.community.command.domain.Article;
+import com.notfound.lpickbackend.community.command.domain.ArticleLike;
 import com.notfound.lpickbackend.community.command.repository.ArticleCommandRepository;
 import com.notfound.lpickbackend.community.command.repository.ArticleLikeCommandRepository;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;

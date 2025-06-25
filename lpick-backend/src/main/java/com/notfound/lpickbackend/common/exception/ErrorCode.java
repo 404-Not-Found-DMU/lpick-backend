@@ -30,6 +30,7 @@ public enum ErrorCode {
     EMPTY_TITLE(HttpStatus.BAD_REQUEST, "제목 값이 비어있습니다."),
     ALREADY_HAS_REVIEW_IN_WIKIPAGE(HttpStatus.BAD_REQUEST, "이미 리뷰를 작성했습니다."),
     ALREADY_HAS_BOOKMARK(HttpStatus.BAD_REQUEST, "이미 추가되어있는 북마크입니다."),
+    INVALID_PAGE_REQUEST(HttpStatus.BAD_REQUEST,"page 옵션이 올바르지 않습니다. 음수 등을 작성할 수 없습니다." ),
 
     // 401 에러
     AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "인증 실패"),
@@ -43,7 +44,7 @@ public enum ErrorCode {
     NOT_FOUND_REVISION(HttpStatus.NOT_FOUND, "버전 정보를 찾을 수 없습니다."),
     NOT_FOUND_WIKI(HttpStatus.NOT_FOUND, "위키 정보를 찾을 수 없습니다."),
 
-    NOT_FOUND_WIKIBOOKMARK(HttpStatus.NOT_FOUND, "북마크 정보를 찾을 수 없습니다."),
+    NOT_FOUND_WIKI_BOOKMARK(HttpStatus.NOT_FOUND, "북마크 정보를 찾을 수 없습니다."),
     NOT_FOUND_REVIEW(HttpStatus.NOT_FOUND, "리뷰 정보를 찾을 수 없습니다."),
     NOT_FOUND_ARTICLE(HttpStatus.NOT_FOUND, "존재하지 않거나 삭제된 게시글입니다."),
 
@@ -52,7 +53,7 @@ public enum ErrorCode {
     NOT_FOUND_BOOKMARK(HttpStatus.NOT_FOUND, "북마크 정보를 찾을 수 없습니다."),
 
     // 처리 방법에 논의가 필요한 에러 코드 임시할당용
-    DO_NOT_KEEP_UP_THIS_ERROR_WHEN_MERGE(HttpStatus.I_AM_A_TEAPOT, "이 에러 코드는 실제 사용 목적이 아닙니다.")
+    DO_NOT_KEEP_UP_THIS_ERROR_WHEN_MERGE(HttpStatus.I_AM_A_TEAPOT, "이 에러 코드는 실제 사용 목적이 아닙니다."),
     ;
 
 

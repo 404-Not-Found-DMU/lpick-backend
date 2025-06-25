@@ -2,12 +2,10 @@ package com.notfound.lpickbackend.community.command.application.service;
 
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
-import com.notfound.lpickbackend.community.command.application.domain.Article;
-import com.notfound.lpickbackend.community.command.application.domain.ArticleBookmark;
-import com.notfound.lpickbackend.community.command.application.domain.ArticleStatus;
+import com.notfound.lpickbackend.community.command.domain.Article;
+import com.notfound.lpickbackend.community.command.domain.ArticleStatus;
 import com.notfound.lpickbackend.community.command.application.dto.ArticleCreateRequest;
 import com.notfound.lpickbackend.community.command.application.dto.ArticleUpdateRequest;
-import com.notfound.lpickbackend.community.command.repository.ArticleBookmarkCommandRepository;
 import com.notfound.lpickbackend.community.command.repository.ArticleCommandRepository;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
 import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
@@ -15,8 +13,6 @@ import com.notfound.lpickbackend.userinfo.query.repository.UserInfoQueryReposito
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -52,10 +48,10 @@ public class ArticleCommandService {
 
         Article article = getArticle(articleId);
 
-//        // 이미 삭제된 데이터에 대한 접근인지 확인
-//        if(article.checkIsDel()) {
-//            throw new CustomException(ErrorCode.NOT_FOUND_ARTICLE);
-//        }
+        // 이미 삭제된 데이터에 대한 접근인지 확인
+        if(article.checkIsDel()) {
+            throw new CustomException(ErrorCode.NOT_FOUND_ARTICLE);
+        }
 
         // 접근 가능한 유저인지 확인
         if(checkUserInfo(article)) {

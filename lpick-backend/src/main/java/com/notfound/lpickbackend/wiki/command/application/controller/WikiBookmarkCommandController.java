@@ -66,7 +66,7 @@ public class WikiBookmarkCommandController {
         // 이를 Service 단에서 별도로 체크하여 중복 요청은 무시할 수 있도록 구현하기.
         if(wikiBookmarkQueryService.existsById(bookmarkId)) {
             // 204 No Content로 구현해 단순히 넘기기 Vs 404 Not Found로 구현해 프론트 측에 에러 명시처리로 GET 통한 업데이트 유도
-            throw new CustomException(ErrorCode.NOT_FOUND_WIKIBOOKMARK);
+            throw new CustomException(ErrorCode.NOT_FOUND_WIKI_BOOKMARK);
         }
 
         wikiBookmarkCommandService.deleteWikiBookmarkById(bookmarkId);

@@ -1,11 +1,10 @@
-package com.notfound.lpickbackend.community.command.application.domain;
+package com.notfound.lpickbackend.community.command.domain;
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.TOOL.IdPrefixUtil;
 import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import java.time.Instant;
 import java.util.UUID;

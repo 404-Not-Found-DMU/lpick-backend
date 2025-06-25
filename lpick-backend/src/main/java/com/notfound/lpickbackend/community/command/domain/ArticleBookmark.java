@@ -1,11 +1,10 @@
-package com.notfound.lpickbackend.community.command.application.domain;
+package com.notfound.lpickbackend.community.command.domain;
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.TOOL.IdPrefixUtil;
 import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.Instant;
 import java.util.UUID;
 
 @Builder
@@ -16,6 +15,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "article_bookmark")
 public class ArticleBookmark {
+    
     @Id
     @Column(name = "article_bookmark_id", nullable = false, length = 40)
     private String articleBookmarkId;
