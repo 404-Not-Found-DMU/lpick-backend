@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ArticleUpdateRequest {
+public class ArticleUpdateRequestDTO {
 
     @NotNull
     private String title;

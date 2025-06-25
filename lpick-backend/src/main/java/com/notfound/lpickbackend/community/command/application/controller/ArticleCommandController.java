@@ -1,14 +1,11 @@
 package com.notfound.lpickbackend.community.command.application.controller;
 
 import com.notfound.lpickbackend.common.exception.SuccessCode;
-import com.notfound.lpickbackend.community.command.application.dto.ArticleCreateRequest;
-import com.notfound.lpickbackend.community.command.application.dto.ArticleUpdateRequest;
+import com.notfound.lpickbackend.community.command.application.dto.ArticleCreateRequestDTO;
+import com.notfound.lpickbackend.community.command.application.dto.ArticleUpdateRequestDTO;
 import com.notfound.lpickbackend.community.command.application.service.ArticleCommandService;
-import com.notfound.lpickbackend.security.details.OAuth2UserDetails;
-import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,10 +17,10 @@ public class ArticleCommandController {
 
     @PostMapping
     public ResponseEntity<SuccessCode> createArticle(
-            @RequestBody ArticleCreateRequest articleCreateRequest
+            @RequestBody ArticleCreateRequestDTO articleCreateRequestDTO
             ){
 
-        articleCommandService.createArticle(articleCreateRequest);
+        articleCommandService.createArticle(articleCreateRequestDTO);
 
         return ResponseEntity.ok(SuccessCode.ARTICLE_CREATE_SUCCESS);
     }
@@ -31,10 +28,10 @@ public class ArticleCommandController {
     @PutMapping("/{articleId}")
     public ResponseEntity<SuccessCode> updateArticle(
             @PathVariable String articleId,
-            @RequestBody ArticleUpdateRequest articleUpdateRequest
+            @RequestBody ArticleUpdateRequestDTO articleUpdateRequestDTO
     ) {
 
-        articleCommandService.updateArticle(articleId, articleUpdateRequest);
+        articleCommandService.updateArticle(articleId, articleUpdateRequestDTO);
 
         return ResponseEntity.ok(SuccessCode.ARTICLE_UPDATE_SUCESS);
     }

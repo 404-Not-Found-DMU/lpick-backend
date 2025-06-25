@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-public class ArticleCreateRequest {
+public class ArticleCreateRequestDTO {
 
     @NotNull
     private String title;
