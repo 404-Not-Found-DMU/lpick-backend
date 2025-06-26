@@ -56,6 +56,26 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
     """)
     Page<ArticleListResponseDTO> findMyWithLikeAndCommentAndBookmarkCount(@Param("oauthId") String oauthId, Pageable pageable);
 
+    @Query("""
+    SELECT new com.notfound.lpickbackend.community.query.application.dto.ArticleListResponseDTO(
+        a.articleId,
+        a.title,
+        COUNT(DISTINCT l2),
+        COUNT(DISTINCT c),
+        COUNT(DISTINCT b),
+        a.oauth.oauthId
+    )
+    FROM ArticleLike l
+    JOIN l.article a
+    LEFT JOIN ArticleLike l2 ON l2.article = a
+    LEFT JOIN Comment c ON c.article = a
+    LEFT JOIN ArticleBookmark b ON b.article = a
+    WHERE l.oauth.oauthId = :oauthId
+    AND a.isDel = com.notfound.lpickbackend.community.command.domain.ArticleStatus.N
+    GROUP BY a.articleId, a.title, a.oauth
+    """)
+    Page<ArticleListResponseDTO> findMyLikedWithLikeAndCommentAndBookmarkCount(@Param("oauthId") String oauthId, Pageable pageable);
+
     // content를 포함한 게시글 상세조회
     @Query("""
     SELECT new com.notfound.lpickbackend.community.query.application.dto.ArticleDetailResponseDTO(

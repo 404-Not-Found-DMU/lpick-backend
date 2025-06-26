@@ -23,6 +23,7 @@ public class ArticleQueryService {
     private final ArticleBookmarkQueryRepository articleBookmarkQueryRepository;
     private final ArticleLikeQueryRepository articleLikeQueryRepository;
 
+    // 전체 게시글 목록 조회
     @Transactional(readOnly = true)
     public List<ArticleListResponseDTO> readAllArticleList(Pageable pageable) {
 
@@ -60,6 +61,7 @@ public class ArticleQueryService {
         return dto;
     }
 
+    // 내가 작성한 게시글 목록 조회
     @Transactional(readOnly = true)
     public List<ArticleListResponseDTO> readMyArticleList(Pageable pageable) {
 
@@ -76,6 +78,22 @@ public class ArticleQueryService {
         return articleQueryRepository.findMyWithLikeAndCommentAndBookmarkCount(oAuthId, pageable).getContent();
     }
 
+    @Transactional(readOnly = true)
+    public List<ArticleListResponseDTO> readMyLikedArticleList(Pageable pageable) {
+
+        // 페이지 요청이 잘못 된 경우 예외 처리
+        if (checkPageable(pageable)) {
+            throw new CustomException(ErrorCode.INVALID_PAGE_REQUEST);
+        }
+
+        String oAuthId = UserInfoUtil.getOAuthId();
+        if(oAuthId.isEmpty()) {
+            throw new CustomException(ErrorCode.INVALID_PAGE_REQUEST);
+        }
+
+        return articleQueryRepository.findMyLikedWithLikeAndCommentAndBookmarkCount(oAuthId, pageable).getContent();
+    }
+
     // 북마크 여부 확인
     private boolean isBookmarked (String oAuthId, String articleId) {
         return articleBookmarkQueryRepository.existsByOauthIdAndArticleId(oAuthId, articleId);
@@ -90,4 +108,5 @@ public class ArticleQueryService {
 
         return pageable.getPageNumber() < 0 || pageable.getPageSize() <= 0;
     }
+
 }

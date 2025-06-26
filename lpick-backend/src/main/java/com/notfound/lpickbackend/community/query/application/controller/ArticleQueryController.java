@@ -50,4 +50,15 @@ public class ArticleQueryController {
 
         return ResponseEntity.ok(articleQueryService.readMyArticleList(pageable));
     }
+
+    @GetMapping("/article/like/me")
+    public ResponseEntity<List<ArticleListResponseDTO>> readMyLikedArticleList(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        return ResponseEntity.ok(articleQueryService.readMyLikedArticleList(pageable));
+    }
 }
