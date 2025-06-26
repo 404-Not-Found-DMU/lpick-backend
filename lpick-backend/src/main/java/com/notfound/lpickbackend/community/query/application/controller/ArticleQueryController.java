@@ -4,6 +4,7 @@ import com.notfound.lpickbackend.common.exception.SuccessCode;
 import com.notfound.lpickbackend.community.query.application.dto.ArticleDetailResponseDTO;
 import com.notfound.lpickbackend.community.query.application.dto.ArticleListResponseDTO;
 import com.notfound.lpickbackend.community.query.application.service.ArticleQueryService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
+@Tag(name = "게시글 조회 컨트롤러", description = "게시글 목록/상세 조회 기능")
 public class ArticleQueryController {
 
     private final ArticleQueryService articleQueryService;

@@ -8,12 +8,15 @@ import com.notfound.lpickbackend.userinfo.query.service.UserInfoQueryService;
 import com.notfound.lpickbackend.wiki.command.application.service.WikiBookmarkCommandService;
 import com.notfound.lpickbackend.wiki.query.service.WikiBookmarkQueryService;
 import com.notfound.lpickbackend.wiki.query.service.WikiPageQueryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "위키 북마크 컨트롤러", description = "위키 북마크 추가/삭제 기능")
 public class WikiBookmarkCommandController {
     private final WikiPageQueryService wikiPageQueryService;
 
@@ -28,6 +31,7 @@ public class WikiBookmarkCommandController {
     // 사유 2. 어차피 프론트에서 상태에 따라 표기해주는 코드 들어가지 않나..?
 
     @PostMapping("/wiki/{wikiId}/book-mark")
+    @Operation(summary = "위키 북마크 추가", description = "위키 페이지 북마크 추가 기능")
     public ResponseEntity<SuccessCode> subscribeWikiBookmark(
             @PathVariable("wikiId") String wikiId,
             @RequestParam("dummyUserId") String userId
@@ -55,6 +59,7 @@ public class WikiBookmarkCommandController {
     // -> 지니는 경우 클라이언트 업데이트 부담 + url의 wikiId 굳이 필요?(특정 위키에 대한 북마크 해제함을 확인하기위한 검증 체계 추가 가능)
     // 2. wikiId로 반드시 검증해야하는가?
     @DeleteMapping("/wiki-bookmark/{bookmarkId}")
+    @Operation(summary = "위키 북마크 해제", description = "특정 위키에 대한 북마크 해제 기능")
     public ResponseEntity<SuccessCode> unsubscribeWikiBookmark(
             @PathVariable("bookmarkId") String bookmarkId,
             @RequestParam("dummyUserId") String userId
