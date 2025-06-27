@@ -7,6 +7,7 @@ import com.notfound.lpickbackend.community.query.application.service.ArticleQuer
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class ArticleQueryController {
     private final ArticleQueryService articleQueryService;
 
     @GetMapping("/article")
-    public ResponseEntity<List<ArticleListResponseDTO>> readAllArticleList(
+    public ResponseEntity<Page<ArticleListResponseDTO>> readAllArticleList(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
     ){
@@ -41,7 +42,7 @@ public class ArticleQueryController {
     }
 
     @GetMapping("/article/me")
-    public ResponseEntity<List<ArticleListResponseDTO>> readMyArticleList(
+    public ResponseEntity<Page<ArticleListResponseDTO>> readMyArticleList(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
     ) {
@@ -52,7 +53,7 @@ public class ArticleQueryController {
     }
 
     @GetMapping("/article/like/me")
-    public ResponseEntity<List<ArticleListResponseDTO>> readMyLikedArticleList(
+    public ResponseEntity<Page<ArticleListResponseDTO>> readMyLikedArticleList(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
     ) {

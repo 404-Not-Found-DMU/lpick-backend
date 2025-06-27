@@ -9,6 +9,7 @@ import com.notfound.lpickbackend.community.query.repository.ArticleLikeQueryRepo
 import com.notfound.lpickbackend.community.query.repository.ArticleQueryRepository;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,14 +26,14 @@ public class ArticleQueryService {
 
     // 전체 게시글 목록 조회
     @Transactional(readOnly = true)
-    public List<ArticleListResponseDTO> readAllArticleList(Pageable pageable) {
+    public Page<ArticleListResponseDTO> readAllArticleList(Pageable pageable) {
 
         // 페이지 요청이 잘못 된 경우 예외 처리
         if (checkPageable(pageable)) {
             throw new CustomException(ErrorCode.INVALID_PAGE_REQUEST);
         }
         // 조회했을 때 게시글이 존재하지 않는 경우는 예외처리 하지 않음.
-        return articleQueryRepository.findAllWithLikeAndCommentAndBookmarkCount(pageable).getContent();
+        return articleQueryRepository.findAllWithLikeAndCommentAndBookmarkCount(pageable);
     }
 
     // 게시글 상세 조회
@@ -63,7 +64,7 @@ public class ArticleQueryService {
 
     // 내가 작성한 게시글 목록 조회
     @Transactional(readOnly = true)
-    public List<ArticleListResponseDTO> readMyArticleList(Pageable pageable) {
+    public Page<ArticleListResponseDTO> readMyArticleList(Pageable pageable) {
 
         // 페이지 요청이 잘못 된 경우 예외 처리
         if (checkPageable(pageable)) {
@@ -75,11 +76,11 @@ public class ArticleQueryService {
             throw new CustomException(ErrorCode.INVALID_PAGE_REQUEST);
         }
 
-        return articleQueryRepository.findMyWithLikeAndCommentAndBookmarkCount(oAuthId, pageable).getContent();
+        return articleQueryRepository.findMyWithLikeAndCommentAndBookmarkCount(oAuthId, pageable);
     }
 
     @Transactional(readOnly = true)
-    public List<ArticleListResponseDTO> readMyLikedArticleList(Pageable pageable) {
+    public Page<ArticleListResponseDTO> readMyLikedArticleList(Pageable pageable) {
 
         // 페이지 요청이 잘못 된 경우 예외 처리
         if (checkPageable(pageable)) {
@@ -91,7 +92,7 @@ public class ArticleQueryService {
             throw new CustomException(ErrorCode.INVALID_PAGE_REQUEST);
         }
 
-        return articleQueryRepository.findMyLikedWithLikeAndCommentAndBookmarkCount(oAuthId, pageable).getContent();
+        return articleQueryRepository.findMyLikedWithLikeAndCommentAndBookmarkCount(oAuthId, pageable);
     }
 
     // 북마크 여부 확인
