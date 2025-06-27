@@ -3,6 +3,7 @@ package com.notfound.lpickbackend.userinfo.query.service;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.servicedata.query.service.GenreQueryService;
+import com.notfound.lpickbackend.userinfo.command.application.domain.UserAlbum;
 import com.notfound.lpickbackend.userinfo.query.dto.response.UserAlbumOwnedResponse;
 import com.notfound.lpickbackend.userinfo.query.repository.UserAlbumQueryRepository;
 import lombok.RequiredArgsConstructor;
@@ -52,5 +53,18 @@ public class UserAlbumQueryService {
                         LinkedHashMap::new     // JPQL ORDER BY 순서 보존
                 ));
 
+    }
+
+    public UserAlbum findById(String userAlbumId) {
+        Optional<UserAlbum> userAlbumOptional = userAlbumQueryReposiory.findById(userAlbumId);
+        if(userAlbumOptional.isEmpty()) {
+            throw new CustomException(ErrorCode.NOT_FOUND_USER_ALBUM);
+        }
+
+        return userAlbumOptional.get();
+    }
+
+    public long countByisFavoriteTrue(String oAuthId) {
+        return userAlbumQueryReposiory.countByOauth_OauthIdAndIsFavoriteTrue(oAuthId);
     }
 }

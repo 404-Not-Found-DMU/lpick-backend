@@ -96,4 +96,6 @@ public interface UserAlbumQueryRepository extends JpaRepository<UserAlbum, Strin
         ORDER BY COUNT(ua) DESC
     """)
     List<Object[]> countUserAlbumByGenre(String oAuthId); // [ ["Rock", 5], ["Jazz", 3], ...] 같은 방식으로 반환
+
+    long countByOauth_OauthIdAndIsFavoriteTrue(String oauthId);
 }

@@ -60,6 +60,10 @@ dependencies {
     // swagger 의존성 추가
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9'
 
+    // S3 활용 목적 의존성 추가
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+
 }
 
 tasks.named('test') {

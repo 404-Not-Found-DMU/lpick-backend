@@ -3,7 +3,10 @@ package com.notfound.lpickbackend.userinfo.command.application.domain;
 import com.notfound.lpickbackend.servicedata.command.domain.Album;
 import com.notfound.lpickbackend.AUTO_ENTITIES.TOOL.IdPrefixUtil;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.UUID;
 
@@ -16,11 +19,12 @@ import java.util.UUID;
 public class UserAlbum {
 
     @Builder
-    public UserAlbum(String userAlbumId, String recordFile, Album album, UserInfo oauth) {
+    public UserAlbum(String userAlbumId, String recordFile, boolean isFavorite, Album album, UserInfo oauth) {
         this.userAlbumId = userAlbumId;
         this.recordFile = recordFile;
         this.album = album;
         this.oauth = oauth;
+        this.isFavorite = isFavorite;
     }
 
     @PrePersist
