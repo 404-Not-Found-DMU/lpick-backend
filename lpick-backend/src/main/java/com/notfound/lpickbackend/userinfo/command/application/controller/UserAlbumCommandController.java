@@ -46,7 +46,7 @@ public class UserAlbumCommandController {
     /** favorite 토글을 연속해서 보낼 경우 요청과 실제 DB 업데이트가 완료되기 전에 다음 요청이 간다거나.. 할 수 있음.
      * 이로 인해 front와 back의 실제 favorite 상태 다른 경우(== 페이지의 하트 모양과 DB 내 상태) 방지 위해 favorite-toggle 요청 완료시마다 현재 상태를 반환해준다. */
     @PatchMapping("/user-album/{userAlbumId}/favorite-toggle") // 요청 ContentType이 MediaType.MULTIPART_FORM_DATA_VALUE일때만 본 요청에 매칭됨.
-    @Operation(summary = "사용자 소유 앨범에 대한 favorite 토글", description = "사용자가 자신이 소유한 앨범에 대해 favorite 토글을 진행하여 favorite 리스트에 추가가능. favorite 리스트는 마이페이지에서 별도 표기됨. favorite는 10개 이상일 수 없음.")
+    @Operation(summary = "사용자 소유 앨범에 대한 favorite 토글", description = "사용자가 자신이 소유한 앨범에 대해 favorite 토글을 진행하여 favorite 리스트에 추가가능. favorite 리스트는 마이페이지에서 별도 표기됨. favorite는 10개 이상일 수 없음. 요청 시 마다 업데이트 결과 boolean 값을 전달해주므로, 해당 값을 기반으로 프론트측 업데이트 진행.")
     public ResponseEntity<FavoriteToggleStatus> applyRecordFile(
             @PathVariable("userAlbumId") String userAlbumId
     ) {
