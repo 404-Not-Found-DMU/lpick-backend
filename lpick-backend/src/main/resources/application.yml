@@ -46,3 +46,14 @@ token:
 logging:
   level:
     org.springframework.security.web.DefaultSecurityFilterChain: debug
+
+# swagger 설정
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+    display-request-duration: true
+    persistAuthorization: true  # Swagger UI 페이지 새로고침해도 인증정보 유지

@@ -9,6 +9,8 @@ import com.notfound.lpickbackend.wiki.command.application.dto.request.ReviewPost
 import com.notfound.lpickbackend.wiki.command.application.service.WikiReviewCommandService;
 import com.notfound.lpickbackend.wiki.query.service.WikiPageQueryService;
 import com.notfound.lpickbackend.wiki.query.service.WikiReviewQueryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "위키 댓글 컨트롤러", description = "위키 댓글 생성/수정/삭제 기능")
 public class WikiReviewCommandController {
     
     private final UserInfoQueryService userInfoQueryService;
@@ -25,7 +28,7 @@ public class WikiReviewCommandController {
     private final WikiReviewQueryService wikiReviewQueryService;
 
 
-
+    @Operation(summary = "위키 리뷰 작성", description = "특정 위키 페이지에 댓글을 작성하는 api")
     @PostMapping("/wiki/{wikiId}/review")
     //@PreAuthorize("hasRole('TIER_SILVER')") // 임시 설정
     public ResponseEntity<SuccessCode> writeReview(
@@ -43,6 +46,7 @@ public class WikiReviewCommandController {
         return ResponseEntity.ok(SuccessCode.CREATE_SUCCESS);
     }
 
+    @Operation(summary = "위키 리뷰 수정", description = "내가 작성한 리뷰를 수정하는 api")
     @PatchMapping("/review/{reviewId}")
     //@PreAuthorize("hasRole('TIER_SILVER')") // 임시 설정
     public ResponseEntity<SuccessCode> updateReview(
@@ -54,6 +58,7 @@ public class WikiReviewCommandController {
         return ResponseEntity.ok(SuccessCode.NO_CONTENT);
     }
 
+    @Operation(summary = "위키 리뷰 삭제", description = "내가 작성한 리뷰를 삭제하는 api")
     @DeleteMapping("/review/{reviewId}")
     //@PreAuthorize("hasRole('TIER_SILVER')") // 임시 설정
     public ResponseEntity<SuccessCode> deleteReview(
