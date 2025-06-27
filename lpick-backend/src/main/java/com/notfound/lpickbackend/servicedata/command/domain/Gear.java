@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.AUTO_ENTITIES;
+package com.notfound.lpickbackend.servicedata.command.domain;
 
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
 import jakarta.persistence.*;

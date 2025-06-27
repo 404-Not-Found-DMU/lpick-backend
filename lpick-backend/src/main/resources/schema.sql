@@ -102,6 +102,7 @@ CREATE TABLE IF NOT EXISTS user_info (
 CREATE TABLE IF NOT EXISTS user_album (
                             user_album_id	varchar(40)		NOT NULL,
                             record_file	varchar(200)		NULL,
+                            is_favorite boolean         NOT NULL DEFAULT FALSE,
                             album_id	varchar(40)		NOT NULL,
                             oauth_id	varchar(40)		NOT NULL
 );

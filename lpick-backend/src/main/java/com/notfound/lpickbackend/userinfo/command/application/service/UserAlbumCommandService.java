@@ -1,6 +1,6 @@
 package com.notfound.lpickbackend.userinfo.command.application.service;
 
-import com.notfound.lpickbackend.AUTO_ENTITIES.Album;
+import com.notfound.lpickbackend.servicedata.command.domain.Album;
 import com.notfound.lpickbackend.userinfo.command.application.domain.UserAlbum;
 import com.notfound.lpickbackend.servicedata.query.service.AlbumQueryService;
 import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;

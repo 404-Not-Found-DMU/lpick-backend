@@ -1,8 +1,7 @@
 package com.notfound.lpickbackend.userinfo.command.application.domain;
 
-import com.notfound.lpickbackend.AUTO_ENTITIES.Album;
+import com.notfound.lpickbackend.servicedata.command.domain.Album;
 import com.notfound.lpickbackend.AUTO_ENTITIES.TOOL.IdPrefixUtil;
-import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -37,6 +36,9 @@ public class UserAlbum {
 
     @Column(name = "record_file", length = 200)
     private String recordFile;
+
+    @Column(name = "is_favorite") // 10개까지만 설정 가능하게 하기. + 추후 favorite 지정 시간 등으로 정렬조건 추가 할것.
+    private boolean isFavorite;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "album_id", nullable = false)

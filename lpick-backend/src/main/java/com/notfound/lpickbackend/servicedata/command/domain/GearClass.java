@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.AUTO_ENTITIES;
+package com.notfound.lpickbackend.servicedata.command.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
