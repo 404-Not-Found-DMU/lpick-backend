@@ -16,21 +16,21 @@ public class UserAlbumQueryService {
     private final UserAlbumQueryRepository userAlbumQueryReposiory;
 
     public Page<UserAlbumOwnedResponse> getUserAlbumListByUserId(String oAuthId, Pageable pageable) {
-        Page<UserAlbum> userAlbumPage = userAlbumQueryReposiory.findAllByOauth_OauthId(oAuthId, pageable);
+        Page<UserAlbumOwnedResponse> userAlbumPage = userAlbumQueryReposiory.findAllByOauth_OauthId(oAuthId, pageable);
 
-        return userAlbumPage.map(i -> {
-            Album album = i.getAlbum();
-
-            return UserAlbumOwnedResponse.builder(
-                    .userAlbumId(i.getUserAlbumId())
-                    .name(album.getName())
-                    .profile(album.getProfile())
-                    .artist(album.get) // albumArtist - artist 추출 들어가야함. jpa가 아닌 별도 서비스에서 도출 시도해야할 듯 보임
-                    .recordFile(i.getRecordFile())
-                    .releaseCountry(album.getReleaseCountry())
-                    .releaseDate(album.getReleaseDate())
-                    .label(album.getLabel())
-                    .build();
-        });
+//        return userAlbumPage.map(i -> {
+//            Album album = i.getAlbum();
+//
+//            return UserAlbumOwnedResponse.builder(
+//                    .userAlbumId(i.getUserAlbumId())
+//                    .name(album.getName())
+//                    .profile(album.getProfile())
+//                    .artistName() // albumArtist - artist 추출 들어가야함. jpa가 아닌 별도 서비스에서 도출 시도해야할 듯 보임
+//                    .recordFile(i.getRecordFile())
+//                    .releaseCountry(album.getReleaseCountry())
+//                    .releaseDate(album.getReleaseDate())
+//                    .label(album.getLabel())
+//                    .build();
+//        });
     }
 }

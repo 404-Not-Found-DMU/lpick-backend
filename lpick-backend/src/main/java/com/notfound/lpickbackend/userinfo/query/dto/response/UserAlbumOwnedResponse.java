@@ -12,11 +12,9 @@ public class UserAlbumOwnedResponse {
     private String userAlbumId;
     private String name;
     private String profile; // 앨범커버 
-    private String artist;
+    private String artistName;
     private String recordFile; // 유무에 따라 null로 기입.
     private Instant releaseDate;
     private String releaseCountry;
     private String label;
-
-
 }
