@@ -5,6 +5,8 @@ import com.notfound.lpickbackend.userinfo.query.service.UserInfoQueryService;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.PageRevisionRequest;
 import com.notfound.lpickbackend.wiki.command.application.service.PageRevisionCommandService;
 import com.notfound.lpickbackend.wiki.query.dto.response.PageRevisionResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
 @RestController
+@Tag(name = "위키 버전 컨트롤러", description = "위키 버전 생성/삭제 기능")
 public class PageRevisionCommandController {
 
     private final PageRevisionCommandService pageRevisionCommandService;
@@ -31,6 +34,7 @@ public class PageRevisionCommandController {
      * */
     // post임에도 requestParam이 쓰인이유는, SpringSecurity 기반 적용 되지 않았기 때문.
     @PostMapping("/wiki/{wikiId}/revision")
+    @Operation(summary = "위키 버전 생성", description = "특정 위키의 새로운 버전 생성 기능")
     public ResponseEntity<PageRevisionResponse> createPageRevision(
             @RequestBody PageRevisionRequest request,
             @PathVariable("wikiId") String wikiId,
@@ -52,6 +56,7 @@ public class PageRevisionCommandController {
     // BLIND나 DELETE와 같이 위키문서 전체에 대해 '서비스 운영진'의 삭제 조치가 행해지는 경우가 아래의 DELETE 요청.
     // @PreAuthorize("hasAuthority('AUTH_ADMIN')")
     @DeleteMapping("/wiki/{wikiId}/revision")
+    @Operation(summary = "위키 버전 삭제", description = "위키의 특정 버전 삭제 기능")
     public ResponseEntity<Void> deletePageRevisionData(
             @PathVariable("wikiId") String wikiId
     ) {

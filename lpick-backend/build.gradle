@@ -34,6 +34,10 @@ dependencies {
     // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
+    // MapStruct 관련
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -53,8 +57,8 @@ dependencies {
     // 위키 리비전 별 diff 기능 대리위한 외부 라이브러리
     implementation 'org.bitbucket.cowwoc:diff-match-patch:1.2'
 
-    // 위부 http 통신을 위한 webclient(RestTemplate 대체)
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    // swagger 의존성 추가
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9'
 
 }
 

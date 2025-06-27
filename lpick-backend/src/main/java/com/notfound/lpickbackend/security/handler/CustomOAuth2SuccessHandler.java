@@ -52,9 +52,7 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
                                         Authentication authentication) throws IOException {
 
         CustomOAuthUser oAuthUser = (CustomOAuthUser) authentication.getPrincipal();
-
         String oAuthId = oAuthUser.getName(); // CustomOAuthUser의 oAuthID return받음
-
         UserInfo userInfo = userInfoCommandRepository.findByOauthId(oAuthId).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO)
         );

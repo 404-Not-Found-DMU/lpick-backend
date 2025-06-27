@@ -1,9 +1,9 @@
 package com.notfound.lpickbackend.wiki.query.controller;
 
-import com.notfound.lpickbackend.common.exception.CustomException;
-import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.wiki.query.dto.response.ReviewResponse;
 import com.notfound.lpickbackend.wiki.query.service.WikiReviewQueryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,11 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "위키 리뷰 컨트롤러", description = "위키 리뷰 조회 관련 컨트롤러")
 public class WikiReviewQueryController {
 
     private final WikiReviewQueryService wikiReviewQueryService;
 
     @GetMapping("/wiki/{wikiId}/review")
+    @Operation(summary = "위키 리뷰 조회", description = "특정 위키의 리뷰 리스트 조회 기능")
     public ResponseEntity<Page<ReviewResponse>> getReviewListInWiki(
             @PathVariable("wikiId") String wikiId,
             @RequestParam(defaultValue = "0") int page,

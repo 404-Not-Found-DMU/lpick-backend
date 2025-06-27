@@ -9,6 +9,7 @@ import com.notfound.lpickbackend.userinfo.command.application.dto.LogoutRequestD
 import com.notfound.lpickbackend.userinfo.command.application.dto.TokenRefreshRequestDTO;
 import com.notfound.lpickbackend.userinfo.command.application.dto.TokenResponseDTO;
 import com.notfound.lpickbackend.userinfo.command.application.service.UserInfoCommandService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 @RequestMapping("/api/v1")
+@Tag(name = "유저 정보 컨트롤러", description = "로그아웃, 쿠키 재요청 기능")
 public class UserInfoCommandController {
 
     private final UserInfoCommandService userCommandService;
