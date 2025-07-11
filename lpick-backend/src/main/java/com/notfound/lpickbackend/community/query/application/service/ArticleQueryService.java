@@ -95,6 +95,12 @@ public class ArticleQueryService {
         return articleQueryRepository.findMyLikedWithLikeAndCommentAndBookmarkCount(oAuthId, pageable);
     }
 
+    @Transactional(readOnly = true)
+    public int countArticleByOauthId(String oauthId) {
+        return articleQueryRepository.countByOauth_OauthId(oauthId);
+    }
+
+
     // 북마크 여부 확인
     private boolean isBookmarked (String oAuthId, String articleId) {
         return articleBookmarkQueryRepository.existsByOauthIdAndArticleId(oAuthId, articleId);

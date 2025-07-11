@@ -96,4 +96,6 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
     GROUP BY a.articleId, a.title, a.oauth
     """)
     ArticleDetailResponseDTO findByIdWithLikeAndCommentAndBookmarkCount(@Param("articleId") String articleId);
+
+    int countByOauth_OauthId(String oauthId);
 }

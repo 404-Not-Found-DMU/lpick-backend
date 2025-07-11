@@ -1,7 +1,9 @@
 package com.notfound.lpickbackend.community.command.domain;
 
+import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import jakarta.persistence.*;
 import lombok.*;
+import com.notfound.lpickbackend.community.command.domain.Article;
 
 import java.time.Instant;
 
@@ -36,5 +38,9 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_comment_id")
     private Comment parentComment;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "oauth_id", nullable = false)
+    private UserInfo userInfo;
 
 }

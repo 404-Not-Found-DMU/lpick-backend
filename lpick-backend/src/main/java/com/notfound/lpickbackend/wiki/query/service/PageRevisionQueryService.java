@@ -97,4 +97,8 @@ public class PageRevisionQueryService {
     public long wikicountByWiki_WikiId(String wikiId) {
         return pageRevisionQueryRepository.countByWiki_WikiId(wikiId);
     }
+
+    public int countRevisionByOauthId(String oauthId) {
+        return pageRevisionQueryRepository.countByUserInfo_OauthId(oauthId);
+    }
 }
