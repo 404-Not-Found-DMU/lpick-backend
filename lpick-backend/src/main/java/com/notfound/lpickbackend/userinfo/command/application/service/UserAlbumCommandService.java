@@ -47,9 +47,9 @@ public class UserAlbumCommandService {
     public void deleteUserAlbum(String userAlbumId) {
         UserAlbum target = userAlbumQueryService.findById(userAlbumId);
 
-        // s3 내 저장 파일 삭제.
+        // s3 내 저장 파일 삭제. 저장 파일이 없다는 가정하에 진행.
         String uploadRecordURL = target.getRecordFile();
-        s3Uploader.deleteFile(uploadRecordURL.split("/")[0], uploadRecordURL.split("/")[1]);
+        if(uploadRecordURL != null)s3Uploader.deleteByUrl(uploadRecordURL);
 
         userAlbumCommandRepository.deleteById(userAlbumId);
     }
@@ -59,10 +59,7 @@ public class UserAlbumCommandService {
         UserAlbum target = userAlbumQueryService.findById(userAlbumId);
 
         // 기존에 userAlbum에 대해 이미 업로드되어있던 record 파일이 있었다면 S3에서 삭제
-        if(target.getRecordFile() != null) s3Uploader.deleteFile(
-                target.getRecordFile().split("/")[0],
-                target.getRecordFile().split("/")[1]
-        );
+        if(target.getRecordFile() != null) s3Uploader.deleteByUrl(target.getRecordFile());
 
         target.setRecordFile(uploadedURL);
 
@@ -74,7 +71,7 @@ public class UserAlbumCommandService {
 
         // s3에서 삭제
         String uploadRecordURL = target.getRecordFile();
-        s3Uploader.deleteFile(uploadRecordURL.split("/")[0], uploadRecordURL.split("/")[1]);
+        s3Uploader.deleteByUrl(uploadRecordURL);
 
         // 매핑용 url 삭제
         target.setRecordFile(null);

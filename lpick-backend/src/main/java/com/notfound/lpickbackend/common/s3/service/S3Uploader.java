@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,6 +23,9 @@ public class S3Uploader {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+
+    @Value("${app.cdn.domain}")
+    private String cdnDomain;
 
     public S3Uploader(AmazonS3Client amazonS3Client) {
         this.amazonS3Client = amazonS3Client;
@@ -59,23 +63,24 @@ public class S3Uploader {
         amazonS3Client.putObject(bucket, key,
                 multipartFile.getInputStream(), meta);
 
-        return amazonS3Client.getUrl(bucket, key).toString();
+//        return amazonS3Client.getUrl(bucket, key).toString();
+        return cdnDomain + "/" + key;
     }
 
-    /**
-     * S3에서 특정 디렉토리(dirName) 아래의 파일(fileName)을 삭제합니다.
-     *
-     * @param dirName   삭제할 파일이 속한 가상 디렉토리 이름 (예: "record")
-     * @param fileName  삭제할 파일명 (UUID_원본이름 포함)
-     */
-    public void deleteFile(String dirName, String fileName) {
-        // S3 key는 "dirName/fileName" 형태입니다.
-        String key = String.format("%s/%s", dirName, fileName);
+    public void deleteByUrl(String fileUrl) {
+        URI uri = URI.create(fileUrl);
+        String path = uri.getPath();              // → "/record/UUID_name.mp4"
+        String[] parts = path.split("/", 3);      // ["", "record", "UUID_name.mp4"]
 
-        // 삭제 요청
-        amazonS3Client.deleteObject(
-                new DeleteObjectRequest(bucket, key)
-        );
+        if (parts.length < 3) {
+            throw new IllegalArgumentException("잘못된 파일 URL 입니다: " + fileUrl);
+        }
+
+        String dirName  = parts[1];               // "record"
+        String fileName = parts[2];               // "UUID_name.mp4"
+
+        String key = String.format("%s/%s", dirName, fileName);
+        amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, key));
     }
 
 

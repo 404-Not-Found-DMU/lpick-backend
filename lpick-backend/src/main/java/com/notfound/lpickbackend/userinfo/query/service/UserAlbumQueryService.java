@@ -67,4 +67,8 @@ public class UserAlbumQueryService {
     public long countByisFavoriteTrue(String oAuthId) {
         return userAlbumQueryReposiory.countByOauth_OauthIdAndIsFavoriteTrue(oAuthId);
     }
+
+    public void isExsistsUserAlbum(String userAlbumId) {
+        if(!userAlbumQueryReposiory.existsById(userAlbumId)) throw new CustomException(ErrorCode.NOT_FOUND_USER_ALBUM);
+    }
 }

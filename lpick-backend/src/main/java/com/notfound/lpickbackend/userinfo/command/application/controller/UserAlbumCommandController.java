@@ -3,15 +3,16 @@ package com.notfound.lpickbackend.userinfo.command.application.controller;
 import com.notfound.lpickbackend.common.exception.SuccessCode;
 import com.notfound.lpickbackend.common.s3.service.S3Uploader;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
-import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import com.notfound.lpickbackend.userinfo.command.application.dto.request.UserAlbumApplyRequest;
 import com.notfound.lpickbackend.userinfo.command.application.service.UserAlbumCommandService;
 import com.notfound.lpickbackend.userinfo.query.dto.response.FavoriteToggleStatus;
-import com.notfound.lpickbackend.userinfo.query.service.UserInfoQueryService;
+import com.notfound.lpickbackend.userinfo.query.repository.UserAlbumQueryRepository;
+import com.notfound.lpickbackend.userinfo.query.service.UserAlbumQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +21,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+@RequestMapping("/api/v1")
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @Tag(name = "사용자 소유 앨범 CUD 컨트롤러", description = "사용자가 소유한 앨범 추가, 삭제, 업데이트 등을 담당. S3 기반 녹음 파일 추가,삭제 가능")
 public class UserAlbumCommandController {
+    private final UserAlbumQueryRepository userAlbumQueryRepository;
     private final S3Uploader s3Uploader; // S3에 멀티파트 업로드를 위한 구현 클래스
 
     private final UserAlbumCommandService userAlbumCommandService;
+    private final UserAlbumQueryService userAlbumQueryService;
 
     /**
      * DB에 이미 존재하는 Album의 id를 requestbody로 받아 user-album에 등록한다.
@@ -63,12 +68,15 @@ public class UserAlbumCommandController {
      * 필요시 추후 POST에도 동일 로직 추가하여 사용자가 지닌 앨범 등록시 곧바로 기입 가능하도록 수정.
      * */
     @PatchMapping(path = "/user-album/{userAlbumId}/record",
-            value = MediaType.MULTIPART_FORM_DATA_VALUE) // 요청 ContentType이 MediaType.MULTIPART_FORM_DATA_VALUE일때만 본 요청에 매칭됨.
+            consumes  = MediaType.MULTIPART_FORM_DATA_VALUE) // 요청 ContentType이 MediaType.MULTIPART_FORM_DATA_VALUE일때만 본 요청에 매칭됨.
     @Operation(summary = "사용자 소유 앨범에 대한 녹음 파일 추가", description = "사용자가 자신이 소유한 앨범에 대해 녹음 파일 추가 가능. 최대 용량 300MB, record 디렉토리 내부에, UUID + originalName 이용해 저장됨.")
     public ResponseEntity<SuccessCode> applyRecordFile(
             @PathVariable("userAlbumId") String userAlbumId,
             @RequestParam("audioFile") MultipartFile audioFile
     ) throws IOException {
+        // 0) userAlbumId의 존재여부 확인하여, 현재 존재하지 않는 ID에 대해 요청한 경우 에러 전달
+        userAlbumQueryService.isExsistsUserAlbum(userAlbumId);
+
         // 1) S3에 먼저 업로드
         String uploadedURL = s3Uploader.upload(audioFile, "record");
 
@@ -78,7 +86,7 @@ public class UserAlbumCommandController {
             userAlbumCommandService.patchAddUserAlbumRecordURL(uploadedURL, userAlbumId);
         } catch (Exception ex) {
             // 3) DB 업데이트 실패 시 보상 로직: 방금 올린 파일 삭제
-            s3Uploader.deleteFile(uploadedURL.split("/")[0], uploadedURL.split("/")[1]);
+            s3Uploader.deleteByUrl(uploadedURL);
             throw ex;  // 예외를 그대로 던지거나, 적절한 에러 응답 생성
         }
         return ResponseEntity.ok(SuccessCode.RECORD_CREATE_SUCCESS);
@@ -95,6 +103,8 @@ public class UserAlbumCommandController {
     public ResponseEntity<SuccessCode> deleteRecordFile(
             @PathVariable("userAlbumId") String userAlbumId
     ) {
+        userAlbumQueryService.isExsistsUserAlbum(userAlbumId);
+
         userAlbumCommandService.patchDelUserAlbumRecordURL(userAlbumId);
 
         return ResponseEntity.ok(SuccessCode.USER_ALBUM_RECORD_DELETE_SUCCESS);

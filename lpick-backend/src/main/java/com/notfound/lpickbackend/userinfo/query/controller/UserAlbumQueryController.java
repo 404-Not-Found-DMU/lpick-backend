@@ -37,7 +37,7 @@ public class UserAlbumQueryController {
                 return ResponseEntity.status(HttpStatus.OK).body(userAlbumList);
         }
 
-        @GetMapping("/user-album/{{userAlbumId}}")
+        @GetMapping("/user-album/{userAlbumId}")
         @Operation(summary = "사용자가 소유한 단일 앨범 상세조회", description = "'사용자 소유 앨범(UserAlbum)' id를 기반으로 상세조회 가능")
         public ResponseEntity<UserAlbumOwnedResponse> getUserOwnedAlbumInfo(
                 @PathVariable("userAlbumId") String userAlbumId

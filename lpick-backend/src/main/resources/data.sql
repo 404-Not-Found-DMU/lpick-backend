@@ -25,6 +25,10 @@ INSERT INTO page_revision(revision_id, content, revision_number, created_at, wik
     ('revision-1', '위키내용입니다.', 'r1', '2025-06-03 12:20:23', 'wiki-1', '1') ON CONFLICT (revision_id) DO NOTHING;
 
 
+-- Album 기입
+INSERT INTO album(album_id, name, profile, release_date, release_country, label, wiki_id) VALUES
+    ('album-1', '앨범명칭', null, '2025-06-05 00:21:12', 'KR', '으랏차차레이블', null) ON CONFLICT (album_id) DO NOTHING;
+
 
 
 -- Role 기입
