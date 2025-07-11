@@ -45,7 +45,8 @@ CREATE TABLE IF NOT EXISTS comment (
                          modified_at	timestamp		NULL,
                          is_del	varchar(10)		NOT NULL,
                          article_id	varchar(40)		NOT NULL,
-                         parent_comment_id	varchar(40)		NULL
+                         parent_comment_id	varchar(40)		NULL,
+                         oauth_id	varchar(40)		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS wiki_page (
@@ -383,6 +384,12 @@ ALTER TABLE comment
 ALTER TABLE comment
     ADD CONSTRAINT FK_comment_TO_comment_1
         FOREIGN KEY (parent_comment_id) REFERENCES comment (comment_id);
+
+ALTER TABLE comment
+    DROP CONSTRAINT IF EXISTS FK_user_info_TO_page_revision_1 CASCADE;
+ALTER TABLE comment
+    ADD CONSTRAINT FK_user_info_TO_comment_1
+        FOREIGN KEY (oauth_id) REFERENCES user_info (oauth_id);
 
 ALTER TABLE artist_like
     DROP CONSTRAINT IF EXISTS FK_user_info_TO_artist_like_1 CASCADE;
