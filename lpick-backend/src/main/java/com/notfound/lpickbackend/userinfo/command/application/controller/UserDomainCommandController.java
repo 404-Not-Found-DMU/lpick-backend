@@ -1,9 +1,13 @@
 package com.notfound.lpickbackend.userinfo.command.application.controller;
 
+import com.notfound.lpickbackend.common.exception.SuccessCode;
+import com.notfound.lpickbackend.security.util.UserInfoUtil;
+import com.notfound.lpickbackend.userinfo.command.application.dto.request.UserAboutEditRequest;
+import com.notfound.lpickbackend.userinfo.command.application.service.UserDomainCommandService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * UserInfoComandControler(== OAuth 기반 기능)와 웹 페이지 내에서의 사용자 기능 관련
@@ -15,6 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1")
 public class UserDomainCommandController {
 
-//    @PostMapping("/user/")
+    private final UserDomainCommandService userDomainCommandService;
+
+    // userInfo가 지니는 about을 수정.
+    @PatchMapping("/user/about")
+    public ResponseEntity<SuccessCode> editUserAbout(
+            @RequestBody @Valid UserAboutEditRequest aboutEditRequest
+    ) {
+        userDomainCommandService.editUserAbout(UserInfoUtil.getOAuthId(), aboutEditRequest);
+
+        return ResponseEntity.ok(SuccessCode.USER_ABOUT_UPDATE_SUCESS);
+    }
 
 }

@@ -51,4 +51,8 @@ public class UserInfo {
                 .map(UserAuth::getAuth)
                 .collect(Collectors.toList());
     }
+
+    public void editAbout(String about) {
+        this.about = about;
+    }
 }

@@ -16,6 +16,7 @@ public enum SuccessCode {
     REFRESH_SUCCESS(HttpStatus.OK, "Refresh 요청 성공"),
     DEV_TOKEN_CREATE_SUCCESS(HttpStatus.OK, "개발자 전용 토큰 생성 성공"),
     ARTICLE_UPDATE_SUCESS(HttpStatus.OK, "게시글 수정 성공"),
+    USER_ABOUT_UPDATE_SUCESS(HttpStatus.OK, "사용자 소개문 수정 성공"),
 
     // 201
     CREATE_SUCCESS(HttpStatus.CREATED, "Created"),

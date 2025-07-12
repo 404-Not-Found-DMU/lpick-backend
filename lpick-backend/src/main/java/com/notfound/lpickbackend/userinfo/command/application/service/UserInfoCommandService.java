@@ -98,4 +98,8 @@ public class UserInfoCommandService extends DefaultOAuth2UserService {
 
         return new TokenResponseDTO(accessToken, refreshToken);
     }
+
+    public void saveUserInfo(UserInfo userInfo) {
+        userInfoCommandRepository.save(userInfo);
+    }
 }
