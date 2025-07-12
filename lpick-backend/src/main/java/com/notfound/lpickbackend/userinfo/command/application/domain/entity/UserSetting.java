@@ -60,6 +60,23 @@ public class UserSetting {
     })
     private NotificationSetting notificationSetting;
 
+    public void setToDefault() {
+        this.myPagePrivacySetting = MyPagePrivacySetting.builder()
+                .allowViewActCount(true)
+                .allowViewCollection(true)
+                .allowViewRecentAct(true)
+                .allowViewGear(true)
+                .build();
+
+        this.pageThemeSetting = PageThemeSetting.LIGHT;
+
+        this.notificationSetting = NotificationSetting.builder()
+                .isAlarmEvent(true)
+                .isAlarmWikiEdit(true)
+                .isAlarmNewDebateAnswer(true)
+                .isAlarmCommented(true)
+                .build();
+    }
 
     public void updateSettingByRequest(UserSettingEditRequest request) {
         this.myPagePrivacySetting = MyPagePrivacySetting.builder()
