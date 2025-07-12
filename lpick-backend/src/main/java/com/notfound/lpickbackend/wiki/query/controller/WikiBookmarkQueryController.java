@@ -1,6 +1,6 @@
 package com.notfound.lpickbackend.wiki.query.controller;
 
-import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
 import com.notfound.lpickbackend.userinfo.query.service.UserInfoQueryService;
 import com.notfound.lpickbackend.wiki.query.dto.response.WikiBookmarkResponse;
 import com.notfound.lpickbackend.wiki.query.dto.response.WikiPageBookmarkListResponse;

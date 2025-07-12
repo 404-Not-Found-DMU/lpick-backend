@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.userinfo.command.application.dto.request;
+package com.notfound.lpickbackend.userinfo.command.application.dto.domaindto.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;

@@ -2,7 +2,8 @@ package com.notfound.lpickbackend.userinfo.command.application.controller;
 
 import com.notfound.lpickbackend.common.exception.SuccessCode;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
-import com.notfound.lpickbackend.userinfo.command.application.dto.request.UserAboutEditRequest;
+import com.notfound.lpickbackend.userinfo.command.application.dto.domaindto.request.UserAboutEditRequest;
+import com.notfound.lpickbackend.userinfo.command.application.dto.domaindto.request.UserSettingEditRequest;
 import com.notfound.lpickbackend.userinfo.command.application.service.UserDomainCommandService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,4 +32,12 @@ public class UserDomainCommandController {
         return ResponseEntity.ok(SuccessCode.USER_ABOUT_UPDATE_SUCESS);
     }
 
+    @PatchMapping("/user/setting")
+    public ResponseEntity<SuccessCode> editUserSetting(
+            @RequestBody @Valid UserSettingEditRequest settingEditRequest
+    ) {
+        userDomainCommandService.editUserSetting(UserInfoUtil.getOAuthId(), settingEditRequest);
+
+        return ResponseEntity.ok(SuccessCode.USER_SETTING_UPDATE_SUCESS);
+    }
 }

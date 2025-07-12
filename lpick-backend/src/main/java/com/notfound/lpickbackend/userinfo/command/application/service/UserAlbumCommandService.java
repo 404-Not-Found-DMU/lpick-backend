@@ -4,9 +4,9 @@ import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.common.s3.service.S3Uploader;
 import com.notfound.lpickbackend.servicedata.command.domain.Album;
-import com.notfound.lpickbackend.userinfo.command.application.domain.UserAlbum;
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserAlbum;
 import com.notfound.lpickbackend.servicedata.query.service.AlbumQueryService;
-import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
 import com.notfound.lpickbackend.userinfo.command.repository.UserAlbumCommandRepository;
 import com.notfound.lpickbackend.userinfo.query.dto.response.FavoriteToggleStatus;
 import com.notfound.lpickbackend.userinfo.query.service.UserAlbumQueryService;
@@ -14,8 +14,6 @@ import com.notfound.lpickbackend.userinfo.query.service.UserInfoQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

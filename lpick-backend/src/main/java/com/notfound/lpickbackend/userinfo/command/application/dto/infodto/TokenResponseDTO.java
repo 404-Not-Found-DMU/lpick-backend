@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.userinfo.command.application.dto;
+package com.notfound.lpickbackend.userinfo.command.application.dto.infodto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -7,7 +7,7 @@ import com.notfound.lpickbackend.community.command.domain.ArticleBookmark;
 import com.notfound.lpickbackend.community.command.repository.ArticleBookmarkCommandRepository;
 import com.notfound.lpickbackend.community.command.repository.ArticleCommandRepository;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
-import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
 import com.notfound.lpickbackend.userinfo.query.repository.UserInfoQueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

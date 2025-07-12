@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.userinfo.command.application.domain;
+package com.notfound.lpickbackend.userinfo.command.application.domain.entity;
 
 import com.notfound.lpickbackend.servicedata.command.domain.Album;
 import com.notfound.lpickbackend.AUTO_ENTITIES.TOOL.IdPrefixUtil;

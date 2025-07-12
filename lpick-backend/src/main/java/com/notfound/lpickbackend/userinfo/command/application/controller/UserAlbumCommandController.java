@@ -3,7 +3,7 @@ package com.notfound.lpickbackend.userinfo.command.application.controller;
 import com.notfound.lpickbackend.common.exception.SuccessCode;
 import com.notfound.lpickbackend.common.s3.service.S3Uploader;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
-import com.notfound.lpickbackend.userinfo.command.application.dto.request.UserAlbumApplyRequest;
+import com.notfound.lpickbackend.userinfo.command.application.dto.domaindto.request.UserAlbumApplyRequest;
 import com.notfound.lpickbackend.userinfo.command.application.service.UserAlbumCommandService;
 import com.notfound.lpickbackend.userinfo.query.dto.response.FavoriteToggleStatus;
 import com.notfound.lpickbackend.userinfo.query.repository.UserAlbumQueryRepository;

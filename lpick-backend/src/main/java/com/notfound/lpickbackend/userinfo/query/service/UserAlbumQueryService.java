@@ -3,7 +3,7 @@ package com.notfound.lpickbackend.userinfo.query.service;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.servicedata.query.service.GenreQueryService;
-import com.notfound.lpickbackend.userinfo.command.application.domain.UserAlbum;
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserAlbum;
 import com.notfound.lpickbackend.userinfo.query.dto.response.UserAlbumOwnedResponse;
 import com.notfound.lpickbackend.userinfo.query.repository.UserAlbumQueryRepository;
 import lombok.RequiredArgsConstructor;

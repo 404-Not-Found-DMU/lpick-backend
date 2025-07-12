@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.userinfo.command.application.domain;
+package com.notfound.lpickbackend.userinfo.command.application.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
