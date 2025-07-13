@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.userinfo.command.application.domain.embed;
 
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserSetting;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -19,4 +20,17 @@ public class MyPagePrivacySetting {
     private Boolean allowViewGear; // 개인 장비 표기 여부
     private Boolean allowViewCollection; // 앨범 목록 표기 여부
 
+
+    public Boolean isUserAllowViewActCount() {
+        return Boolean.TRUE.equals(allowViewActCount);
+    }
+    public boolean isUserAllowViewRecentAct() {
+        return Boolean.TRUE.equals(allowViewRecentAct);
+    }
+    public boolean isUserAllowViewGear() {
+        return Boolean.TRUE.equals(allowViewGear);
+    }
+    public boolean isUserAllowViewCollection() {
+        return Boolean.TRUE.equals(allowViewCollection);
+    }
 }

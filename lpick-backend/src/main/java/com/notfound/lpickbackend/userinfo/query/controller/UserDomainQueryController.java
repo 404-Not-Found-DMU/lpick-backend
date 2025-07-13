@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.userinfo.query.controller;
 
+import com.notfound.lpickbackend.common._super.BlindableResponse;
 import com.notfound.lpickbackend.common.exception.SuccessCode;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
 import com.notfound.lpickbackend.userinfo.query.dto.response.UserActivityResponse;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,6 +33,13 @@ public class UserDomainQueryController {
     @GetMapping("/user/setting")
     public ResponseEntity<UserSettingResponse> getUserSetting() {
         return ResponseEntity.ok().body(userSettingQueryService.getUserSetting(UserInfoUtil.getOAuthId()));
+    }
+
+    @GetMapping("/user/{oauthId}/activity-count")
+    public ResponseEntity<UserActivityResponse> getUserActivityCountByOauthId(
+            @PathVariable("oauthId") String oauthId
+    ) {
+        return ResponseEntity.ok().body(userDomainQueryService.getUserActivityCountByOauthId(oauthId));
     }
 
 }
