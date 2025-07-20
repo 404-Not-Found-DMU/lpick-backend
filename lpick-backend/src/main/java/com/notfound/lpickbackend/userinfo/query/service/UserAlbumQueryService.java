@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,10 +25,7 @@ public class UserAlbumQueryService {
     private final GenreQueryService genreQueryService;
     private final UserSettingQueryService userSettingQueryService;
 
-    public List<UserAlbumOwnedResponse> getUserFavoriteAlbumList(String oAuthId) {
-        return userAlbumQueryReposiory.findAllUserAlbumByIsFavorite(oAuthId);
-    }
-
+    @Transactional(readOnly = true)
     public Map<String, Integer> countUserAlbumByGenre(String oAuthId) {
         // 1. 현재 등록된 전체 장르 목록 가져오기
         List<String> genreStrList = genreQueryService.getAllGenreList();
@@ -45,12 +43,19 @@ public class UserAlbumQueryService {
 
     }
 
+    @Transactional(readOnly = true)
+    public List<UserAlbumOwnedResponse> getUserFavoriteAlbumList(String oAuthId) {
+        return userAlbumQueryReposiory.findAllUserAlbumByIsFavorite(oAuthId);
+    }
+
     /** 요청자 본인의 앨범 목록 내역 가져올때만 사용. */
+    @Transactional(readOnly = true)
     public Page<UserAlbumOwnedResponse> getOwnAlbumList(String oAuthId, Pageable pageable) {
 
         return userAlbumQueryReposiory.findAllUserAlbumByOauthId(oAuthId, pageable);
     }
-    
+
+    @Transactional(readOnly = true)
     /** 타인 마이페이지 진입 시 컬렉션 획득 위해 사용 */
     public BlindableResponse<Page<UserAlbumOwnedResponse>> getUserAlbumListByOauthId(String oAuthId, Pageable pageable) {
         UserSetting userSetting = userSettingQueryService.findById(oAuthId);
@@ -68,6 +73,7 @@ public class UserAlbumQueryService {
     }
 
     /** 사용자 앨범 상세 내역 제공시 사용 */
+    @Transactional(readOnly = true)
     public UserAlbumOwnedResponse getUserAlbumInfoById(String userAlbumId) {
         Optional<UserAlbumOwnedResponse> userAlbumOptional = userAlbumQueryReposiory.findUserAlbumById(userAlbumId);
 
@@ -76,6 +82,7 @@ public class UserAlbumQueryService {
         return userAlbumOptional.get();
     }
 
+    @Transactional(readOnly = true)
     /** 엔티티 반환 목적 */
     public UserAlbum findById(String userAlbumId) {
         Optional<UserAlbum> userAlbumOptional = userAlbumQueryReposiory.findById(userAlbumId);
@@ -86,10 +93,12 @@ public class UserAlbumQueryService {
         return userAlbumOptional.get();
     }
 
+    @Transactional(readOnly = true)
     public long countByisFavoriteTrue(String oAuthId) {
         return userAlbumQueryReposiory.countByOauth_OauthIdAndIsFavoriteTrue(oAuthId);
     }
 
+    @Transactional(readOnly = true)
     public void isExsistsUserAlbum(String userAlbumId) {
         if(!userAlbumQueryReposiory.existsById(userAlbumId)) throw new CustomException(ErrorCode.NOT_FOUND_USER_ALBUM);
     }

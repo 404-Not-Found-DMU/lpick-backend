@@ -28,6 +28,7 @@ public class UserSettingQueryService {
     }
 
 
+    @Transactional(readOnly = true)
     public UserSetting findById(String oauthId) {
         return userSettingQueryRepository.findById(oauthId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO)); // UserSetting은 사용자 생성 시 기본적으로 동시에 생성되는 일대일 엔티티.

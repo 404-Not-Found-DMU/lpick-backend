@@ -6,7 +6,6 @@ import com.notfound.lpickbackend.security.util.UserInfoUtil;
 import com.notfound.lpickbackend.userinfo.command.application.dto.domaindto.request.UserAlbumApplyRequest;
 import com.notfound.lpickbackend.userinfo.command.application.service.UserAlbumCommandService;
 import com.notfound.lpickbackend.userinfo.query.dto.response.FavoriteToggleStatus;
-import com.notfound.lpickbackend.userinfo.query.repository.UserAlbumQueryRepository;
 import com.notfound.lpickbackend.userinfo.query.service.UserAlbumQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +26,6 @@ import java.io.IOException;
 @Slf4j
 @Tag(name = "사용자 소유 앨범 CUD 컨트롤러", description = "사용자가 소유한 앨범 추가, 삭제, 업데이트 등을 담당. S3 기반 녹음 파일 추가,삭제 가능")
 public class UserAlbumCommandController {
-    private final UserAlbumQueryRepository userAlbumQueryRepository;
     private final S3Uploader s3Uploader; // S3에 멀티파트 업로드를 위한 구현 클래스
 
     private final UserAlbumCommandService userAlbumCommandService;

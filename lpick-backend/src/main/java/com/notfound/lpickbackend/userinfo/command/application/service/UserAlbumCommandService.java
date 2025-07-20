@@ -42,6 +42,7 @@ public class UserAlbumCommandService {
         userAlbumCommandRepository.save(userAlbum);
     }
 
+    @Transactional
     public void deleteUserAlbum(String userAlbumId) {
         UserAlbum target = userAlbumQueryService.findById(userAlbumId);
 

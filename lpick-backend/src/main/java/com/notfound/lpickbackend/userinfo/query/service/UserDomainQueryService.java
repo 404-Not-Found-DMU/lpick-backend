@@ -9,6 +9,7 @@ import com.notfound.lpickbackend.userinfo.query.dto.response.UserActivityRespons
 import com.notfound.lpickbackend.wiki.query.service.PageRevisionQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class UserDomainQueryService {
     private final UserSettingQueryService userSettingQueryService;
     private final DebateChaQueryService debateChaQueryService;
 
+    @Transactional(readOnly = true)
     public BlindableResponse<UserActivityResponse> getUserActivityCountByOauthId(String oauthId) {
 
         UserSetting userSetting = userSettingQueryService.findById(oauthId);
@@ -40,6 +42,7 @@ public class UserDomainQueryService {
         );
     }
 
+    @Transactional(readOnly = true)
     public UserActivityResponse getUserActivityCount(String oauthId) {
         return UserActivityResponse.builder()
                 .articleCount(articleQueryService.countArticleByOauthId(oauthId))
