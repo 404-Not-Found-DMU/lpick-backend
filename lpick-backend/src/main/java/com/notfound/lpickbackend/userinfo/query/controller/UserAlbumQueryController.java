@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.userinfo.query.controller;
 
+import com.notfound.lpickbackend.common._wrapper.BlindableResponse;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
 import com.notfound.lpickbackend.userinfo.query.dto.response.UserAlbumOwnedResponse;
 import com.notfound.lpickbackend.userinfo.query.service.UserAlbumQueryService;
@@ -29,7 +30,7 @@ public class UserAlbumQueryController {
                 @RequestParam("size")int size
         ) {
                 Page<UserAlbumOwnedResponse> userAlbumList
-                        = userAlbumQueryService.getUserAlbumListByUserId(
+                        = userAlbumQueryService.getOwnAlbumList(
                                 UserInfoUtil.getOAuthId(),
                                 PageRequest.of(page, size)
                         );
@@ -37,12 +38,26 @@ public class UserAlbumQueryController {
                 return ResponseEntity.status(HttpStatus.OK).body(userAlbumList);
         }
 
+        @GetMapping("/my-page/{oauthId}/user-album")
+        public ResponseEntity<BlindableResponse<Page<UserAlbumOwnedResponse>>> getUserOwnedAlbumListByOauthId(
+                @PathVariable("oauthId")String oauthId,
+                @RequestParam("page")int page,
+                @RequestParam("size")int size
+        ) {
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        userAlbumQueryService.getUserAlbumListByOauthId(
+                                oauthId,
+                                PageRequest.of(page, size)
+                        )
+                );
+        }
+
         @GetMapping("/user-album/{userAlbumId}")
         @Operation(summary = "사용자가 소유한 단일 앨범 상세조회", description = "'사용자 소유 앨범(UserAlbum)' id를 기반으로 상세조회 가능")
         public ResponseEntity<UserAlbumOwnedResponse> getUserOwnedAlbumInfo(
                 @PathVariable("userAlbumId") String userAlbumId
         ) {
-                return ResponseEntity.status(HttpStatus.OK).body(userAlbumQueryService.getUserAlbumById(userAlbumId));
+                return ResponseEntity.status(HttpStatus.OK).body(userAlbumQueryService.getUserAlbumInfoById(userAlbumId));
         }
 
 

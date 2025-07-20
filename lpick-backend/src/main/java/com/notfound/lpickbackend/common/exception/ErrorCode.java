@@ -12,6 +12,7 @@ public enum ErrorCode {
 
     // 500 에러
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버에러 발생"),
+    ILLEGAL_VALUE_DETECTED(HttpStatus.INTERNAL_SERVER_ERROR, "DB 규칙에 맞지 않는 값이 DB에 위치해있습니다."),
 
     // 토큰 관련 에러
     NOT_VALID_REFRESH_TOKEN(HttpStatus.FORBIDDEN, "유효하지 않은 refresh token입니다."),
@@ -55,6 +56,11 @@ public enum ErrorCode {
 
     NOT_FOUND_USER_ALBUM(HttpStatus.NOT_FOUND,"사용자는 해당 앨범을 지니고 있지 않습니다."),
     NOT_FOUND_ALBUM(HttpStatus.NOT_FOUND, "앨범 정보를 찾을 수 없습니다."),
+
+    NOT_FOUND_DEBATE_CHAT(HttpStatus.NOT_FOUND, "토론 댓글 정보를 찾을 수 없습니다."),
+
+    NOT_FOUND_USER_GEAR(HttpStatus.NOT_FOUND, "사용자는 해당 음향기기를 지니고 있지 않습니다."),
+    NOT_FOUND_GEAR(HttpStatus.NOT_FOUND, "음향기기 정보를 찾을 수 없습니다."),
     // 처리 방법에 논의가 필요한 에러 코드 임시할당용
     DO_NOT_KEEP_UP_THIS_ERROR_WHEN_MERGE(HttpStatus.I_AM_A_TEAPOT, "이 에러 코드는 실제 사용 목적이 아닙니다."),
     ;

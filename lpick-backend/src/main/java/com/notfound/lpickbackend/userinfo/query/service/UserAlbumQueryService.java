@@ -1,9 +1,11 @@
 package com.notfound.lpickbackend.userinfo.query.service;
 
+import com.notfound.lpickbackend.common._wrapper.BlindableResponse;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.servicedata.query.service.GenreQueryService;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserAlbum;
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserSetting;
 import com.notfound.lpickbackend.userinfo.query.dto.response.UserAlbumOwnedResponse;
 import com.notfound.lpickbackend.userinfo.query.repository.UserAlbumQueryRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,19 +22,7 @@ public class UserAlbumQueryService {
 
     private final UserAlbumQueryRepository userAlbumQueryReposiory;
     private final GenreQueryService genreQueryService;
-
-    public Page<UserAlbumOwnedResponse> getUserAlbumListByUserId(String oAuthId, Pageable pageable) {
-
-        return userAlbumQueryReposiory.findAllUserAlbumByOauthId(oAuthId, pageable);
-    }
-
-    public UserAlbumOwnedResponse getUserAlbumById(String userAlbumId) {
-        Optional<UserAlbumOwnedResponse> userAlbumOptional = userAlbumQueryReposiory.findUserAlbumById(userAlbumId);
-
-        if(userAlbumOptional.isEmpty()) throw new CustomException(ErrorCode.NOT_FOUND_USER_ALBUM);
-
-        return userAlbumOptional.get();
-    }
+    private final UserSettingQueryService userSettingQueryService;
 
     public List<UserAlbumOwnedResponse> getUserFavoriteAlbumList(String oAuthId) {
         return userAlbumQueryReposiory.findAllUserAlbumByIsFavorite(oAuthId);
@@ -55,6 +45,38 @@ public class UserAlbumQueryService {
 
     }
 
+    /** 요청자 본인의 앨범 목록 내역 가져올때만 사용. */
+    public Page<UserAlbumOwnedResponse> getOwnAlbumList(String oAuthId, Pageable pageable) {
+
+        return userAlbumQueryReposiory.findAllUserAlbumByOauthId(oAuthId, pageable);
+    }
+    
+    /** 타인 마이페이지 진입 시 컬렉션 획득 위해 사용 */
+    public BlindableResponse<Page<UserAlbumOwnedResponse>> getUserAlbumListByOauthId(String oAuthId, Pageable pageable) {
+        UserSetting userSetting = userSettingQueryService.findById(oAuthId);
+
+        if(!userSetting.getMyPagePrivacySetting().isUserAllowViewCollection())
+            return BlindableResponse.of(
+                    userSetting.getMyPagePrivacySetting().isUserAllowViewCollection(),
+                    null
+            );
+
+        return BlindableResponse.of(
+                userSetting.getMyPagePrivacySetting().isUserAllowViewCollection(),
+                userAlbumQueryReposiory.findAllUserAlbumByOauthId(oAuthId, pageable)
+        );
+    }
+
+    /** 사용자 앨범 상세 내역 제공시 사용 */
+    public UserAlbumOwnedResponse getUserAlbumInfoById(String userAlbumId) {
+        Optional<UserAlbumOwnedResponse> userAlbumOptional = userAlbumQueryReposiory.findUserAlbumById(userAlbumId);
+
+        if(userAlbumOptional.isEmpty()) throw new CustomException(ErrorCode.NOT_FOUND_USER_ALBUM);
+
+        return userAlbumOptional.get();
+    }
+
+    /** 엔티티 반환 목적 */
     public UserAlbum findById(String userAlbumId) {
         Optional<UserAlbum> userAlbumOptional = userAlbumQueryReposiory.findById(userAlbumId);
         if(userAlbumOptional.isEmpty()) {

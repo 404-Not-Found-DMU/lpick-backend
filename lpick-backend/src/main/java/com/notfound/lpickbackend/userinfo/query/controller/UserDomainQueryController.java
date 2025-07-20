@@ -1,7 +1,6 @@
 package com.notfound.lpickbackend.userinfo.query.controller;
 
-import com.notfound.lpickbackend.common._super.BlindableResponse;
-import com.notfound.lpickbackend.common.exception.SuccessCode;
+import com.notfound.lpickbackend.common._wrapper.BlindableResponse;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
 import com.notfound.lpickbackend.userinfo.query.dto.response.UserActivityResponse;
 import com.notfound.lpickbackend.userinfo.query.dto.response.UserSettingResponse;
@@ -35,8 +34,8 @@ public class UserDomainQueryController {
         return ResponseEntity.ok().body(userSettingQueryService.getUserSetting(UserInfoUtil.getOAuthId()));
     }
 
-    @GetMapping("/user/{oauthId}/activity-count")
-    public ResponseEntity<UserActivityResponse> getUserActivityCountByOauthId(
+    @GetMapping("/my-page/{oauthId}/activity-count")
+    public ResponseEntity<BlindableResponse<UserActivityResponse>> getUserActivityCountByOauthId(
             @PathVariable("oauthId") String oauthId
     ) {
         return ResponseEntity.ok().body(userDomainQueryService.getUserActivityCountByOauthId(oauthId));
