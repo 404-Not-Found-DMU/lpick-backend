@@ -31,6 +31,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // oath2 코드 요청 리다이렉트는 건너 뛰기
         // 개발자 전용 토큰 요청도 건너 뛰기
+        // Oauth 호출과정에서 특정상황에 발생할 수 있는 모든 uri 무시 처리 필요.
         if (pathMatcher.match("/oauth2/**", path) ||
                 pathMatcher.match("/login/**", path) ||
                 pathMatcher.match("/swagger-ui/**", path) ||
