@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/community")
 @Tag(name = "게시글 조회 컨트롤러", description = "게시글 목록/상세 조회 기능")
 public class ArticleQueryController {
 

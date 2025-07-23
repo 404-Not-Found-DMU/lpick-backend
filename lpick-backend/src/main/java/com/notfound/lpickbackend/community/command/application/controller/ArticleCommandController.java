@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/article")
+@RequestMapping("/api/v1/community/article")
 @RequiredArgsConstructor
 @Tag(name = "게시글 컨트롤러", description = "게시글 생성/수정/삭제 관련 기능")
 public class ArticleCommandController {
