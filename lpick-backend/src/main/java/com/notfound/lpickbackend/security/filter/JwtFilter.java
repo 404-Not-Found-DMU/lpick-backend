@@ -31,13 +31,18 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // oath2 코드 요청 리다이렉트는 건너 뛰기
         // 개발자 전용 토큰 요청도 건너 뛰기
-        if (pathMatcher.match("/oauth2/code/**", path) || 
-                path.equals("/") || 
-                pathMatcher.match("/api/v1/developer-token", path)
-        ) {
+        if (pathMatcher.match("/oauth2/**", path) ||
+                pathMatcher.match("/login/**", path) ||
+                pathMatcher.match("/swagger-ui/**", path) ||
+                pathMatcher.match("/v3/api-docs/**", path) ||
+                pathMatcher.match("/favicon.ico", path) ||
+                pathMatcher.match("/", path) ||
+                pathMatcher.match("/api/v1/developer-token", path)) {
             filterChain.doFilter(request, response);
             return;
         }
+
+        log.info("JWT Filter 시작. uri : {}", path);
 
         // 요청 헤더에서 Cookies 추출
         Cookie[] cookies = request.getCookies();
