@@ -4,6 +4,7 @@ import com.notfound.lpickbackend.common.exception.SuccessCode;
 import com.notfound.lpickbackend.community.query.application.dto.ArticleDetailResponseDTO;
 import com.notfound.lpickbackend.community.query.application.dto.ArticleListResponseDTO;
 import com.notfound.lpickbackend.community.query.application.service.ArticleQueryService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class ArticleQueryController {
     private final ArticleQueryService articleQueryService;
 
     @GetMapping("/article")
+    @Operation(summary = "모든 게시글 목록 조회", description = "모든 커뮤니티 게시글 목록을 페이지 단위로 조회하는 기능")
     public ResponseEntity<Page<ArticleListResponseDTO>> readAllArticleList(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
@@ -35,6 +37,7 @@ public class ArticleQueryController {
     }
 
     @GetMapping("/article/{articleId}")
+    @Operation(summary = "게시글 상세조회", description = "특정 게시글의 상세 내역을 조회하는 기능")
     public ResponseEntity<ArticleDetailResponseDTO> readArticleDetail(
             @PathVariable("articleId") String articleId
     ){
@@ -42,6 +45,7 @@ public class ArticleQueryController {
     }
 
     @GetMapping("/article/me")
+    @Operation(summary = "내 게시글 조회", description = "내가 작성한 게시글을 페이지 단위로 조회하는 기능")
     public ResponseEntity<Page<ArticleListResponseDTO>> readMyArticleList(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
@@ -53,6 +57,7 @@ public class ArticleQueryController {
     }
 
     @GetMapping("/article/like/me")
+    @Operation(summary = "좋아요 게시글 조회", description = "내가 좋아요 누른 게시글 목록을 조회하는 기능")
     public ResponseEntity<Page<ArticleListResponseDTO>> readMyLikedArticleList(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
