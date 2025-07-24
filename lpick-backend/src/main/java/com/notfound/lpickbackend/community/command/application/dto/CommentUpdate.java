@@ -1,11 +1,13 @@
 package com.notfound.lpickbackend.community.command.application.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
-public class CommentCreate {
+@Getter
+@AllArgsConstructor
+public class CommentUpdate {
 
     private String comment;
 }
