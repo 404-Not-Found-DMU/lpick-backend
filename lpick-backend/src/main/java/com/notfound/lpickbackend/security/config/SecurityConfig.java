@@ -16,6 +16,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -31,8 +34,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(csrf -> csrf.disable());
+        http.cors(cors -> cors
+                .configurationSource(corsConfigurationSource()));
         http.authorizeHttpRequests(config -> config
-                        .requestMatchers("/api/v1/developer-token","/swagger-ui.html/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // 개발자용 토큰 요청 허용
+                        .requestMatchers("/login", "/api/v1/developer-token","/swagger-ui.html/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // 개발자용 토큰 요청 허용
                         .anyRequest().authenticated() // 테스트를 위해 임시로 설정
                 )
                 .formLogin(config -> config.disable()) // 폼 로그인 비활성화
@@ -60,7 +65,6 @@ public class SecurityConfig {
                         "ROLE_TIER_DIAMOND > ROLE_TIER_GOLD\n" +
                         "ROLE_TIER_GOLD > ROLE_TIER_SILVER\n" +
                         "ROLE_TIER_SILVER > ROLE_TIER_BRONZE" +
-
                         // hasAuthority로 비교할 Auth 계층구조(ADMIN이 모든 기능 가능하게 하기위함.
                         "AUTH_ADMIN > AUTH_MANAGER\n" +
                         "AUTH_ADMIN > AUTH_MEDIATOR"
@@ -76,4 +80,21 @@ public class SecurityConfig {
         return h;
     }
 
+    // 3) CORS 빈 생성
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.addAllowedOriginPattern("https://lpick.duckdns.org"); // nginx 도메인
+        configuration.addAllowedOriginPattern("http://localhost:3000"); // 프론트 로컬 도메인
+        configuration.addAllowedOriginPattern("http://3.34.194.165:8080"); // EC2 퍼블릭 IP (현재는 사용 안하지만 일단 추가)
+
+        configuration.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
+        configuration.addAllowedHeader("*"); // 모든 헤더 허용
+        configuration.setAllowCredentials(true); // 쿠키 인증 필요하면 true
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 }
