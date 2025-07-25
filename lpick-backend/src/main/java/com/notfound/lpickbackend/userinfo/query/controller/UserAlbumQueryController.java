@@ -39,6 +39,7 @@ public class UserAlbumQueryController {
         }
 
         @GetMapping("/my-page/{oauthId}/user-album")
+        @Operation(summary = "대상 사용자의 소유 앨범 페이지네이션 조회", description = "설정에 따라 표기되지 않을 수 있음. 페이지네이션을 기반으로 사용자가 소유한 앨범의 목록 조회 가능. 상세 조회를 바로 제공.(필요시 제목 및 커버만 반환으로 수정가능)")
         public ResponseEntity<BlindableResponse<Page<UserAlbumOwnedResponse>>> getUserOwnedAlbumListByOauthId(
                 @PathVariable("oauthId")String oauthId,
                 @RequestParam("page")int page,
