@@ -51,6 +51,7 @@ public enum ErrorCode {
     NOT_FOUND_USER_INFO(HttpStatus.NOT_FOUND, "유저 정보를 찾을 수 없습니다."),
     NOT_FOUND_TIER(HttpStatus.NOT_FOUND, "티어 정보를 찾을 수 없습니다."),
     NOT_FOUND_BOOKMARK(HttpStatus.NOT_FOUND, "북마크 정보를 찾을 수 없습니다."),
+    NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND, "댓글 정보를 찾을 수 없습니다."),
 
     // 처리 방법에 논의가 필요한 에러 코드 임시할당용
     DO_NOT_KEEP_UP_THIS_ERROR_WHEN_MERGE(HttpStatus.I_AM_A_TEAPOT, "이 에러 코드는 실제 사용 목적이 아닙니다."),

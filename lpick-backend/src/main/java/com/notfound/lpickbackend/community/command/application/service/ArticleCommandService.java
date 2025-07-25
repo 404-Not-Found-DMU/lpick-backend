@@ -4,8 +4,8 @@ import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.community.command.domain.Article;
 import com.notfound.lpickbackend.community.command.domain.ArticleStatus;
-import com.notfound.lpickbackend.community.command.application.dto.ArticleCreateRequestDTO;
-import com.notfound.lpickbackend.community.command.application.dto.ArticleUpdateRequestDTO;
+import com.notfound.lpickbackend.community.command.application.dto.ArticleCreateRequest;
+import com.notfound.lpickbackend.community.command.application.dto.ArticleUpdateRequest;
 import com.notfound.lpickbackend.community.command.repository.ArticleCommandRepository;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
 import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
@@ -29,13 +29,13 @@ public class ArticleCommandService {
     *  4. img 태그가 포함된 content 자체를 DB에 저장
     * */
     @Transactional
-    public void createArticle(ArticleCreateRequestDTO articleCreateRequestDTO) {
+    public void createArticle(ArticleCreateRequest articleCreateRequest) {
 
         UserInfo userInfo = getUserInfo();
 
         Article newArticle = Article.builder()
-                .title(articleCreateRequestDTO.getTitle())
-                .content(articleCreateRequestDTO.getContent())
+                .title(articleCreateRequest.getTitle())
+                .content(articleCreateRequest.getContent())
                 .oauth(userInfo)
                 .isDel(ArticleStatus.N)
                 .build();
@@ -44,7 +44,7 @@ public class ArticleCommandService {
     }
 
     @Transactional
-    public void updateArticle(String articleId, ArticleUpdateRequestDTO articleUpdateRequestDTO) {
+    public void updateArticle(String articleId, ArticleUpdateRequest articleUpdateRequest) {
 
         Article article = getArticle(articleId);
 
@@ -59,8 +59,8 @@ public class ArticleCommandService {
         }
 
         article.updateContent(
-                articleUpdateRequestDTO.getTitle(),
-                articleUpdateRequestDTO.getContent()
+                articleUpdateRequest.getTitle(),
+                articleUpdateRequest.getContent()
         );
 
         articleCommandRepository.save(article);

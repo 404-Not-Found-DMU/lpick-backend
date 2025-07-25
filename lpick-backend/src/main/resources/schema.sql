@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS comment (
                          modified_at	timestamp		NULL,
                          is_del	varchar(10)		NOT NULL,
                          article_id	varchar(40)		NOT NULL,
+                         oauth_id	varchar(40)		NOT NULL,
                          parent_comment_id	varchar(40)		NULL
 );
 

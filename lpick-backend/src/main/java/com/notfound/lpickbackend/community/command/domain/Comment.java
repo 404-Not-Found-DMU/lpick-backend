@@ -1,9 +1,12 @@
 package com.notfound.lpickbackend.community.command.domain;
 
+import com.notfound.lpickbackend.AUTO_ENTITIES.TOOL.IdPrefixUtil;
+import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Builder
 @AllArgsConstructor
@@ -26,8 +29,9 @@ public class Comment {
     @Column(name = "modified_at")
     private Instant modifiedAt;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "is_del", nullable = false, length = 10)
-    private String isDel;
+    private CommentStatus isDel;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "article_id", nullable = false)
@@ -37,4 +41,17 @@ public class Comment {
     @JoinColumn(name = "parent_comment_id")
     private Comment parentComment;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "oauth_id", nullable = false)
+    private UserInfo oauth;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.commentId == null) {
+            this.commentId = IdPrefixUtil.get(this.getClass().getSimpleName()) + "_" + UUID.randomUUID();
+        }
+
+        this.createdAt = Instant.now();
+        this.modifiedAt = Instant.now();
+    }
 }

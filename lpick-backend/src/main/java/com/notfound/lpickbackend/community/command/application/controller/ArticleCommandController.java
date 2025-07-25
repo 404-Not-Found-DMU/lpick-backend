@@ -1,8 +1,8 @@
 package com.notfound.lpickbackend.community.command.application.controller;
 
 import com.notfound.lpickbackend.common.exception.SuccessCode;
-import com.notfound.lpickbackend.community.command.application.dto.ArticleCreateRequestDTO;
-import com.notfound.lpickbackend.community.command.application.dto.ArticleUpdateRequestDTO;
+import com.notfound.lpickbackend.community.command.application.dto.ArticleCreateRequest;
+import com.notfound.lpickbackend.community.command.application.dto.ArticleUpdateRequest;
 import com.notfound.lpickbackend.community.command.application.service.ArticleCommandService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,10 +21,10 @@ public class ArticleCommandController {
     @PostMapping
     @Operation(summary = "커뮤니티 게시글 생성", description = "커뮤니티 게시글을 새로 생성하는 기능")
     public ResponseEntity<SuccessCode> createArticle(
-            @RequestBody ArticleCreateRequestDTO articleCreateRequestDTO
+            @RequestBody ArticleCreateRequest articleCreateRequest
             ){
 
-        articleCommandService.createArticle(articleCreateRequestDTO);
+        articleCommandService.createArticle(articleCreateRequest);
 
         return ResponseEntity.ok(SuccessCode.ARTICLE_CREATE_SUCCESS);
     }
@@ -33,10 +33,10 @@ public class ArticleCommandController {
     @Operation(summary = "커뮤니티 게시글 수정", description = "내가 작성한 커뮤니티 게시글을 수정하는 기능")
     public ResponseEntity<SuccessCode> updateArticle(
             @PathVariable String articleId,
-            @RequestBody ArticleUpdateRequestDTO articleUpdateRequestDTO
+            @RequestBody ArticleUpdateRequest articleUpdateRequest
     ) {
 
-        articleCommandService.updateArticle(articleId, articleUpdateRequestDTO);
+        articleCommandService.updateArticle(articleId, articleUpdateRequest);
 
         return ResponseEntity.ok(SuccessCode.ARTICLE_UPDATE_SUCESS);
     }
