@@ -4,6 +4,8 @@ import com.notfound.lpickbackend.common.exception.SuccessCode;
 import com.notfound.lpickbackend.community.command.application.dto.CommentCreate;
 import com.notfound.lpickbackend.community.command.application.dto.CommentUpdate;
 import com.notfound.lpickbackend.community.command.application.service.CommentCommandService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,11 +13,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/community/comment")
 @RequiredArgsConstructor
+@Tag(name = "커뮤니티 댓글 컨트롤러", description = "댓글 생성/수정/삭제 기능")
 public class CommentCommandController {
 
     CommentCommandService commentCommandService;
 
     @PostMapping
+    @Operation(summary = "댓글 작성", description = "커뮤니티 게시글에 댓글을 작성하는 기능")
     ResponseEntity<SuccessCode> createComment(
             @RequestBody CommentCreate commentCreate
             ){
@@ -26,16 +30,18 @@ public class CommentCommandController {
     }
 
     @PatchMapping("/{commentId}")
+    @Operation(summary = "댓글 수정", description = "내가 작성한 댓글을 수정하는 기능")
     ResponseEntity<SuccessCode> updateComment(
             @PathVariable String commentId,
             @RequestBody CommentUpdate commentUpdate
     ){
-        commentCommandService.updateComment(commentUpdate);
+        commentCommandService.updateComment(commentId, commentUpdate);
 
         return ResponseEntity.ok(SuccessCode.SUCCESS);
     }
 
     @DeleteMapping("/{commentId}")
+    @Operation(summary = "댓글 삭제", description = "내가 작성한 댓글을 삭제하는 기능")
     ResponseEntity<SuccessCode> deleteComment(
             @PathVariable String commentId
     ) {
@@ -45,6 +51,7 @@ public class CommentCommandController {
     }
 
     @PostMapping("/{commentId}")
+    @Operation(summary = "대댓글 작성", description = "댓글에 대댓글을 작성하는 기능")
     ResponseEntity<SuccessCode> createChildComment(
             @PathVariable String commentId,
             @RequestBody CommentCreate commentCreate

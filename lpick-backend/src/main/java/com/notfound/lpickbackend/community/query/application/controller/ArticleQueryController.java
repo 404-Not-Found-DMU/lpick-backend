@@ -1,20 +1,16 @@
 package com.notfound.lpickbackend.community.query.application.controller;
 
-import com.notfound.lpickbackend.common.exception.SuccessCode;
-import com.notfound.lpickbackend.community.query.application.dto.ArticleDetailResponseDTO;
-import com.notfound.lpickbackend.community.query.application.dto.ArticleListResponseDTO;
+import com.notfound.lpickbackend.community.query.application.dto.ArticleDetailResponse;
+import com.notfound.lpickbackend.community.query.application.dto.ArticleListResponse;
 import com.notfound.lpickbackend.community.query.application.service.ArticleQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,7 +22,7 @@ public class ArticleQueryController {
 
     @GetMapping("/article")
     @Operation(summary = "모든 게시글 목록 조회", description = "모든 커뮤니티 게시글 목록을 페이지 단위로 조회하는 기능")
-    public ResponseEntity<Page<ArticleListResponseDTO>> readAllArticleList(
+    public ResponseEntity<Page<ArticleListResponse>> readAllArticleList(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
     ){
@@ -38,7 +34,7 @@ public class ArticleQueryController {
 
     @GetMapping("/article/{articleId}")
     @Operation(summary = "게시글 상세조회", description = "특정 게시글의 상세 내역을 조회하는 기능")
-    public ResponseEntity<ArticleDetailResponseDTO> readArticleDetail(
+    public ResponseEntity<ArticleDetailResponse> readArticleDetail(
             @PathVariable("articleId") String articleId
     ){
         return ResponseEntity.ok(articleQueryService.readArticleDetail(articleId));
@@ -46,7 +42,7 @@ public class ArticleQueryController {
 
     @GetMapping("/article/me")
     @Operation(summary = "내 게시글 조회", description = "내가 작성한 게시글을 페이지 단위로 조회하는 기능")
-    public ResponseEntity<Page<ArticleListResponseDTO>> readMyArticleList(
+    public ResponseEntity<Page<ArticleListResponse>> readMyArticleList(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
     ) {
@@ -58,7 +54,7 @@ public class ArticleQueryController {
 
     @GetMapping("/article/like/me")
     @Operation(summary = "좋아요 게시글 조회", description = "내가 좋아요 누른 게시글 목록을 조회하는 기능")
-    public ResponseEntity<Page<ArticleListResponseDTO>> readMyLikedArticleList(
+    public ResponseEntity<Page<ArticleListResponse>> readMyLikedArticleList(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
     ) {

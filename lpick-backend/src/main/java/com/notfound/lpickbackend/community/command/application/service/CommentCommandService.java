@@ -34,13 +34,36 @@ public class CommentCommandService {
     }
 
     @Transactional
-    public void updateComment(CommentUpdate commentUpdate) {
+    public void updateComment(String commentId, CommentUpdate commentUpdate) {
 
+        Comment updatedComment = getComment(commentId);
+        String userId = UserInfoUtil.getOAuthId();
+
+        // 삭제여부 확인
+        if(updatedComment.checkIsDel()) {
+            throw new CustomException(ErrorCode.NOT_FOUND_COMMENT);
+        }
+
+        // 접근 가능 여부 확인
+        if (userId.equals(updatedComment.getOauth().getOauthId())) {
+            throw new CustomException(ErrorCode.FORBIDDEN_RESOURCE_ACCESS);
+        }
+
+        commentUpdate.setComment(updatedComment.getContent());
+        commentCommandRepository.save(updatedComment);
     }
 
     @Transactional
     public void deleteComment(String commentId) {
 
+        Comment deleteComment = getComment(commentId);
+        String userId = UserInfoUtil.getOAuthId();
+
+        if (checkUserInfo(deleteComment)) {
+            throw new CustomException(ErrorCode.AUTHENTICATION_FAILED);
+        }
+
+        commentCommandRepository.delete(deleteComment);
     }
 
     @Transactional
@@ -58,10 +81,13 @@ public class CommentCommandService {
 
     // 서비스 내부에서 사용할 UserInfo 찾는 메소드
     private UserInfo getUserInfo() {
-
         return userInfoQueryRepository.findById(UserInfoUtil.getOAuthId()).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO)
         );
+    }
+
+    private boolean checkUserInfo(Comment comment) {
+        return !comment.getOauth().getOauthId().equals(UserInfoUtil.getOAuthId());
     }
 
     private Comment getComment(String commentId) {

@@ -1,8 +1,7 @@
 package com.notfound.lpickbackend.community.query.application.service;
 
 
-import com.notfound.lpickbackend.community.query.application.dto.ArticleDetailResponseDTO;
-import com.notfound.lpickbackend.community.query.application.dto.ArticleListResponseDTO;
+import com.notfound.lpickbackend.community.query.application.dto.ArticleListResponse;
 import com.notfound.lpickbackend.community.query.repository.ArticleBookmarkQueryRepository;
 import com.notfound.lpickbackend.community.query.repository.ArticleLikeQueryRepository;
 import com.notfound.lpickbackend.community.query.repository.ArticleQueryRepository;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -79,14 +77,14 @@ class ArticleQueryServiceTest {
     void allArticleReadTest() {
         // given
         Pageable pageable = PageRequest.of(0, 10);
-        List<ArticleListResponseDTO> articles = List.of(
-                new ArticleListResponseDTO("id1", "제목1", 3L, 1L, 0L, "mock-oauth-id")
+        List<ArticleListResponse> articles = List.of(
+                new ArticleListResponse("id1", "제목1", 3L, 1L, 0L, "mock-oauth-id")
         );
         given(articleQueryRepository.findAllWithLikeAndCommentAndBookmarkCount(pageable))
                 .willReturn(new PageImpl<>(articles));
 
         // when
-        List<ArticleListResponseDTO> result = articleQueryService.readAllArticleList(pageable).getContent();
+        List<ArticleListResponse> result = articleQueryService.readAllArticleList(pageable).getContent();
 
         // then
         assertEquals(1, result.size());
@@ -97,14 +95,14 @@ class ArticleQueryServiceTest {
     void myArticleReadTest() {
         // given
         Pageable pageable = PageRequest.of(0, 5);
-        List<ArticleListResponseDTO> myList = List.of(
-                new ArticleListResponseDTO("id1", "내글", 0L, 0L, 0L, "mock-oauth-id")
+        List<ArticleListResponse> myList = List.of(
+                new ArticleListResponse("id1", "내글", 0L, 0L, 0L, "mock-oauth-id")
         );
         given(articleQueryRepository.findMyWithLikeAndCommentAndBookmarkCount("mock-oauth-id", pageable))
                 .willReturn(new PageImpl<>(myList));
 
         // when
-        List<ArticleListResponseDTO> result = articleQueryService.readMyArticleList(pageable).getContent();
+        List<ArticleListResponse> result = articleQueryService.readMyArticleList(pageable).getContent();
 
         // then
         assertEquals(1, result.size());
@@ -115,14 +113,14 @@ class ArticleQueryServiceTest {
     void myLikedArticleReadTest() {
         // given
         Pageable pageable = PageRequest.of(0, 5);
-        List<ArticleListResponseDTO> likedList = List.of(
-                new ArticleListResponseDTO("id1", "좋아요한 글", 1L, 0L, 0L, "mock-oauth-id")
+        List<ArticleListResponse> likedList = List.of(
+                new ArticleListResponse("id1", "좋아요한 글", 1L, 0L, 0L, "mock-oauth-id")
         );
         given(articleQueryRepository.findMyLikedWithLikeAndCommentAndBookmarkCount("mock-oauth-id", pageable))
                 .willReturn(new PageImpl<>(likedList));
 
         // when
-        List<ArticleListResponseDTO> result = articleQueryService.readMyLikedArticleList(pageable).getContent();
+        List<ArticleListResponse> result = articleQueryService.readMyLikedArticleList(pageable).getContent();
 
         // then
         assertEquals(1, result.size());

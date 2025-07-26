@@ -4,6 +4,7 @@ import com.notfound.lpickbackend.AUTO_ENTITIES.TOOL.IdPrefixUtil;
 import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table(name = "comment")
+@SQLDelete(sql = "UPDATE comment SET is_del = 'Y' WHERE comment_id = ?")
 public class Comment {
     @Id
     @Column(name = "comment_id", nullable = false, length = 40)
@@ -44,6 +46,11 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "oauth_id", nullable = false)
     private UserInfo oauth;
+
+    // 게시글의 삭제 여부 체크 메소드
+    public boolean checkIsDel() {
+        return isDel.equals(CommentStatus.Y);
+    }
 
     @PrePersist
     public void prePersist() {
