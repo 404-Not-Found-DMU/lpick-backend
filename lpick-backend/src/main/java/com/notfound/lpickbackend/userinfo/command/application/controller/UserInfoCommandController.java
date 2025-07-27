@@ -9,6 +9,7 @@ import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.Logout
 import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.TokenRefreshRequestDTO;
 import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.TokenResponseDTO;
 import com.notfound.lpickbackend.userinfo.command.application.service.UserInfoCommandService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,7 @@ public class UserInfoCommandController {
     * @CookieValue는 스프링 MVC 컨트롤러 메서드 파라미터에서만 동작하는 애노테이션.
     * */
     @PostMapping("/auth/logout")
+    @Operation(summary = "로그아웃", description = "쿠키와 토큰을 삭제 처리 하는 기능")
     ResponseEntity<SuccessCode> oAuthLogoutRequest(
             HttpServletResponse response,
             @CookieValue(name = "access_token", required = false) String accessToken
@@ -68,6 +70,7 @@ public class UserInfoCommandController {
 
     // refresh Token 재발급 요청
     @PostMapping("/auth/refresh")
+    @Operation(summary = "토큰 재발급", description = "RefreshToken을 사용해 토큰을 재발급 받는 기능")
     ResponseEntity<SuccessCode> oAuthRefreshTokenRequest(
             HttpServletResponse response,
             @CookieValue(name = "access_token", required = false) String accessToken
@@ -97,6 +100,7 @@ public class UserInfoCommandController {
 
     /* 개발자 전용 토큰 요청 api */
     @PostMapping("/developer-token")
+    @Operation(summary = "개발자 전용 토큰 요청", description = "테스트를 위해 1년짜리 토큰을 발급하는 기능")
     ResponseEntity<SuccessCode> developerTokenRequest(
             HttpServletResponse response
     ) {

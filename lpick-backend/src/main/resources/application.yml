@@ -1,6 +1,7 @@
 spring:
   config:
     import:
+      - optional:file:/app/API-KEY.yml
       - optional:classpath:API-KEY.yml
   sql:
     init:
@@ -35,7 +36,7 @@ spring:
       ddl-auto: none
   data:
     redis:
-      host: localhost
+      host: ${redis.name}
       port: 6379
 
 token:
@@ -56,4 +57,10 @@ springdoc:
     operationsSorter: method
     tagsSorter: alpha
     display-request-duration: true
+    disable-swagger-default-url: true
+    use-root-path: true
+    urls:
+      - name: LPICK API
+        url: /v3/api-docs
+    oauth2-redirect-url: ${swagger.oauth2-redirect-url} # swagger에서 사용되는 redirect-url
     persistAuthorization: true  # Swagger UI 페이지 새로고침해도 인증정보 유지
