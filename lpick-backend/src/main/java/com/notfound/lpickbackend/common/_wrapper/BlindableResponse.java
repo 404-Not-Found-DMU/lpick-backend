@@ -3,6 +3,8 @@ package com.notfound.lpickbackend.common._wrapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Objects;
+
 @Getter
 @AllArgsConstructor
 /** 반환 구조 래핑 목적의 제네릭 클래스. */
@@ -14,5 +16,19 @@ public class BlindableResponse<T> {
 
     public static <T> BlindableResponse<T> of(boolean blinded, T data) {
         return new BlindableResponse<>(blinded, data);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BlindableResponse<?> that = (BlindableResponse<?>) o;
+        return Objects.equals(isBlindedToOther, that.isBlindedToOther) &&
+                Objects.equals(data, that.data);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(isBlindedToOther, data);
     }
 }

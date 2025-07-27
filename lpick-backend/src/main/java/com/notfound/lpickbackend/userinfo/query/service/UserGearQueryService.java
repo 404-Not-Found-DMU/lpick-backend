@@ -44,6 +44,7 @@ public class UserGearQueryService {
         GearInfoResponse headphone = null;
         GearInfoResponse turntable = null;
 
+        // DB 내에 잘못된 대상이 있는경우 어떻게 처리해야하는가?
         for (GearInfoResponse info : list) {
             switch (info.getGearClass()) {
                 case SPEAKER -> speaker = info;
