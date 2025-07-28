@@ -53,4 +53,6 @@ public interface PageRevisionQueryRepository extends JpaRepository<PageRevision,
             WHERE pr.wiki.wikiId IN :wikiIds
         """) // 페이징을 위해 countQuery 추가
     Page<PageRevision> findLatestRevisionsForWikis(@Param("wikiIds") List<String> wikiIds, Pageable pageable);
+
+    int countByUserInfo_OauthId(String oauthId);
 }

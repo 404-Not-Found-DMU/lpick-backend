@@ -58,8 +58,11 @@ dependencies {
     implementation 'org.bitbucket.cowwoc:diff-match-patch:1.2'
 
     // swagger 의존성 추가
-//    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.1'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+    
+    // S3 활용 목적 의존성 추가
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
 }
 
 tasks.named('test') {

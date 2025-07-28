@@ -1,9 +1,9 @@
 package com.notfound.lpickbackend.userinfo.query.service;
 
-import com.notfound.lpickbackend.userinfo.command.application.domain.UserAuth;
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserAuth;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
-import com.notfound.lpickbackend.userinfo.command.application.domain.UserAuthentication;
+import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.UserAuthentication;
 import com.notfound.lpickbackend.userinfo.query.repository.UserAuthQueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

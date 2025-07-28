@@ -45,7 +45,8 @@ CREATE TABLE IF NOT EXISTS comment (
                          modified_at	timestamp		NULL,
                          is_del	varchar(10)		NOT NULL,
                          article_id	varchar(40)		NOT NULL,
-                         parent_comment_id	varchar(40)		NULL
+                         parent_comment_id	varchar(40)		NULL,
+                         oauth_id	varchar(40)		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS wiki_page (
@@ -99,9 +100,24 @@ CREATE TABLE IF NOT EXISTS user_info (
                            tier_id	varchar(40)		NOT NULL
 );
 
+
+CREATE TABLE IF NOT EXISTS user_setting (
+                           oauth_id                  varchar(50)   NOT NULL,
+                           allow_view_act_count      boolean       NOT NULL DEFAULT TRUE,
+                           allow_view_recent_act     boolean       NOT NULL DEFAULT TRUE,
+                           allow_view_gear           boolean       NOT NULL DEFAULT TRUE,
+                           allow_view_collection     boolean       NOT NULL DEFAULT TRUE,
+                           page_theme_setting        varchar(20)   NOT NULL DEFAULT 'LIGHT',
+                           is_alarmWiki_edit         boolean       NOT NULL DEFAULT TRUE,
+                           is_alarm_new_debate_answer boolean      NOT NULL DEFAULT TRUE,
+                           is_alarm_commented        boolean       NOT NULL DEFAULT TRUE,
+                           is_alarm_event            boolean       NOT NULL DEFAULT TRUE
+);
+
 CREATE TABLE IF NOT EXISTS user_album (
                             user_album_id	varchar(40)		NOT NULL,
                             record_file	varchar(200)		NULL,
+                            is_favorite boolean         NOT NULL DEFAULT FALSE,
                             album_id	varchar(40)		NOT NULL,
                             oauth_id	varchar(40)		NOT NULL
 );
@@ -266,6 +282,11 @@ ALTER TABLE user_info
 ALTER TABLE user_info
     ADD CONSTRAINT PK_USER_INFO PRIMARY KEY (oauth_id);
 
+ALTER TABLE user_setting
+    DROP CONSTRAINT IF EXISTS PK_USER_SETTING CASCADE;
+ALTER TABLE user_setting
+    ADD CONSTRAINT PK_USER_SETTING PRIMARY KEY (oauth_id);
+
 ALTER TABLE user_album
     DROP CONSTRAINT IF EXISTS PK_USER_ALBUM CASCADE;
 ALTER TABLE user_album
@@ -383,6 +404,12 @@ ALTER TABLE comment
     ADD CONSTRAINT FK_comment_TO_comment_1
         FOREIGN KEY (parent_comment_id) REFERENCES comment (comment_id);
 
+ALTER TABLE comment
+    DROP CONSTRAINT IF EXISTS FK_user_info_TO_page_revision_1 CASCADE;
+ALTER TABLE comment
+    ADD CONSTRAINT FK_user_info_TO_comment_1
+        FOREIGN KEY (oauth_id) REFERENCES user_info (oauth_id);
+
 ALTER TABLE artist_like
     DROP CONSTRAINT IF EXISTS FK_user_info_TO_artist_like_1 CASCADE;
 ALTER TABLE artist_like
@@ -448,6 +475,12 @@ ALTER TABLE user_info
 ALTER TABLE user_info
     ADD CONSTRAINT FK_tier_TO_user_info_1
         FOREIGN KEY (tier_id) REFERENCES tier (tier_id);
+
+ALTER TABLE user_setting
+    DROP CONSTRAINT IF EXISTS FK_user_info_TO_user_setting_1 CASCADE;
+ALTER TABLE user_setting
+    ADD CONSTRAINT FK_user_info_TO_user_setting_1
+        FOREIGN KEY (oauth_id) REFERENCES user_info (oauth_id);
 
 ALTER TABLE user_album
     DROP CONSTRAINT IF EXISTS FK_album_TO_user_album_1 CASCADE;

@@ -1,6 +1,6 @@
 package com.notfound.lpickbackend.wiki.command.application.domain;
 
-import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.ReviewPostRequest;
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,21 +1,19 @@
 package com.notfound.lpickbackend.community.query.application.service;
 
 
-import com.notfound.lpickbackend.community.query.application.dto.ArticleDetailResponseDTO;
 import com.notfound.lpickbackend.community.query.application.dto.ArticleListResponseDTO;
 import com.notfound.lpickbackend.community.query.repository.ArticleBookmarkQueryRepository;
 import com.notfound.lpickbackend.community.query.repository.ArticleLikeQueryRepository;
 import com.notfound.lpickbackend.community.query.repository.ArticleQueryRepository;
 import com.notfound.lpickbackend.security.details.OAuth2UserDetails;
-import com.notfound.lpickbackend.userinfo.command.application.domain.Tier;
-import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.Tier;
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

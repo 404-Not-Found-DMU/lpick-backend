@@ -1,7 +1,7 @@
 package com.notfound.lpickbackend.userinfo.query.repository;
 
-import com.notfound.lpickbackend.userinfo.command.application.domain.UserAuth;
-import com.notfound.lpickbackend.userinfo.command.application.domain.UserAuthId;
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserAuth;
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserAuthId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

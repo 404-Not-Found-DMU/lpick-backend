@@ -1,7 +1,7 @@
 package com.notfound.lpickbackend.security.util;
 
-import com.notfound.lpickbackend.userinfo.command.application.domain.Auth;
-import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.Auth;
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;

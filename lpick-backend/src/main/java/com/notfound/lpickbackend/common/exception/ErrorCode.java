@@ -12,6 +12,7 @@ public enum ErrorCode {
 
     // 500 에러
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버에러 발생"),
+    ILLEGAL_VALUE_DETECTED(HttpStatus.INTERNAL_SERVER_ERROR, "DB 규칙에 맞지 않는 값이 DB에 위치해있습니다."),
 
     // 토큰 관련 에러
     NOT_VALID_REFRESH_TOKEN(HttpStatus.FORBIDDEN, "유효하지 않은 refresh token입니다."),
@@ -31,6 +32,7 @@ public enum ErrorCode {
     ALREADY_HAS_REVIEW_IN_WIKIPAGE(HttpStatus.BAD_REQUEST, "이미 리뷰를 작성했습니다."),
     ALREADY_HAS_BOOKMARK(HttpStatus.BAD_REQUEST, "이미 추가되어있는 북마크입니다."),
     INVALID_PAGE_REQUEST(HttpStatus.BAD_REQUEST,"page 옵션이 올바르지 않습니다. 음수 등을 작성할 수 없습니다." ),
+    ALREADY_FULL_FAVORITE_ALBUM(HttpStatus.BAD_REQUEST, "favorite 리스트가 가득 찼습니다. 더이상 favorite로 지정할 수 없습니다."),
 
     // 401 에러
     AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "인증 실패"),
@@ -52,6 +54,13 @@ public enum ErrorCode {
     NOT_FOUND_TIER(HttpStatus.NOT_FOUND, "티어 정보를 찾을 수 없습니다."),
     NOT_FOUND_BOOKMARK(HttpStatus.NOT_FOUND, "북마크 정보를 찾을 수 없습니다."),
 
+    NOT_FOUND_USER_ALBUM(HttpStatus.NOT_FOUND,"사용자는 해당 앨범을 지니고 있지 않습니다."),
+    NOT_FOUND_ALBUM(HttpStatus.NOT_FOUND, "앨범 정보를 찾을 수 없습니다."),
+
+    NOT_FOUND_DEBATE_CHAT(HttpStatus.NOT_FOUND, "토론 댓글 정보를 찾을 수 없습니다."),
+
+    NOT_FOUND_USER_GEAR(HttpStatus.NOT_FOUND, "사용자는 해당 음향기기를 지니고 있지 않습니다."),
+    NOT_FOUND_GEAR(HttpStatus.NOT_FOUND, "음향기기 정보를 찾을 수 없습니다."),
     // 처리 방법에 논의가 필요한 에러 코드 임시할당용
     DO_NOT_KEEP_UP_THIS_ERROR_WHEN_MERGE(HttpStatus.I_AM_A_TEAPOT, "이 에러 코드는 실제 사용 목적이 아닙니다."),
     ;
