@@ -28,6 +28,9 @@ public class UserGear {
     @Column(name = "user_gear_id", nullable = false, length = 40)
     private String userGearId;
 
+    @Column(name = "is_favorite", nullable = false)
+    private boolean isFavorite;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "oauth_id", nullable = false)
     private UserInfo oauth;
