@@ -2,5 +2,5 @@ package com.notfound.lpickbackend.userinfo.command.application.domain.inherenceE
 
 
 public enum GearClass {
-    SPEAKER, HEADPHONE, TURNTABLE;
+    SPEAKER, HEADPHONE, TURNTABLE, AMP;
 }

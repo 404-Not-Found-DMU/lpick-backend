@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS genre (
 
 CREATE TABLE IF NOT EXISTS user_gear (
                            user_gear_id	varchar(40)		NOT NULL,
+                           is_favorite boolean      NOT NULL DEFAULT FALSE,
                            oauth_id	varchar(40)		NOT NULL,
                            eq_id	varchar(40)		NOT NULL
 );
