@@ -7,9 +7,14 @@ import org.springframework.data.domain.Pageable;
 // QueryDSL 사용을 위한 커스텀 클래스(JpaRepository에선 쿼리메소드 작성 못함)
 public interface CustomCommentQueryRepository {
 
-    Page<ParentsCommentResponse> findParentsCommentsWithChildrenAndLikes(
+    Page<ParentsCommentResponse> findCommentsWithChildrenAndLikes(
             String articleId,
-            String currentUserId,
+            String oauthId,
+            Pageable pageable
+    );
+
+    Page<ParentsCommentResponse> findByOauthIdAndCommentLike(
+            String oAuthId,
             Pageable pageable
     );
 }

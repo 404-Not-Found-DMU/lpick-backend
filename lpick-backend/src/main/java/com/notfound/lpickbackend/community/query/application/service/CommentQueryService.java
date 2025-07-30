@@ -20,6 +20,13 @@ public class CommentQueryService {
     ) {
         String oauthId = UserInfoUtil.getOAuthId();
 
-        return commentQueryRepository.findParentsCommentsWithChildrenAndLikes(articleId, oauthId, pageable);
+        return commentQueryRepository.findCommentsWithChildrenAndLikes(articleId, oauthId, pageable);
+    }
+
+    public Page<ParentsCommentResponse> readLikedCommentList(Pageable pageable) {
+
+        String oauthId = UserInfoUtil.getOAuthId();
+
+        return commentQueryRepository.findByOauthIdAndCommentLike(oauthId, pageable);
     }
 }

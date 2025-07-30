@@ -35,7 +35,7 @@ public class CommentQueryRepositoryImpl implements CustomCommentQueryRepository{
     }
 
     @Override
-    public Page<ParentsCommentResponse> findParentsCommentsWithChildrenAndLikes(String articleId, String currentUserId, Pageable pageable) {
+    public Page<ParentsCommentResponse> findCommentsWithChildrenAndLikes(String articleId, String oauthId, Pageable pageable) {
 
         QComment c = QComment.comment;
         QCommentLike cl = QCommentLike.commentLike;
@@ -44,11 +44,11 @@ public class CommentQueryRepositoryImpl implements CustomCommentQueryRepository{
         BooleanExpression likedExpr;
 
         // 만약 비회원 조회라면 좋아요 유무 false로 고정
-        if (currentUserId == null) {
+        if (oauthId == null) {
             likedExpr = Expressions.FALSE;
         } else {
             likedExpr = Expressions.cases()
-                    .when(cl.oauth.oauthId.eq(currentUserId)).then(1)
+                    .when(cl.oauth.oauthId.eq(oauthId)).then(1)
                     .otherwise(0)
                     .sum().gt(0);
         }
@@ -145,5 +145,57 @@ public class CommentQueryRepositoryImpl implements CustomCommentQueryRepository{
         }
 
         return new PageImpl<>(parentResponses, pageable, total);
+    }
+
+    @Override
+    public Page<ParentsCommentResponse> findByOauthIdAndCommentLike(String oAuthId, Pageable pageable) {
+
+        QComment c = QComment.comment;
+        QCommentLike cl = QCommentLike.commentLike;
+
+        List<ParentsCommentResponse> results = queryFactory
+                .select(Projections.fields(
+                        ParentsCommentResponse.class,
+                        c.commentId,
+                        c.content,
+                        c.createdAt,
+                        c.modifiedAt,
+                        c.isDel,
+                        c.article.articleId.as("articleId"),
+                        c.oauth.oauthId.as("oauthId"),
+                        Expressions.TRUE.as("liked"), // 내가 좋아요 누른 목록이므로 항상 true
+                        cl.count().intValue().as("likeCount")
+                ))
+                .from(cl)
+                .join(cl.comment, c)
+                .where(
+                        cl.oauth.oauthId.eq(oAuthId),
+                        c.parentComment.isNull()
+                )
+                .groupBy(
+                        c.commentId,
+                        c.content,
+                        c.createdAt,
+                        c.modifiedAt,
+                        c.isDel,
+                        c.article.articleId,
+                        c.oauth.oauthId
+                )
+                .orderBy(c.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        long total = queryFactory
+                .select(cl.countDistinct())
+                .from(cl)
+                .join(cl.comment, c)
+                .where(
+                        cl.oauth.oauthId.eq(oAuthId),
+                        c.parentComment.isNull()
+                )
+                .fetchOne();
+
+        return new PageImpl<>(results, pageable, total);
     }
 }

@@ -29,4 +29,14 @@ public class CommentQueryController {
 
         return ResponseEntity.ok(commentQueryService.readCommentList(articleId, pageable));
     }
+
+    @GetMapping("/liked")
+    public ResponseEntity<Page<ParentsCommentResponse>> getLikedComments(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        return ResponseEntity.ok(commentQueryService.readLikedCommentList(pageable));
+    }
 }
