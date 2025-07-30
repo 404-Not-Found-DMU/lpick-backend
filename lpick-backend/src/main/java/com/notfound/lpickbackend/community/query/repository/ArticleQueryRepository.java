@@ -20,9 +20,11 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
     * 번거롭고 성능 저하 이슈 발생 가능성이 있어 JPQL 사용
     * */
     @Query("""
-    SELECT new com.notfound.lpickbackend.community.query.application.dto.ArticleListResponseDTO(
+    SELECT new com.notfound.lpickbackend.community.query.application.dto.ArticleListResponse(
         a.articleId,
         a.title,
+        a.createdAt,
+        a.modifiedAt,
         COUNT(DISTINCT l),
         COUNT(DISTINCT c),
         COUNT(DISTINCT b),
@@ -38,9 +40,11 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
     Page<ArticleListResponse> findAllWithLikeAndCommentAndBookmarkCount(Pageable pageable);
 
     @Query("""
-    SELECT new com.notfound.lpickbackend.community.query.application.dto.ArticleListResponseDTO(
+    SELECT new com.notfound.lpickbackend.community.query.application.dto.ArticleListResponse(
         a.articleId,
         a.title,
+        a.createdAt,
+        a.modifiedAt,
         COUNT(DISTINCT l),
         COUNT(DISTINCT c),
         COUNT(DISTINCT b),
@@ -57,9 +61,11 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
     Page<ArticleListResponse> findMyWithLikeAndCommentAndBookmarkCount(@Param("oauthId") String oauthId, Pageable pageable);
 
     @Query("""
-    SELECT new com.notfound.lpickbackend.community.query.application.dto.ArticleListResponseDTO(
+    SELECT new com.notfound.lpickbackend.community.query.application.dto.ArticleListResponse(
         a.articleId,
         a.title,
+        a.createdAt,
+        a.modifiedAt,
         COUNT(DISTINCT l2),
         COUNT(DISTINCT c),
         COUNT(DISTINCT b),
@@ -82,6 +88,8 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
         a.articleId,
         a.title,
         a.content,
+        a.createdAt,
+        a.modifiedAt,
         COUNT(DISTINCT l),
         COUNT(DISTINCT c),
         COUNT(DISTINCT b),

@@ -4,27 +4,35 @@ import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.community.command.application.dto.CommentCreate;
 import com.notfound.lpickbackend.community.command.application.dto.CommentUpdate;
+import com.notfound.lpickbackend.community.command.domain.Article;
 import com.notfound.lpickbackend.community.command.domain.Comment;
 import com.notfound.lpickbackend.community.command.domain.CommentStatus;
 import com.notfound.lpickbackend.community.command.repository.CommentCommandRepository;
+import com.notfound.lpickbackend.community.query.repository.ArticleQueryRepository;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
 import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import com.notfound.lpickbackend.userinfo.query.repository.UserInfoQueryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CommentCommandService {
 
     private final CommentCommandRepository commentCommandRepository;
     private final UserInfoQueryRepository userInfoQueryRepository;
+    private final ArticleQueryRepository articleQueryRepository;
 
     @Transactional
-    public void createComment(CommentCreate commentCreate) {
+    public void createComment(String articleId, CommentCreate commentCreate) {
+
+        Article article = getArticle(articleId);
 
         Comment comment = Comment.builder()
+                .article(article)
                 .content(commentCreate.getComment())
                 .isDel(CommentStatus.N)
                 .oauth(getUserInfo())
@@ -45,7 +53,7 @@ public class CommentCommandService {
         }
 
         // 접근 가능 여부 확인
-        if (userId.equals(updatedComment.getOauth().getOauthId())) {
+        if (checkUserInfo(updatedComment)) {
             throw new CustomException(ErrorCode.FORBIDDEN_RESOURCE_ACCESS);
         }
 
@@ -69,11 +77,18 @@ public class CommentCommandService {
     @Transactional
     public void createChildComment(String commentId, CommentCreate commentCreate) {
 
+        Comment parent = getComment(commentId);
+
+        if(parent.checkHasParentComment()) { // 대댓글에 대댓글 작성을 막는 예외처리
+            throw new CustomException(ErrorCode.ALREADY_HAS_PARENTS_REQUEST);
+        }
+
         Comment comment = Comment.builder()
+                .article(parent.getArticle())
                 .content(commentCreate.getComment())
                 .isDel(CommentStatus.N)
                 .oauth(getUserInfo())
-                .parentComment(getComment(commentId))
+                .parentComment(parent)
                 .build();
 
         commentCommandRepository.save(comment);
@@ -83,6 +98,12 @@ public class CommentCommandService {
     private UserInfo getUserInfo() {
         return userInfoQueryRepository.findById(UserInfoUtil.getOAuthId()).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO)
+        );
+    }
+
+    private Article getArticle(String articleId) {
+        return articleQueryRepository.findById(articleId).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND_ARTICLE)
         );
     }
 

@@ -39,6 +39,10 @@ spring:
       host: ${redis.name}
       port: 6379
 
+cookie:
+  secure: ${cookie.secure}
+  same-site: ${cookie.same}
+
 token:
   secret: ${secret.token}
   access_token_expiration_time: 3600000 # 60 * 60 * 1000 1시간

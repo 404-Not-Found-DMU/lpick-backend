@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS comment (
                          modified_at	timestamp		NULL,
                          is_del	varchar(10)		NOT NULL,
                          article_id	varchar(40)		NOT NULL,
+                         oauth_id	varchar(40)		NOT NULL,
                          parent_comment_id	varchar(40)		NULL
 );
 
@@ -89,7 +90,7 @@ CREATE TABLE IF NOT EXISTS debate_chat (
 );
 
 CREATE TABLE IF NOT EXISTS user_info (
-                           oauth_id	varchar(40)		NOT NULL,
+                           oauth_id	varchar(50)		NOT NULL,
                            nickname	varchar(50)		NOT NULL,
                            profile	varchar(200)		NULL,
                            point	integer	DEFAULT 0	NOT NULL,
@@ -153,6 +154,7 @@ CREATE TABLE IF NOT EXISTS review (
                         star	real		NOT NULL,
                         content	text		NOT NULL,
                         oauth_id	varchar(40)		NOT NULL,
+                        created_at  timestamp      NOT NULL,
                         wiki_id	varchar(40)		NOT NULL
 );
 

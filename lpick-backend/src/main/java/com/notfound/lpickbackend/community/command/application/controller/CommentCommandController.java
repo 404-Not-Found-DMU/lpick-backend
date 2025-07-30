@@ -11,28 +11,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/community/comment")
+@RequestMapping("/api/v1/community")
 @RequiredArgsConstructor
 @Tag(name = "커뮤니티 댓글 컨트롤러", description = "댓글 생성/수정/삭제 기능")
 public class CommentCommandController {
 
-    CommentCommandService commentCommandService;
+    private final CommentCommandService commentCommandService;
 
-    @PostMapping
+    @PostMapping("/{articleId}/comment")
     @Operation(summary = "댓글 작성", description = "커뮤니티 게시글에 댓글을 작성하는 기능")
     ResponseEntity<SuccessCode> createComment(
-            @RequestBody CommentCreate commentCreate
+            @RequestBody CommentCreate commentCreate,
+            @PathVariable("articleId") String articleId
             ){
 
-        commentCommandService.createComment(commentCreate);
+        commentCommandService.createComment(articleId, commentCreate);
 
         return ResponseEntity.ok(SuccessCode.SUCCESS);
     }
 
-    @PatchMapping("/{commentId}")
+    @PatchMapping("/comment/{commentId}")
     @Operation(summary = "댓글 수정", description = "내가 작성한 댓글을 수정하는 기능")
     ResponseEntity<SuccessCode> updateComment(
-            @PathVariable String commentId,
+            @PathVariable("commentId") String commentId,
             @RequestBody CommentUpdate commentUpdate
     ){
         commentCommandService.updateComment(commentId, commentUpdate);
@@ -40,20 +41,20 @@ public class CommentCommandController {
         return ResponseEntity.ok(SuccessCode.SUCCESS);
     }
 
-    @DeleteMapping("/{commentId}")
+    @DeleteMapping("/comment/{commentId}")
     @Operation(summary = "댓글 삭제", description = "내가 작성한 댓글을 삭제하는 기능")
     ResponseEntity<SuccessCode> deleteComment(
-            @PathVariable String commentId
+            @PathVariable("commentId") String commentId
     ) {
         commentCommandService.deleteComment(commentId);
 
         return ResponseEntity.ok(SuccessCode.SUCCESS);
     }
 
-    @PostMapping("/{commentId}")
+    @PostMapping("/{articleId}/comment/{commentId}")
     @Operation(summary = "대댓글 작성", description = "댓글에 대댓글을 작성하는 기능")
     ResponseEntity<SuccessCode> createChildComment(
-            @PathVariable String commentId,
+            @PathVariable("commentId") String commentId,
             @RequestBody CommentCreate commentCreate
     ) {
         commentCommandService.createChildComment(commentId, commentCreate);

@@ -22,7 +22,7 @@ public class ArticleLikeCommandController {
     @PostMapping("/{articleId}/like")
     @Operation(summary = "게시글 좋아요 ", description = "게시글 좋아요 추가하는 기능")
     public ResponseEntity<SuccessCode> createArticleLike(
-            @PathVariable String articleId,
+            @PathVariable("articleId") String articleId,
             @AuthenticationPrincipal OAuth2UserDetails userDetail
     ) {
 
@@ -35,7 +35,7 @@ public class ArticleLikeCommandController {
     @DeleteMapping("/{articleId}/like")
     @Operation(summary = "게시글 좋아요 취소", description = "추가된 좋아요를 취소하는 기능")
     public ResponseEntity<SuccessCode> deleteArticleLike(
-            @PathVariable String articleId
+            @PathVariable("articleId") String articleId
     ) {
 
         articleLikeCommandService.deleteArticleLike(articleId);

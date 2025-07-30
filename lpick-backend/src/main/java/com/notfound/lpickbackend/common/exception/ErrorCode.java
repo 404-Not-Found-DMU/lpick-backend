@@ -31,6 +31,7 @@ public enum ErrorCode {
     ALREADY_HAS_REVIEW_IN_WIKIPAGE(HttpStatus.BAD_REQUEST, "이미 리뷰를 작성했습니다."),
     ALREADY_HAS_BOOKMARK(HttpStatus.BAD_REQUEST, "이미 추가되어있는 북마크입니다."),
     INVALID_PAGE_REQUEST(HttpStatus.BAD_REQUEST,"page 옵션이 올바르지 않습니다. 음수 등을 작성할 수 없습니다." ),
+    ALREADY_HAS_PARENTS_REQUEST(HttpStatus.BAD_REQUEST,"대댓글에 대댓글을 추가로 작성할 수 없습니다." ),
 
     // 401 에러
     AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "인증 실패"),

@@ -3,6 +3,8 @@ package com.notfound.lpickbackend.community.query.application.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
+
 @Getter
 @Setter
 public class ArticleDetailResponse {
@@ -12,6 +14,10 @@ public class ArticleDetailResponse {
     private String title;
 
     private String content;
+
+    private Instant createdAt;
+
+    private Instant modifiedAt;
 
     private Long likeCount;
 
@@ -30,6 +36,8 @@ public class ArticleDetailResponse {
             String articleId,
             String title,
             String content,
+            Instant createdAt,
+            Instant modifiedAt,
             Long likeCount,
             Long commentCount,
             Long bookmarkCount,
@@ -38,6 +46,8 @@ public class ArticleDetailResponse {
         this.articleId = articleId;
         this.title = title;
         this.content = content;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
         this.likeCount = likeCount;
         this.commentCount = commentCount;
         this.bookmarkCount = bookmarkCount;

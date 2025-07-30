@@ -32,7 +32,7 @@ public class ArticleCommandController {
     @PutMapping("/{articleId}")
     @Operation(summary = "커뮤니티 게시글 수정", description = "내가 작성한 커뮤니티 게시글을 수정하는 기능")
     public ResponseEntity<SuccessCode> updateArticle(
-            @PathVariable String articleId,
+            @PathVariable("articleId") String articleId,
             @RequestBody ArticleUpdateRequest articleUpdateRequest
     ) {
 
@@ -44,7 +44,7 @@ public class ArticleCommandController {
     @DeleteMapping("/{articleId}")
     @Operation(summary = "커뮤니티 게시글 삭제", description = "내가 작성한 커뮤니티 게시글을 삭제하는 기능")
     public ResponseEntity<SuccessCode> deleteArticle(
-            @PathVariable String articleId
+            @PathVariable("articleId") String articleId
     ) {
 
         articleCommandService.deleteArticle(articleId);

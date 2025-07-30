@@ -5,8 +5,11 @@ import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Builder
@@ -47,9 +50,18 @@ public class Comment {
     @JoinColumn(name = "oauth_id", nullable = false)
     private UserInfo oauth;
 
+    @OneToMany(mappedBy = "parentComment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Where(clause = "is_del = 'N'") // 삭제된 댓글 제외
+    private List<Comment> childComments = new ArrayList<>();
+
     // 게시글의 삭제 여부 체크 메소드
     public boolean checkIsDel() {
         return isDel.equals(CommentStatus.Y);
+    }
+
+    // 부모 댓글 여부 체크 메소드
+    public boolean checkHasParentComment() {
+        return parentComment != null;
     }
 
     @PrePersist

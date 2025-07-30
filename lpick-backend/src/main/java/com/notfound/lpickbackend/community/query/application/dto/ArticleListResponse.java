@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
+
 @Setter
 @Getter
 @AllArgsConstructor
@@ -13,6 +15,10 @@ public class ArticleListResponse {
 
     private String title;
 
+    private Instant createdAt;
+
+    private Instant modifiedAt;
+
     private Long likeCount;
 
     private Long commentCount;
@@ -20,4 +26,5 @@ public class ArticleListResponse {
     private Long bookmarkCount;
 
     private String oauthId;
+
 }

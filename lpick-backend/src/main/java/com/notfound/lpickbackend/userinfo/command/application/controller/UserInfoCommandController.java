@@ -112,13 +112,13 @@ public class UserInfoCommandController {
                 response,
                 "access_token",
                 tokenResponseDTO.getAccessToken(),
-                31536000 // 1년
+                accessTokenValidity * 1000 // 1년
         );
         CookieUtil.addCookie(
                 response,
                 "refresh_token",
                 tokenResponseDTO.getRefreshToken(),
-                31536000 // 1년
+                accessTokenValidity * 1000 // 1년
         );
 
         return ResponseEntity.ok(SuccessCode.DEV_TOKEN_CREATE_SUCCESS);
