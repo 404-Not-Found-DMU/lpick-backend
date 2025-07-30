@@ -13,7 +13,12 @@ public interface CustomCommentQueryRepository {
             Pageable pageable
     );
 
-    Page<ParentsCommentResponse> findByOauthIdAndCommentLike(
+    Page<ParentsCommentResponse> findParentsByOauthIdAndCommentLike(
+            String oAuthId,
+            Pageable pageable
+    );
+
+    Page<ParentsCommentResponse> findChildByOauthIdAndCommentLike(
             String oAuthId,
             Pageable pageable
     );

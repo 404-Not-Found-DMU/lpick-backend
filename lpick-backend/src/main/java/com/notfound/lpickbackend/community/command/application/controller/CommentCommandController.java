@@ -52,7 +52,7 @@ public class CommentCommandController {
     }
 
     @PostMapping("/{articleId}/comment/{commentId}")
-    @Operation(summary = "대댓글 작성", description = "댓글에 대댓글을 작성하는 기능")
+    @Operation(summary = "대댓글 작성", description = "댓글에 답글을 작성하는 기능")
     ResponseEntity<SuccessCode> createChildComment(
             @PathVariable("commentId") String commentId,
             @RequestBody CommentCreate commentCreate

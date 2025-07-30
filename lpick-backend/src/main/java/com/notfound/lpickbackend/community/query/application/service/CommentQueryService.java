@@ -14,6 +14,7 @@ public class CommentQueryService {
 
     private final CommentQueryRepository commentQueryRepository;
 
+    // 게시글의 댓글 목록 조회
     public Page<ParentsCommentResponse> readCommentList(
             String articleId,
             Pageable pageable
@@ -23,10 +24,19 @@ public class CommentQueryService {
         return commentQueryRepository.findCommentsWithChildrenAndLikes(articleId, oauthId, pageable);
     }
 
-    public Page<ParentsCommentResponse> readLikedCommentList(Pageable pageable) {
+    // 내가 좋아요 누른 답글 조회
+    public Page<ParentsCommentResponse> readLikedParentsCommentList(Pageable pageable) {
 
         String oauthId = UserInfoUtil.getOAuthId();
 
-        return commentQueryRepository.findByOauthIdAndCommentLike(oauthId, pageable);
+        return commentQueryRepository.findParentsByOauthIdAndCommentLike(oauthId, pageable);
+    }
+
+    // 내가 좋아요 누른 답글 조회
+    public Page<ParentsCommentResponse> readLikedChildCommentList(Pageable pageable) {
+
+        String oauthId = UserInfoUtil.getOAuthId();
+
+        return commentQueryRepository.findChildByOauthIdAndCommentLike(oauthId, pageable);
     }
 }

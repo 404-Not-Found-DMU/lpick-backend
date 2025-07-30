@@ -32,7 +32,7 @@ public enum ErrorCode {
     ALREADY_HAS_BOOKMARK(HttpStatus.BAD_REQUEST, "이미 추가되어있는 북마크입니다."),
     INVALID_PAGE_REQUEST(HttpStatus.BAD_REQUEST,"page 옵션이 올바르지 않습니다. 음수 등을 작성할 수 없습니다." ),
     ALREADY_HAS_PARENTS_REQUEST(HttpStatus.BAD_REQUEST,"대댓글에 대댓글을 추가로 작성할 수 없습니다." ),
-
+    ALREADY_HAS_LIKE(HttpStatus.BAD_REQUEST, "이미 좋아요 처리 된 리소스입니다."),
     // 401 에러
     AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "인증 실패"),
 
@@ -57,6 +57,7 @@ public enum ErrorCode {
 
     // 처리 방법에 논의가 필요한 에러 코드 임시할당용
     DO_NOT_KEEP_UP_THIS_ERROR_WHEN_MERGE(HttpStatus.I_AM_A_TEAPOT, "이 에러 코드는 실제 사용 목적이 아닙니다."),
+    ;
 
     private final HttpStatus httpStatus;
     private final String message;

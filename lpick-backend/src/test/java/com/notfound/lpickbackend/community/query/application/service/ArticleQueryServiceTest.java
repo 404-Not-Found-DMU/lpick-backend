@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.time.Instant;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -78,7 +79,7 @@ class ArticleQueryServiceTest {
         // given
         Pageable pageable = PageRequest.of(0, 10);
         List<ArticleListResponse> articles = List.of(
-                new ArticleListResponse("id1", "제목1", 3L, 1L, 0L, "mock-oauth-id")
+                new ArticleListResponse("id1", "제목1", Instant.now(), Instant.now(), 3L, 1L, 0L, "mock-oauth-id")
         );
         given(articleQueryRepository.findAllWithLikeAndCommentAndBookmarkCount(pageable))
                 .willReturn(new PageImpl<>(articles));
@@ -96,7 +97,7 @@ class ArticleQueryServiceTest {
         // given
         Pageable pageable = PageRequest.of(0, 5);
         List<ArticleListResponse> myList = List.of(
-                new ArticleListResponse("id1", "내글", 0L, 0L, 0L, "mock-oauth-id")
+                new ArticleListResponse("id1", "내글", Instant.now(), Instant.now(), 0L, 0L, 0L, "mock-oauth-id")
         );
         given(articleQueryRepository.findMyWithLikeAndCommentAndBookmarkCount("mock-oauth-id", pageable))
                 .willReturn(new PageImpl<>(myList));
@@ -114,7 +115,7 @@ class ArticleQueryServiceTest {
         // given
         Pageable pageable = PageRequest.of(0, 5);
         List<ArticleListResponse> likedList = List.of(
-                new ArticleListResponse("id1", "좋아요한 글", 1L, 0L, 0L, "mock-oauth-id")
+                new ArticleListResponse("id1", "좋아요한 글", Instant.now(), Instant.now(), 1L, 0L, 0L, "mock-oauth-id")
         );
         given(articleQueryRepository.findMyLikedWithLikeAndCommentAndBookmarkCount("mock-oauth-id", pageable))
                 .willReturn(new PageImpl<>(likedList));

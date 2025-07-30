@@ -11,6 +11,9 @@ import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import com.notfound.lpickbackend.userinfo.query.repository.UserInfoQueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,35 +24,51 @@ public class CommentLikeCommandService {
     private final UserInfoQueryRepository userInfoQueryRepository;
 
     // 댓글 좋아요 추가
+    @Transactional
     public void createCommentLike(String commentId) {
 
         Comment comment = getComment(commentId);
         UserInfo userInfo = getUserInfo();
 
-        CommentLike commentLike = CommentLike.builder()
-                .comment(comment)
-                .oauth(userInfo)
-                .build();
+        Optional<CommentLike> commentLike = getCommentLike(userInfo, comment);
 
-        commentLikeCommandRepository.save(commentLike);
+        // 중복이 아닐 때 저장
+        if(commentLike.isEmpty()) {
+
+             CommentLike newCommentLike = CommentLike.builder()
+                     .oauth(userInfo)
+                     .comment(comment)
+                     .build();
+
+             commentLikeCommandRepository.save(newCommentLike);
+        } else {
+            throw new CustomException(ErrorCode.ALREADY_HAS_LIKE);
+        }
     }
 
     // 댓글 좋아요 취소
-    public void deleteCommentLike(String commentLikeId) {
+    @Transactional
+    public void deleteCommentLike(String commentId) {
 
-        CommentLike commentLike = getCommentLike(commentLikeId);
+        Comment comment = getComment(commentId);
+
+        UserInfo userInfo = getUserInfo();
+
+        Optional<CommentLike> commentLike = getCommentLike(userInfo, comment);
 
         // 찾아서 없다면 삭제와 다른게 없다
-        if(commentLike == null) {
+        if(commentLike.isEmpty()) {
             return;
         }
 
+        CommentLike deleteCommentLike = commentLike.get();
+
         // 삭제 가능한 유저인지
-        if(!checkUserInfo(commentLike.getOauth().getOauthId())){
+        if(!checkUserInfo(deleteCommentLike.getOauth().getOauthId())){
             throw new CustomException(ErrorCode.FORBIDDEN_RESOURCE_ACCESS);
         }
 
-        commentLikeCommandRepository.deleteById(commentLikeId);
+        commentLikeCommandRepository.delete(deleteCommentLike);
     }
 
     private Comment getComment(String commentId) {
@@ -66,11 +85,9 @@ public class CommentLikeCommandService {
         );
     }
 
-    private CommentLike getCommentLike(String commentLikeId) {
+    private Optional<CommentLike> getCommentLike(UserInfo userInfo, Comment comment) {
 
-        return commentLikeCommandRepository.findById(commentLikeId).orElseThrow(
-                () -> new CustomException(ErrorCode.NOT_FOUND_COMMENT_LIKE)
-        );
+        return commentLikeCommandRepository.findByOauthAndComment(userInfo, comment);
     }
 
     private boolean checkUserInfo(String oAuthId) {

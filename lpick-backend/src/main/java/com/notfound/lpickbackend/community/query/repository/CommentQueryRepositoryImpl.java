@@ -148,7 +148,7 @@ public class CommentQueryRepositoryImpl implements CustomCommentQueryRepository{
     }
 
     @Override
-    public Page<ParentsCommentResponse> findByOauthIdAndCommentLike(String oAuthId, Pageable pageable) {
+    public Page<ParentsCommentResponse> findParentsByOauthIdAndCommentLike(String oAuthId, Pageable pageable) {
 
         QComment c = QComment.comment;
         QCommentLike cl = QCommentLike.commentLike;
@@ -171,6 +171,60 @@ public class CommentQueryRepositoryImpl implements CustomCommentQueryRepository{
                 .where(
                         cl.oauth.oauthId.eq(oAuthId),
                         c.parentComment.isNull()
+                )
+                .groupBy(
+                        c.commentId,
+                        c.content,
+                        c.createdAt,
+                        c.modifiedAt,
+                        c.isDel,
+                        c.article.articleId,
+                        c.oauth.oauthId
+                )
+                .orderBy(c.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        long total = queryFactory
+                .select(cl.countDistinct())
+                .from(cl)
+                .join(cl.comment, c)
+                .where(
+                        cl.oauth.oauthId.eq(oAuthId),
+                        c.parentComment.isNull()
+                )
+                .fetchOne();
+
+        return new PageImpl<>(results, pageable, total);
+    }
+
+
+    // 이 코드는 사실 1줄만 다른거라 위에 있는 부모 댓글 조회와 합칠지 이대로 구분할지 고민중입니다.
+    @Override
+    public Page<ParentsCommentResponse> findChildByOauthIdAndCommentLike(String oAuthId, Pageable pageable) {
+
+        QComment c = QComment.comment;
+        QCommentLike cl = QCommentLike.commentLike;
+
+        List<ParentsCommentResponse> results = queryFactory
+                .select(Projections.fields(
+                        ParentsCommentResponse.class,
+                        c.commentId,
+                        c.content,
+                        c.createdAt,
+                        c.modifiedAt,
+                        c.isDel,
+                        c.article.articleId.as("articleId"),
+                        c.oauth.oauthId.as("oauthId"),
+                        Expressions.TRUE.as("liked"), // 내가 좋아요 누른 목록이므로 항상 true
+                        cl.count().intValue().as("likeCount")
+                ))
+                .from(cl)
+                .join(cl.comment, c)
+                .where(
+                        cl.oauth.oauthId.eq(oAuthId),
+                        c.parentComment.isNotNull()
                 )
                 .groupBy(
                         c.commentId,
