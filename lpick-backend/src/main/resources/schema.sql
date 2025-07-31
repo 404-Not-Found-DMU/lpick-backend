@@ -203,6 +203,7 @@ CREATE TABLE IF NOT EXISTS gear (
                       name	varchar(50)		NOT NULL,
                       model_name	varchar(100)		NULL,
                       brand	varchar(50)		NULL,
+                      is_temp  boolean NOT NULL DEFAULT FALSE,
                       eq_class	varchar(50)		NOT NULL,
                       wiki_id	varchar(40)		NULL
 );
@@ -214,6 +215,20 @@ CREATE TABLE IF NOT EXISTS report (
                         report_explain	text		NOT NULL,
                         created_at	timestamp		NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS service_data_image (
+                        id	varchar(40)		NOT NULL,
+                        src varchar(255)   NOT NULL,
+                        type varchar(10)   NOT NULL
+
+);
+
+CREATE TABLE IF NOT EXISTS community_image (
+                        id	varchar(40)		NOT NULL,
+                        src varchar(255)   NOT NULL,
+                        type varchar(10)   NOT NULL
+);
+
 -- ==============================================================
 -- 2) PK 제약조건: DROP IF EXISTS … CASCADE 후 ADD
 -- ==============================================================
@@ -357,6 +372,16 @@ ALTER TABLE report
     DROP CONSTRAINT IF EXISTS PK_REPORT CASCADE;
 ALTER TABLE report
     ADD CONSTRAINT PK_REPORT PRIMARY KEY (report_id);
+
+ALTER TABLE service_data_image
+    DROP CONSTRAINT IF EXISTS PK_SERVICE_DATA_IMAGE CASCADE;
+ALTER TABLE service_data_image
+    ADD CONSTRAINT PK_SERVICE_DATA_IMAGE PRIMARY KEY (id);
+
+ALTER TABLE community_image
+    DROP CONSTRAINT IF EXISTS PK_COMMUNITY_IMAGE CASCADE;
+ALTER TABLE community_image
+    ADD CONSTRAINT PK_COMMUNITY_IMAGE PRIMARY KEY (id);
 
 
 -- ==============================================================

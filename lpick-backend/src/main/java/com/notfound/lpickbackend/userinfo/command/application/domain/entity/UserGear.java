@@ -1,8 +1,7 @@
 package com.notfound.lpickbackend.userinfo.command.application.domain.entity;
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.TOOL.IdPrefixUtil;
-import com.notfound.lpickbackend.servicedata.command.domain.Gear;
-import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
+import com.notfound.lpickbackend.servicedata.command.application.domain.Gear;
 import jakarta.persistence.*;
 import lombok.*;
 

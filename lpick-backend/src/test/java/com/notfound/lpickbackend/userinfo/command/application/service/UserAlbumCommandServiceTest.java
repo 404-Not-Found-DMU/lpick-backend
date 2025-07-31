@@ -2,12 +2,9 @@ package com.notfound.lpickbackend.userinfo.command.application.service;
 
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
-import com.notfound.lpickbackend.servicedata.command.domain.Album;
+import com.notfound.lpickbackend.servicedata.command.application.domain.Album;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserAlbum;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
-import com.notfound.lpickbackend.userinfo.command.repository.UserAlbumCommandRepository;
-import com.notfound.lpickbackend.userinfo.query.repository.UserAlbumQueryRepository;
-import com.notfound.lpickbackend.userinfo.query.repository.UserInfoQueryRepository;
 import com.notfound.lpickbackend.userinfo.query.service.UserAlbumQueryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
