@@ -16,13 +16,17 @@ public enum SuccessCode {
     REFRESH_SUCCESS(HttpStatus.OK, "Refresh 요청 성공"),
     DEV_TOKEN_CREATE_SUCCESS(HttpStatus.OK, "개발자 전용 토큰 생성 성공"),
     ARTICLE_UPDATE_SUCESS(HttpStatus.OK, "게시글 수정 성공"),
+    USER_ABOUT_UPDATE_SUCESS(HttpStatus.OK, "사용자 소개문 수정 성공"),
+    USER_SETTING_UPDATE_SUCESS(HttpStatus.OK, "사용자 설정 수정 성공"),
 
     // 201
     CREATE_SUCCESS(HttpStatus.CREATED, "Created"),
+    USER_ALBUM_CREATE_SUCCESS(HttpStatus.CREATED, "사용자 소유 앨범 등록 성공"),
     WIKI_PAGE_CREATE_SUCCESS(HttpStatus.CREATED, "위키 문서 생성 성공"),
     ARTICLE_CREATE_SUCCESS(HttpStatus.CREATED, "게시글 생성 성공"),
     BOOKMARK_CREATE_SUCCESS(HttpStatus.CREATED, "북마크 생성 성공"),
     LIKE_CREATE_SUCCESS(HttpStatus.CREATED, "좋아요 생성 성공"),
+    RECORD_CREATE_SUCCESS(HttpStatus.CREATED, "레코드파일 S3업로드 성공"),
 
     // PAGE_REVISION_REVERT_SUCCESS(HttpStatus.OK, "대상 버전으로 되돌리기 성공");
 
@@ -31,6 +35,7 @@ public enum SuccessCode {
     ARTICLE_DELETE_SUCCESS(HttpStatus.NO_CONTENT, "게시글 삭제 성공"),
     BOOKMARK_DELETE_SUCCESS(HttpStatus.NO_CONTENT, "북마크 삭제 성공" ),
     LIKE_DELETE_SUCCESS(HttpStatus.NO_CONTENT, "좋아요 삭제 성공" ),
+    USER_ALBUM_RECORD_DELETE_SUCCESS(HttpStatus.NO_CONTENT, "사용자 소유 앨범 내 녹음 파일 삭제 성공"),
     ;
 
     private final HttpStatus httpStatus;

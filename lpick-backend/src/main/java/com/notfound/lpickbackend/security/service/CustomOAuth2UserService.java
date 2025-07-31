@@ -1,13 +1,15 @@
 package com.notfound.lpickbackend.security.service;
 
-import com.notfound.lpickbackend.userinfo.command.application.domain.Tier;
-import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.security.details.CustomOAuthUser;
 import com.notfound.lpickbackend.security.details.OAuth2UserDetails;
 import com.notfound.lpickbackend.tier.query.repository.TierCommandRepository;
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.Tier;
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserSetting;
 import com.notfound.lpickbackend.userinfo.command.repository.UserInfoCommandRepository;
+import com.notfound.lpickbackend.userinfo.command.repository.UserSettingCommandRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -25,6 +27,7 @@ import java.util.Optional;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserInfoCommandRepository userInfoCommandRepository;
+    private final UserSettingCommandRepository userSettingCommandRepository;
     private final TierCommandRepository tierCommandRepository;
     private final String DEFAULT_TIER_ID = "1";
 
@@ -69,6 +72,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .tier(defaultTier)
                     .build();
             userInfoCommandRepository.save(userInfo);
+
+            // UserSetting 이원화에 따라 사용자 회원가입 시 UserSetting 기본 엔티티 구현 및 기본값 저장 위한 코드 추가.
+            UserSetting defaultUserSetting = new UserSetting();
+            defaultUserSetting.setToDefault(); // 디폴트 설정(모두 true, LIGHT 테마)
+            userSettingCommandRepository.save(defaultUserSetting);
         }
 
         return new CustomOAuthUser(userInfo);

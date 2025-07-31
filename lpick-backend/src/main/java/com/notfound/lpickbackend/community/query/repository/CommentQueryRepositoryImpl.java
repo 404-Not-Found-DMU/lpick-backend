@@ -2,8 +2,8 @@ package com.notfound.lpickbackend.community.query.repository;
 
 import com.notfound.lpickbackend.community.command.domain.QComment;
 import com.notfound.lpickbackend.community.command.domain.QCommentLike;
-import com.notfound.lpickbackend.community.query.application.dto.ChildsCommentResponse;
-import com.notfound.lpickbackend.community.query.application.dto.ParentsCommentResponse;
+import com.notfound.lpickbackend.community.query.dto.ChildsCommentResponse;
+import com.notfound.lpickbackend.community.query.dto.ParentsCommentResponse;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;

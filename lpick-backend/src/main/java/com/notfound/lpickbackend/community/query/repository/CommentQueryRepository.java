@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CommentQueryRepository extends JpaRepository<Comment, String>, CustomCommentQueryRepository {
 
+    int countByOauth_OauthId(String oauthId);
 }

@@ -1,6 +1,6 @@
 package com.notfound.lpickbackend.community.query.repository;
 
-import com.notfound.lpickbackend.community.query.application.dto.ParentsCommentResponse;
+import com.notfound.lpickbackend.community.query.dto.ParentsCommentResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

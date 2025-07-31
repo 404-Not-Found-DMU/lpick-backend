@@ -6,7 +6,7 @@ import com.notfound.lpickbackend.common.redis.RedisService;
 import com.notfound.lpickbackend.security.details.CustomOAuthUser;
 import com.notfound.lpickbackend.security.util.CookieUtil;
 import com.notfound.lpickbackend.security.util.JwtTokenProvider;
-import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
 import com.notfound.lpickbackend.userinfo.command.repository.UserInfoCommandRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

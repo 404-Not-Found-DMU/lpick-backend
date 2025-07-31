@@ -4,10 +4,10 @@ import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.common.redis.RedisService;
 import com.notfound.lpickbackend.security.util.JwtTokenProvider;
-import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
-import com.notfound.lpickbackend.userinfo.command.application.dto.LogoutRequestDTO;
-import com.notfound.lpickbackend.userinfo.command.application.dto.TokenRefreshRequestDTO;
-import com.notfound.lpickbackend.userinfo.command.application.dto.TokenResponseDTO;
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
+import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.LogoutRequestDTO;
+import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.TokenRefreshRequestDTO;
+import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.TokenResponseDTO;
 import com.notfound.lpickbackend.userinfo.command.repository.UserInfoCommandRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -97,5 +97,9 @@ public class UserInfoCommandService extends DefaultOAuth2UserService {
         redisService.saveWhitelistRefreshToken("1", refreshToken, 365, TimeUnit.DAYS);
 
         return new TokenResponseDTO(accessToken, refreshToken);
+    }
+
+    public void saveUserInfo(UserInfo userInfo) {
+        userInfoCommandRepository.save(userInfo);
     }
 }

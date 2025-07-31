@@ -10,7 +10,7 @@ import com.notfound.lpickbackend.community.command.domain.CommentStatus;
 import com.notfound.lpickbackend.community.command.repository.CommentCommandRepository;
 import com.notfound.lpickbackend.community.query.repository.ArticleQueryRepository;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
-import com.notfound.lpickbackend.userinfo.command.application.domain.UserInfo;
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
 import com.notfound.lpickbackend.userinfo.query.repository.UserInfoQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

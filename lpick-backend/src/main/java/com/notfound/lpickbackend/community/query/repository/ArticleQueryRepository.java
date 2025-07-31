@@ -1,8 +1,8 @@
 package com.notfound.lpickbackend.community.query.repository;
 
 import com.notfound.lpickbackend.community.command.domain.Article;
-import com.notfound.lpickbackend.community.query.application.dto.ArticleDetailResponse;
-import com.notfound.lpickbackend.community.query.application.dto.ArticleListResponse;
+import com.notfound.lpickbackend.community.query.dto.ArticleDetailResponse;
+import com.notfound.lpickbackend.community.query.dto.ArticleListResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,7 +20,7 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
     * 번거롭고 성능 저하 이슈 발생 가능성이 있어 JPQL 사용
     * */
     @Query("""
-    SELECT new com.notfound.lpickbackend.community.query.application.dto.ArticleListResponse(
+    SELECT new com.notfound.lpickbackend.community.query.dto.ArticleListResponse(
         a.articleId,
         a.title,
         a.createdAt,
@@ -40,7 +40,7 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
     Page<ArticleListResponse> findAllWithLikeAndCommentAndBookmarkCount(Pageable pageable);
 
     @Query("""
-    SELECT new com.notfound.lpickbackend.community.query.application.dto.ArticleListResponse(
+    SELECT new com.notfound.lpickbackend.community.query.dto.ArticleListResponse(
         a.articleId,
         a.title,
         a.createdAt,
@@ -61,7 +61,7 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
     Page<ArticleListResponse> findMyWithLikeAndCommentAndBookmarkCount(@Param("oauthId") String oauthId, Pageable pageable);
 
     @Query("""
-    SELECT new com.notfound.lpickbackend.community.query.application.dto.ArticleListResponse(
+    SELECT new com.notfound.lpickbackend.community.query.dto.ArticleListResponse(
         a.articleId,
         a.title,
         a.createdAt,
@@ -84,7 +84,7 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
 
     // content를 포함한 게시글 상세조회
     @Query("""
-    SELECT new com.notfound.lpickbackend.community.query.application.dto.ArticleDetailResponse(
+    SELECT new com.notfound.lpickbackend.community.query.dto.ArticleDetailResponse(
         a.articleId,
         a.title,
         a.content,
@@ -104,4 +104,6 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
     GROUP BY a.articleId, a.title, a.oauth
     """)
     ArticleDetailResponse findByIdWithLikeAndCommentAndBookmarkCount(@Param("articleId") String articleId);
+
+    int countByOauth_OauthId(String oauthId);
 }
