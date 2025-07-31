@@ -1,7 +1,7 @@
 package com.notfound.lpickbackend.userinfo.query.service;
 
 import com.notfound.lpickbackend.common._wrapper.BlindableResponse;
-import com.notfound.lpickbackend.community.query.application.service.ArticleQueryService;
+import com.notfound.lpickbackend.community.query.service.ArticleQueryService;
 import com.notfound.lpickbackend.community.query.service.CommentQueryService;
 import com.notfound.lpickbackend.debate.query.service.DebateChaQueryService;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserSetting;

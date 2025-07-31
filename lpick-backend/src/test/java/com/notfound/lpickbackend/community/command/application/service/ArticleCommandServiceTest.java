@@ -1,7 +1,7 @@
 package com.notfound.lpickbackend.community.command.application.service;
 
-import com.notfound.lpickbackend.community.command.application.dto.ArticleCreateRequestDTO;
-import com.notfound.lpickbackend.community.command.application.dto.ArticleUpdateRequestDTO;
+import com.notfound.lpickbackend.community.command.application.dto.ArticleCreateRequest;
+import com.notfound.lpickbackend.community.command.application.dto.ArticleUpdateRequest;
 import com.notfound.lpickbackend.community.command.domain.Article;
 import com.notfound.lpickbackend.community.command.domain.ArticleStatus;
 import com.notfound.lpickbackend.community.command.repository.ArticleCommandRepository;
@@ -74,7 +74,7 @@ class ArticleCommandServiceTest {
     @Test
     void articleCreateTest() {
         // given
-        ArticleCreateRequestDTO request = new ArticleCreateRequestDTO("제목", "내용");
+        ArticleCreateRequest request = new ArticleCreateRequest("제목", "내용");
 
         given(userInfoQueryRepository.findById("mock-oauth-id"))
                 .willReturn(Optional.of(mockUser));
@@ -95,7 +95,7 @@ class ArticleCommandServiceTest {
     void articleUpdateTest() {
         // given
         String articleId = "article-123";
-        ArticleUpdateRequestDTO request = new ArticleUpdateRequestDTO("수정된 제목", "수정된 내용");
+        ArticleUpdateRequest request = new ArticleUpdateRequest("수정된 제목", "수정된 내용");
 
         Article existingArticle = Article.builder()
                 .articleId(articleId)

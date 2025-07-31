@@ -1,17 +1,23 @@
-package com.notfound.lpickbackend.community.query.application.dto;
+package com.notfound.lpickbackend.community.query.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
+
 @Setter
 @Getter
 @AllArgsConstructor
-public class ArticleListResponseDTO {
+public class ArticleListResponse {
 
     private String articleId;
 
     private String title;
+
+    private Instant createdAt;
+
+    private Instant modifiedAt;
 
     private Long likeCount;
 
@@ -20,4 +26,5 @@ public class ArticleListResponseDTO {
     private Long bookmarkCount;
 
     private String oauthId;
+
 }

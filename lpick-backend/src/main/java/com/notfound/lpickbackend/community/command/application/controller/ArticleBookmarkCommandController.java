@@ -11,7 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/article")
+@RequestMapping("/api/v1/community/article")
 @RequiredArgsConstructor
 @Tag(name = "게시글 북마크 컨트롤러", description = "게시글 북마크 추가/삭제 기능")
 public class ArticleBookmarkCommandController {
@@ -22,7 +22,7 @@ public class ArticleBookmarkCommandController {
     @PostMapping("/{articleId}/bookmark")
     @Operation(summary = "게시글 북마크 추가", description = "커뮤니티 게시글에 대해 북마크를 추가하는 기능")
     public ResponseEntity<SuccessCode> createArticleBookmark(
-            @PathVariable String articleId,
+            @PathVariable("articleId") String articleId,
             @AuthenticationPrincipal OAuth2UserDetails userDetail
     ) {
 
@@ -35,7 +35,7 @@ public class ArticleBookmarkCommandController {
     @DeleteMapping("/{articleId}/bookmark")
     @Operation(summary = "게시글 북마크 취소", description = "추가 된 게시글 북마크를 취소하는 기능")
     public ResponseEntity<SuccessCode> deleteArticleBookmark(
-            @PathVariable String articleId
+            @PathVariable("articleId") String articleId
     ) {
 
         articleBookmarkCommandService.deleteArticleBookmark(articleId);

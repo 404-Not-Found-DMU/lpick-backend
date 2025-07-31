@@ -6,6 +6,7 @@ import com.notfound.lpickbackend.TestUtil;
 import com.notfound.lpickbackend.security.details.CustomOAuthUser;
 import com.notfound.lpickbackend.tier.query.repository.TierCommandRepository;
 import com.notfound.lpickbackend.userinfo.command.repository.UserInfoCommandRepository;
+import com.notfound.lpickbackend.userinfo.command.repository.UserSettingCommandRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -33,6 +34,9 @@ class CustomOAuth2UserServiceTest {
 
     @Mock
     private TierCommandRepository tierCommandRepository;
+
+    @Mock
+    private UserSettingCommandRepository userSettingCommandRepository;
 
     @Mock
     private OAuth2UserRequest userRequest;

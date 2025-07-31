@@ -1,8 +1,8 @@
 package com.notfound.lpickbackend.community.query.repository;
 
 import com.notfound.lpickbackend.community.command.domain.Article;
-import com.notfound.lpickbackend.community.query.application.dto.ArticleDetailResponseDTO;
-import com.notfound.lpickbackend.community.query.application.dto.ArticleListResponseDTO;
+import com.notfound.lpickbackend.community.query.dto.ArticleDetailResponse;
+import com.notfound.lpickbackend.community.query.dto.ArticleListResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,9 +20,11 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
     * 번거롭고 성능 저하 이슈 발생 가능성이 있어 JPQL 사용
     * */
     @Query("""
-    SELECT new com.notfound.lpickbackend.community.query.application.dto.ArticleListResponseDTO(
+    SELECT new com.notfound.lpickbackend.community.query.dto.ArticleListResponse(
         a.articleId,
         a.title,
+        a.createdAt,
+        a.modifiedAt,
         COUNT(DISTINCT l),
         COUNT(DISTINCT c),
         COUNT(DISTINCT b),
@@ -35,12 +37,14 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
     WHERE a.isDel = com.notfound.lpickbackend.community.command.domain.ArticleStatus.N
     GROUP BY a.articleId, a.title, a.oauth
     """)
-    Page<ArticleListResponseDTO> findAllWithLikeAndCommentAndBookmarkCount(Pageable pageable);
+    Page<ArticleListResponse> findAllWithLikeAndCommentAndBookmarkCount(Pageable pageable);
 
     @Query("""
-    SELECT new com.notfound.lpickbackend.community.query.application.dto.ArticleListResponseDTO(
+    SELECT new com.notfound.lpickbackend.community.query.dto.ArticleListResponse(
         a.articleId,
         a.title,
+        a.createdAt,
+        a.modifiedAt,
         COUNT(DISTINCT l),
         COUNT(DISTINCT c),
         COUNT(DISTINCT b),
@@ -54,12 +58,14 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
     AND a.oauth.oauthId = :oauthId
     GROUP BY a.articleId, a.title, a.oauth
     """)
-    Page<ArticleListResponseDTO> findMyWithLikeAndCommentAndBookmarkCount(@Param("oauthId") String oauthId, Pageable pageable);
+    Page<ArticleListResponse> findMyWithLikeAndCommentAndBookmarkCount(@Param("oauthId") String oauthId, Pageable pageable);
 
     @Query("""
-    SELECT new com.notfound.lpickbackend.community.query.application.dto.ArticleListResponseDTO(
+    SELECT new com.notfound.lpickbackend.community.query.dto.ArticleListResponse(
         a.articleId,
         a.title,
+        a.createdAt,
+        a.modifiedAt,
         COUNT(DISTINCT l2),
         COUNT(DISTINCT c),
         COUNT(DISTINCT b),
@@ -74,14 +80,16 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
     AND a.isDel = com.notfound.lpickbackend.community.command.domain.ArticleStatus.N
     GROUP BY a.articleId, a.title, a.oauth
     """)
-    Page<ArticleListResponseDTO> findMyLikedWithLikeAndCommentAndBookmarkCount(@Param("oauthId") String oauthId, Pageable pageable);
+    Page<ArticleListResponse> findMyLikedWithLikeAndCommentAndBookmarkCount(@Param("oauthId") String oauthId, Pageable pageable);
 
     // content를 포함한 게시글 상세조회
     @Query("""
-    SELECT new com.notfound.lpickbackend.community.query.application.dto.ArticleDetailResponseDTO(
+    SELECT new com.notfound.lpickbackend.community.query.dto.ArticleDetailResponse(
         a.articleId,
         a.title,
         a.content,
+        a.createdAt,
+        a.modifiedAt,
         COUNT(DISTINCT l),
         COUNT(DISTINCT c),
         COUNT(DISTINCT b),
@@ -95,7 +103,7 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
     AND a.articleId = :articleId
     GROUP BY a.articleId, a.title, a.oauth
     """)
-    ArticleDetailResponseDTO findByIdWithLikeAndCommentAndBookmarkCount(@Param("articleId") String articleId);
+    ArticleDetailResponse findByIdWithLikeAndCommentAndBookmarkCount(@Param("articleId") String articleId);
 
     int countByOauth_OauthId(String oauthId);
 }

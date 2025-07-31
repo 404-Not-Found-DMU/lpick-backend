@@ -1,9 +1,9 @@
-package com.notfound.lpickbackend.community.query.application.service;
+package com.notfound.lpickbackend.community.query.service;
 
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
-import com.notfound.lpickbackend.community.query.application.dto.ArticleDetailResponseDTO;
-import com.notfound.lpickbackend.community.query.application.dto.ArticleListResponseDTO;
+import com.notfound.lpickbackend.community.query.dto.ArticleDetailResponse;
+import com.notfound.lpickbackend.community.query.dto.ArticleListResponse;
 import com.notfound.lpickbackend.community.query.repository.ArticleBookmarkQueryRepository;
 import com.notfound.lpickbackend.community.query.repository.ArticleLikeQueryRepository;
 import com.notfound.lpickbackend.community.query.repository.ArticleQueryRepository;
@@ -13,8 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +24,7 @@ public class ArticleQueryService {
 
     // 전체 게시글 목록 조회
     @Transactional(readOnly = true)
-    public Page<ArticleListResponseDTO> readAllArticleList(Pageable pageable) {
+    public Page<ArticleListResponse> readAllArticleList(Pageable pageable) {
 
         // 페이지 요청이 잘못 된 경우 예외 처리
         if (checkPageable(pageable)) {
@@ -38,9 +36,9 @@ public class ArticleQueryService {
 
     // 게시글 상세 조회
     @Transactional(readOnly = true)
-    public ArticleDetailResponseDTO readArticleDetail(String articleId) {
+    public ArticleDetailResponse readArticleDetail(String articleId) {
 
-        ArticleDetailResponseDTO dto = articleQueryRepository.findByIdWithLikeAndCommentAndBookmarkCount(articleId);
+        ArticleDetailResponse dto = articleQueryRepository.findByIdWithLikeAndCommentAndBookmarkCount(articleId);
 
         if(dto == null) {
             throw new CustomException(ErrorCode.NOT_FOUND_ARTICLE);
@@ -64,7 +62,7 @@ public class ArticleQueryService {
 
     // 내가 작성한 게시글 목록 조회
     @Transactional(readOnly = true)
-    public Page<ArticleListResponseDTO> readMyArticleList(Pageable pageable) {
+    public Page<ArticleListResponse> readMyArticleList(Pageable pageable) {
 
         // 페이지 요청이 잘못 된 경우 예외 처리
         if (checkPageable(pageable)) {
@@ -80,7 +78,7 @@ public class ArticleQueryService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ArticleListResponseDTO> readMyLikedArticleList(Pageable pageable) {
+    public Page<ArticleListResponse> readMyLikedArticleList(Pageable pageable) {
 
         // 페이지 요청이 잘못 된 경우 예외 처리
         if (checkPageable(pageable)) {
