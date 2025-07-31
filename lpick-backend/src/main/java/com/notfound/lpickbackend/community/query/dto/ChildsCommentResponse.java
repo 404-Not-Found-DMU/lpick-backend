@@ -1,13 +1,13 @@
 package com.notfound.lpickbackend.community.query.dto;
 
-import com.notfound.lpickbackend.community.command.domain.CommentStatus;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
 @Getter
-@Setter
+@NoArgsConstructor
 public class ChildsCommentResponse {
 
     private String commentId;

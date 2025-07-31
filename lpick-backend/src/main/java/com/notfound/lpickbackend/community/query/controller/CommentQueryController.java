@@ -33,7 +33,7 @@ public class CommentQueryController {
     }
 
     @GetMapping("/parents/like")
-    @Operation(summary = "댓글 목록 조회", description = "특정 게시글의 댓글 목록을 조회합니다.")
+    @Operation(summary = "좋아요 댓글 조회", description = "내가 좋아요 누른 댓글 목록을 조회합니다.")
     public ResponseEntity<Page<ParentsCommentResponse>> getLikedParentsComments(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
@@ -44,7 +44,7 @@ public class CommentQueryController {
     }
 
     @GetMapping("/child/like")
-    @Operation(summary = "댓글 목록 조회", description = "특정 게시글의 댓글 목록을 조회합니다.")
+    @Operation(summary = "좋아요 답글 조회", description = "내가 좋아요 누른 답글 목록을 조회합니다.")
     public ResponseEntity<Page<ParentsCommentResponse>> getLikedChildComments(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
