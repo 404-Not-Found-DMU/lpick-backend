@@ -2,11 +2,8 @@ package com.notfound.lpickbackend.userinfo.command.application.service;
 
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
-import com.notfound.lpickbackend.servicedata.command.domain.Album;
-import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserAlbum;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserGear;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
-import com.notfound.lpickbackend.userinfo.query.service.UserAlbumQueryService;
 import com.notfound.lpickbackend.userinfo.query.service.UserGearQueryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,8 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;

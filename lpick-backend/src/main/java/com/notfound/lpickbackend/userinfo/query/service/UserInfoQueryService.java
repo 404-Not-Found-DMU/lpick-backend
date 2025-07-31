@@ -17,6 +17,4 @@ public class UserInfoQueryService {
         return userInfoQueryRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.AUTHENTICATION_FAILED));
     }
-
-
 }

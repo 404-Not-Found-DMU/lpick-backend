@@ -3,7 +3,7 @@ package com.notfound.lpickbackend.userinfo.command.application.service;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.common.s3.service.S3Uploader;
-import com.notfound.lpickbackend.servicedata.command.domain.Album;
+import com.notfound.lpickbackend.servicedata.command.application.domain.Album;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserAlbum;
 import com.notfound.lpickbackend.servicedata.query.service.AlbumQueryService;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;

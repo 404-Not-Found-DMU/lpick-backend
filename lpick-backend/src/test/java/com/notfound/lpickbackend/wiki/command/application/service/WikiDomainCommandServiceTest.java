@@ -1,8 +1,8 @@
 package com.notfound.lpickbackend.wiki.command.application.service;
 
-import com.notfound.lpickbackend.servicedata.command.domain.Album;
-import com.notfound.lpickbackend.servicedata.command.domain.Artist;
-import com.notfound.lpickbackend.servicedata.command.domain.Gear;
+import com.notfound.lpickbackend.servicedata.command.application.domain.Album;
+import com.notfound.lpickbackend.servicedata.command.application.domain.Artist;
+import com.notfound.lpickbackend.servicedata.command.application.domain.Gear;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;

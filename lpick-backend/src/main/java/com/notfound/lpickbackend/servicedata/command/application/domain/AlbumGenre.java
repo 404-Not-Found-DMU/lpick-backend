@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.servicedata.command.domain;
+package com.notfound.lpickbackend.servicedata.command.application.domain;
 
 import jakarta.persistence.*;
 import lombok.*;

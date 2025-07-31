@@ -1,6 +1,6 @@
 package com.notfound.lpickbackend.servicedata.query.repository;
 
-import com.notfound.lpickbackend.servicedata.command.domain.Gear;
+import com.notfound.lpickbackend.servicedata.command.application.domain.Gear;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

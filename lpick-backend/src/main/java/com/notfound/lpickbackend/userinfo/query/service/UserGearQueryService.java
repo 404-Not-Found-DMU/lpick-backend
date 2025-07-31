@@ -77,6 +77,6 @@ public class UserGearQueryService {
     /** 어떤 사용자가 특정 ClassName의 UserGear를 얼마나 Favorite True 했는지 카운트하는 목적의 메소드 */
     @Transactional(readOnly = true)
     public long countUserGearFavoriteByClassName(String oAuthId, String className) {
-        return userGearQueryRepository.countByOauth_OauthIdAndIsFavoriteTrue(oAuthId, className);
+        return userGearQueryRepository.countFavoritesByOauthIdAndClassName(oAuthId, className);
     }
 }

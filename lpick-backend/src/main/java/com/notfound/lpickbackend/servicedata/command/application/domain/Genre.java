@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.servicedata.command.domain;
+package com.notfound.lpickbackend.servicedata.command.application.domain;
 
 import com.notfound.lpickbackend.AUTO_ENTITIES.TOOL.IdPrefixUtil;
 import jakarta.persistence.*;
