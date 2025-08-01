@@ -17,7 +17,6 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int port;
 
-
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         return new LettuceConnectionFactory(host, port); // 또는 Docker 내부 네트워크라면 host 확인

@@ -131,7 +131,7 @@ class WikiDomainCommandServiceTest {
         album.setWiki(dummyWiki);
 
         Gear gear = mock(Gear.class);
-        gear.setEqId("album-1");
+        gear.setId("album-1");
         gear.setWiki(dummyWiki);
 
         dummyWiki.setArtist(artist);

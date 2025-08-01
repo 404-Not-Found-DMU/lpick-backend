@@ -175,8 +175,7 @@ CREATE TABLE IF NOT EXISTS review (
 );
 
 CREATE TABLE IF NOT EXISTS gear_class (
-                            class_id	varchar(40)		NOT NULL,
-                            class_name	varchar(50)		NULL
+                            class_name	varchar(40)		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS debate (
@@ -199,7 +198,7 @@ CREATE TABLE IF NOT EXISTS article_like (
 );
 
 CREATE TABLE IF NOT EXISTS gear (
-                      eq_id	varchar(40)		NOT NULL,
+                      id	varchar(40)		NOT NULL,
                       name	varchar(50)		NOT NULL,
                       model_name	varchar(100)		NULL,
                       brand	varchar(50)		NULL,
@@ -346,7 +345,7 @@ ALTER TABLE review
 ALTER TABLE gear_class
     DROP CONSTRAINT IF EXISTS PK_GEAR_CLASS CASCADE;
 ALTER TABLE gear_class
-    ADD CONSTRAINT PK_GEAR_CLASS PRIMARY KEY (class_id);
+    ADD CONSTRAINT PK_GEAR_CLASS PRIMARY KEY (class_name);
 
 ALTER TABLE debate
     DROP CONSTRAINT IF EXISTS PK_DEBATE CASCADE;
@@ -366,7 +365,7 @@ ALTER TABLE article_like
 ALTER TABLE gear
     DROP CONSTRAINT IF EXISTS PK_GEAR CASCADE;
 ALTER TABLE gear
-    ADD CONSTRAINT PK_GEAR PRIMARY KEY (eq_id);
+    ADD CONSTRAINT PK_GEAR PRIMARY KEY (id);
 
 ALTER TABLE report
     DROP CONSTRAINT IF EXISTS PK_REPORT CASCADE;
@@ -404,7 +403,7 @@ ALTER TABLE user_gear
     DROP CONSTRAINT IF EXISTS FK_gear_TO_user_gear_1 CASCADE;
 ALTER TABLE user_gear
     ADD CONSTRAINT FK_gear_TO_user_gear_1
-        FOREIGN KEY (eq_id) REFERENCES gear (eq_id);
+        FOREIGN KEY (eq_id) REFERENCES gear (id);
 
 ALTER TABLE page_revision
     DROP CONSTRAINT IF EXISTS FK_wiki_page_TO_page_revision_1 CASCADE;
@@ -620,7 +619,7 @@ ALTER TABLE gear
     DROP CONSTRAINT IF EXISTS FK_gear_class_TO_gear_1 CASCADE;
 ALTER TABLE gear
     ADD CONSTRAINT FK_gear_class_TO_gear_1
-        FOREIGN KEY (eq_class)REFERENCES gear_class (class_id);
+        FOREIGN KEY (eq_class)REFERENCES gear_class (class_name);
 
 ALTER TABLE gear
     DROP CONSTRAINT IF EXISTS FK_wiki_page_TO_gear_1 CASCADE;

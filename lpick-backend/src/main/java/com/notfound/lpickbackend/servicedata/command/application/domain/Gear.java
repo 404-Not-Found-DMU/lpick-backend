@@ -1,20 +1,20 @@
 package com.notfound.lpickbackend.servicedata.command.application.domain;
 
+import com.notfound.lpickbackend.common._super.BaseEntity;
+import com.notfound.lpickbackend.servicedata.command.application.domain.dto.TempGearRequest;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
 @Table(name = "gear")
-public class Gear {
-    @Id
-    @Column(name = "eq_id", nullable = false, length = 40)
-    private String eqId;
+public class Gear extends BaseEntity {
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;
@@ -25,6 +25,9 @@ public class Gear {
     @Column(name = "brand", length = 50)
     private String brand;
 
+    @Column(name = "is_temp", nullable = false)
+    private boolean isTemp;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "eq_class", nullable = false)
     private GearClass eqClass;
@@ -32,5 +35,16 @@ public class Gear {
     @OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "wiki_id")
     private WikiPage wiki;
+
+    // isTemp True -> False로 변환. 사용자가 임시로 작성해뒀던 Gear를 수정없이 허가한다.
+    public void approveTempGear() {
+        this.isTemp = false;
+    }
+
+    public void updateTempGear(TempGearRequest req, GearClass eqClass) {
+        this.modelName = req.getModelName();
+        this.eqClass = eqClass;
+        this.brand = req.getBrand();
+    }
 
 }
