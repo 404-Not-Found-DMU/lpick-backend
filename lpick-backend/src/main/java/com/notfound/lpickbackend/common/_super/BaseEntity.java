@@ -6,15 +6,18 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.UUID;
 
+// SuperBuilder == 자식클래스 빌더 사용 시 슈퍼 클래스 필드까지 빌더에서 활용 가능하게 하는 빌더. 슈퍼 클래스에도 아래와 같이 작성해두어야함.
+@SuperBuilder
 @MappedSuperclass
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public abstract class BaseEntity {
     @Id
     @Column(name = "id", nullable = false, length = 40)

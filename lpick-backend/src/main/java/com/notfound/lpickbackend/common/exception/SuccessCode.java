@@ -18,6 +18,8 @@ public enum SuccessCode {
     ARTICLE_UPDATE_SUCESS(HttpStatus.OK, "게시글 수정 성공"),
     USER_ABOUT_UPDATE_SUCESS(HttpStatus.OK, "사용자 소개문 수정 성공"),
     USER_SETTING_UPDATE_SUCESS(HttpStatus.OK, "사용자 설정 수정 성공"),
+    GEAR_UPDATE_SUCESS(HttpStatus.OK, "기기 정보 업데이트 성공"),
+    TEMP_GEAR_APPROVE_SUCESS(HttpStatus.OK, "임시기기 승인 성공"),
 
     // 201
     CREATE_SUCCESS(HttpStatus.CREATED, "Created"),
@@ -27,6 +29,8 @@ public enum SuccessCode {
     BOOKMARK_CREATE_SUCCESS(HttpStatus.CREATED, "북마크 생성 성공"),
     LIKE_CREATE_SUCCESS(HttpStatus.CREATED, "좋아요 생성 성공"),
     RECORD_CREATE_SUCCESS(HttpStatus.CREATED, "레코드파일 S3업로드 성공"),
+    TEMP_GEAR_CREATE_SUCCESS(HttpStatus.CREATED, "임시 음향기기 생성 성공"),
+
 
     // PAGE_REVISION_REVERT_SUCCESS(HttpStatus.OK, "대상 버전으로 되돌리기 성공");
 

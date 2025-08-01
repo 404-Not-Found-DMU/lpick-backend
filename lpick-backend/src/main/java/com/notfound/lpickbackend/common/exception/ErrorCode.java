@@ -34,6 +34,7 @@ public enum ErrorCode {
     INVALID_PAGE_REQUEST(HttpStatus.BAD_REQUEST,"page 옵션이 올바르지 않습니다. 음수 등을 작성할 수 없습니다." ),
     ALREADY_FULL_FAVORITE_ALBUM(HttpStatus.BAD_REQUEST, "favorite 리스트가 가득 찼습니다. 더이상 favorite로 지정할 수 없습니다."),
     ALREADY_FULL_FAVORITE_GEAR(HttpStatus.BAD_REQUEST, "favorite 리스트가 가득 찼습니다. 더이상 favorite로 지정할 수 없습니다."),
+    IS_NOT_TEMP_GEAR(HttpStatus.BAD_REQUEST, "허가하려는 Gear는 Temp 상태가 아닙니다."),
 
 
     ALREADY_HAS_PARENTS_REQUEST(HttpStatus.BAD_REQUEST,"대댓글에 대댓글을 추가로 작성할 수 없습니다." ),
@@ -67,6 +68,9 @@ public enum ErrorCode {
 
     NOT_FOUND_USER_GEAR(HttpStatus.NOT_FOUND, "사용자는 해당 음향기기를 지니고 있지 않습니다."),
     NOT_FOUND_GEAR(HttpStatus.NOT_FOUND, "음향기기 정보를 찾을 수 없습니다."),
+    NOT_FOUND_GEAR_CLASS(HttpStatus.NOT_FOUND, "해당 타입의 음향기기 종류를 찾을 수 없습니다."),
+
+
     // 처리 방법에 논의가 필요한 에러 코드 임시할당용
     DO_NOT_KEEP_UP_THIS_ERROR_WHEN_MERGE(HttpStatus.I_AM_A_TEAPOT, "이 에러 코드는 실제 사용 목적이 아닙니다."),
     ;
