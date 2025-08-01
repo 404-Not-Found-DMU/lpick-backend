@@ -3,6 +3,7 @@ package com.notfound.lpickbackend.servicedata.command.application.service;
 import com.notfound.lpickbackend.common._super.BaseCommandService;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
+import com.notfound.lpickbackend.common.s3.service.S3Uploader;
 import com.notfound.lpickbackend.servicedata.command.application.domain.Gear;
 import com.notfound.lpickbackend.servicedata.command.application.domain.dto.TempGearRequest;
 import com.notfound.lpickbackend.servicedata.command.application.repository.GearCommandRepository;
@@ -22,6 +23,8 @@ public class GearCommandService extends BaseCommandService<Gear, String> {
     private final GearQueryService gearQueryService;
 
     private final GearClassQueryService gearClassQueryService;
+
+    private final S3Uploader s3Uploader;
 
     @Override
     public Gear saveEntity(Gear entity) {

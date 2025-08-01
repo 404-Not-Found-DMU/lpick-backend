@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -24,7 +25,9 @@ public class GearCommandController {
     @PostMapping("/gear/temp-gear")
     @Operation(summary = "임시 음향기기 추가", description = "사용자가 자신의 음향기기가 본 서비스의 DB에 없어 등록하지 못할경우 사용.")
     public ResponseEntity<SuccessCode> createTempGear(
-            @RequestBody @Valid TempGearRequest req ) {
+            @RequestBody @Valid TempGearRequest req,
+            @RequestPart("image")MultipartFile images
+            ) {
         gearCommandService.saveTempGear(req);
 
         return ResponseEntity.ok(SuccessCode.CREATE_SUCCESS);

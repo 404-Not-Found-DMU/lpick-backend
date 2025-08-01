@@ -2,8 +2,10 @@ package com.notfound.lpickbackend.userinfo.command.application.service;
 
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
+import com.notfound.lpickbackend.servicedata.command.application.domain.Gear;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserGear;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
+import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass;
 import com.notfound.lpickbackend.userinfo.query.service.UserGearQueryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,8 @@ class UserGearCommandServiceTest {
 
 
     private UserGear mockUserGear;
+
+    private final GearClass className = GearClass.TURNTABLE;
 
     private final String oauthId1 = "oauth123";
     private final String oauthId2 = "oauth222";
@@ -56,11 +60,20 @@ class UserGearCommandServiceTest {
                 .tier(null)
                 .build();
 
+        com.notfound.lpickbackend.servicedata.command.application.domain.GearClass TURNTABLE =
+                com.notfound.lpickbackend.servicedata.command.application.domain.GearClass.builder()
+                        .className(GearClass.TURNTABLE.name())
+                        .build();
+
+        Gear mockGear =  Gear.builder()
+                .eqClass(TURNTABLE)
+                .build();
 
         mockUserGear = UserGear.builder()
                 .userGearId(userGearId)
-                .eq(null)
+                .eq(mockGear)
                 .oauth(mockUser1)
+                .isFavorite(false)
                 .build();
     }
 
@@ -77,5 +90,34 @@ class UserGearCommandServiceTest {
 
 
         assertThat(exception.getErrorCode()).isEqualTo(ErrorCode.FORBIDDEN_RESOURCE_ACCESS);
+    }
+
+    @Test
+    void patchUserGearFavoriteToggle_IfDifferentUserRequested() {
+        given(userGearQueryService.findById(userGearId)).willReturn(mockUserGear);
+
+        // 접근시도 인원은 User2므로 에러 발생
+        CustomException exception = assertThrows(CustomException.class, () -> {
+            userGearCommandService.patchUserGearFavoriteToggle(oauthId2, userGearId);
+        });
+
+
+        assertThat(exception.getErrorCode()).isEqualTo(ErrorCode.FORBIDDEN_RESOURCE_ACCESS);
+    }
+
+    @Test
+    void patchUserGearFavoriteToggle_IfAlreadyExsitsFavoriteGear() {
+
+        given(userGearQueryService.findGearDetailInfoById(userGearId)).willReturn(mockUserGear);
+        given(userGearQueryService.countUserGearFavoriteByClassName(oauthId1, className.name())).willReturn(1L);
+
+        // 접근시도 인원은 User2므로 에러 발생
+        CustomException exception = assertThrows(CustomException.class, () -> {
+            userGearCommandService.patchUserGearFavoriteToggle(oauthId1, userGearId);
+        });
+
+
+        assertThat(exception.getErrorCode()).isEqualTo(ErrorCode.ALREADY_FULL_FAVORITE_GEAR);
+
     }
 }

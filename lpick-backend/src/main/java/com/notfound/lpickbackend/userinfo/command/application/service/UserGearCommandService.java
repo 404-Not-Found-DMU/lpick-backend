@@ -48,6 +48,7 @@ public class UserGearCommandService {
         userGearCommandRepository.delete(userGear);
     }
 
+    @Transactional
     public FavoriteToggleStatus patchUserGearFavoriteToggle(String oAuthId, String userGearId) {
         // userGear는 분류별로 1개의 favorite만 설정할 수 있다
 
@@ -61,7 +62,7 @@ public class UserGearCommandService {
                 );
         
         // 분류 카운트가 1개 이상이고, 토글 결과가 true인 경우 에러 발생
-        if(classFavoriteCount >= 1 && !target.isFavorite())
+        if(classFavoriteCount >= 1L && !target.isFavorite())
             throw new CustomException(ErrorCode.ALREADY_FULL_FAVORITE_GEAR);
 
         target.setFavorite(!target.isFavorite());
@@ -72,7 +73,7 @@ public class UserGearCommandService {
     }
 
     /** pathvariable 기반 ID로 가져온 엔티티와 현재 security 기반하에 사용자가 동일한지 검증  */
-    private void checkUserOwnedGear(UserGear userGear, String oAuthId) {
+    protected void checkUserOwnedGear(UserGear userGear, String oAuthId) {
         if(!userGear.getOauth().getOauthId().equals(oAuthId)) throw new CustomException(ErrorCode.FORBIDDEN_RESOURCE_ACCESS);
 
     }
