@@ -62,7 +62,7 @@ public class UserGearQueryService {
                 .build();
     }
 
-    /** UserGear는 User - Gear 간의 매핑 여부 및 좋아요 여부만을 확인하므로, UserGear의 분류 등을 확인하기 위해서는 해당 기능 사용 요망. */
+    /** UserGear는 User - Gear 간의 매핑 여부 및 좋아요 여부만을 확인하므로, UserGear의 분류 등을 확인하기 위해서는 해당 기능 사용 요망. EntityGraph 적용된 엔티티 반환 */
     public UserGear findGearDetailInfoById(String userGearId) {
         return userGearQueryRepository.findGearDetailByIdWithEqAndEqClass(userGearId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_GEAR));
