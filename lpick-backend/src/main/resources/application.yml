@@ -5,7 +5,7 @@ spring:
       - optional:classpath:API-KEY.yml
   sql:
     init:
-      mode: never
+      mode: always
       encoding: UTF-8
       schema-locations:
         - classpath:schema.sql   # 스키마(DDL), 테이블 구조
