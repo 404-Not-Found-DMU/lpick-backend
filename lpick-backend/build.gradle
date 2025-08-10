@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.5'
     id 'io.spring.dependency-management' version '1.1.7'
-    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"// QueryDSL 플러그인
 }
 
 group = 'com.notfound'
@@ -72,36 +71,25 @@ dependencies {
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 }
 
-// QueryDSL 추가
-def querydslDir = "build/generated/querydsl"
+def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile
 
-querydsl{
-    library = "com.querydsl:querydsl-apt"
-    jpa = true
-    querydslSourcesDir = querydslDir
-}
-sourceSets{
+sourceSets {
     main {
         java {
-            srcDirs = ['src/main/java', querydslDir]
+            srcDir querydslDir
         }
     }
 }
-compileQuerydsl{
-    options.annotationProcessorPath = configurations.querydsl
-}
-configurations{
-    querydsl.extendsFrom compileClasspath
-}
 
 tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs += ['-Aquerydsl.generatedAnnotationClass=javax.annotation.Generated']
+    options.compilerArgs += [
+            "-Aquerydsl.generatedAnnotationClass=javax.annotation.Generated"
+    ]
 }
 
-clean {
-    delete file('build/generated/querydsl')
+tasks.register("cleanQuerydslDir", Delete) {
+    delete querydslDir
 }
-// QueryDSL 추가 끝
 
 tasks.named('test') {
     useJUnitPlatform()
