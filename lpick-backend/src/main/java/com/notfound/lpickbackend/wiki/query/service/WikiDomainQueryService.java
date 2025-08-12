@@ -32,9 +32,10 @@ public class WikiDomainQueryService {
 
         Optional<WikiBookmark> bookmarkOptional = wikiBookmarkQueryService.findByWiki_WikiIdAndOauth_oauthId(wikiId, userId);
 
-        Page<ReviewResponse> reviewList = wikiReviewQueryService.getReviewResponseListInWiki(
-                PageRequest.of(0, 10, Sort.by("createdAt").descending()), wikiId);
-        return this.toViewResponse(wikiPage, pageRevision, bookmarkOptional, reviewList);
+        // 페이지 단위가 아닌, wiki 컴포넌트 기준으로 반환하도록 수정. 위키 리뷰 목록은 별도의 요청을 이미 소유하고있음.
+//        Page<ReviewResponse> reviewList = wikiReviewQueryService.getReviewResponseListInWiki(
+//                PageRequest.of(0, 10, Sort.by("createdAt").descending()), wikiId);
+        return this.toViewResponse(wikiPage, pageRevision, bookmarkOptional);
     }
     
     // 최근에 수정된 wikiPage 10개의 리스트를 제공. '최근 수정된 위키문서' 란에 표기하기위한 목적
@@ -57,7 +58,7 @@ public class WikiDomainQueryService {
 
     }
 
-    private WikiPageViewResponse toViewResponse(WikiPage wikiEntity, PageRevision revisionEntity, Optional<WikiBookmark> bookmarkOptionalEntity, Page<ReviewResponse> reviewResponses) {
+    private WikiPageViewResponse toViewResponse(WikiPage wikiEntity, PageRevision revisionEntity, Optional<WikiBookmark> bookmarkOptionalEntity) {
         return WikiPageViewResponse.builder()
                 .wikiId(wikiEntity.getWikiId())
                 .title(wikiEntity.getTitle())
@@ -65,7 +66,6 @@ public class WikiDomainQueryService {
                 .modifiedAt(revisionEntity.getCreatedAt())
                 .bookmarkId(bookmarkOptionalEntity.map(WikiBookmark::getWikiBookmarkId).orElse(null)) // 존재하면 id값 기입, 없으면 null 기입
                 .wikiPageClass(wikiEntity.getWikiClass())
-                .reviewList(reviewResponses)
                 .build();
     }
 }

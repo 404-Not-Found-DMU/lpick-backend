@@ -136,12 +136,7 @@ class WikiDomainQueryServiceTest {
                 .findByPageRevision_revisionNumberAndWiki_wikiId(wikiPage.getCurrentRevision(), dummyWikiId);
         verify(wikiBookmarkQueryService, times(1))
                 .findByWiki_WikiIdAndOauth_oauthId(dummyWikiId,dummyUserId);
-        verify(wikiReviewQueryService, times(1))
-                .getReviewResponseListInWiki(
-                        PageRequest.of(0, 10,
-                                Sort.by("createdAt").descending()),
-                        dummyWikiId
-                );
+
 
         WikiPageViewResponse expectedResponse =
                 WikiPageViewResponse.builder()
@@ -150,7 +145,6 @@ class WikiDomainQueryServiceTest {
                         .content(pageRevision.getContent())
                         .modifiedAt(pageRevision.getCreatedAt())
                         .bookmarkId(bookmark.getWikiBookmarkId())
-                        .reviewList(stubPage)
                         .build();
 
         assertEquals(expectedResponse, viewResponse);
