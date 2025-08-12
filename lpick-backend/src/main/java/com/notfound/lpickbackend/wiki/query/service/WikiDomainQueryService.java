@@ -51,6 +51,7 @@ public class WikiDomainQueryService {
                     .wikiId(wikiPage.getWikiId())
                     .title(wikiPage.getTitle())
                     .modifiedBefore(TimeAgoUtil.toTimeAgo(updateRevisionAt, now))
+                    .wikiPageClass(wikiPage.getWikiClass())
                     .build();
         }).toList();
 
@@ -63,6 +64,7 @@ public class WikiDomainQueryService {
                 .content(revisionEntity.getContent())
                 .modifiedAt(revisionEntity.getCreatedAt())
                 .bookmarkId(bookmarkOptionalEntity.map(WikiBookmark::getWikiBookmarkId).orElse(null)) // 존재하면 id값 기입, 없으면 null 기입
+                .wikiPageClass(wikiEntity.getWikiClass())
                 .reviewList(reviewResponses)
                 .build();
     }
