@@ -43,6 +43,10 @@ public class WikiPage {
     @Column(name = "status", nullable = false, length = 10)
     private WikiStatus wikiStatus;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "class", nullable = false, length = 10)
+    private WikiPageClass wikiClass;
+
     // debate는 debateChat에 비하면 양이 많지 않으므로, debate의 remove 자체는 cascade로 구현해도 성능 손해 심하지 않을 듯하다.
     @OneToMany(mappedBy = "wiki", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Debate> debates = new ArrayList<>();

@@ -1,12 +1,12 @@
 INSERT INTO tier(tier_id, name, point_scope) VALUES
                         ('1', 'dummy_tier', 300) ON CONFLICT (tier_id) DO NOTHING;
 
-INSERT INTO wiki_page(wiki_id, title, current_revision, status) VALUES
-                        ('wiki-1', 'dummy_wikipage', 'r3', 'OPEN') ON CONFLICT (wiki_id) DO NOTHING;
-INSERT INTO wiki_page(wiki_id, title, current_revision, status) VALUES
-                        ('wiki-2', 'dummy_wikipage2', null, 'OPEN') ON CONFLICT (wiki_id) DO NOTHING;
-INSERT INTO wiki_page(wiki_id, title, current_revision, status) VALUES
-                        ('wiki-3', 'dummy_wikipage3', null, 'OPEN') ON CONFLICT (wiki_id) DO NOTHING;
+INSERT INTO wiki_page(wiki_id, title, current_revision, status, class) VALUES
+                        ('wiki-1', 'dummy_wikipage', 'r3', 'OPEN', 'ARTIST') ON CONFLICT (wiki_id) DO NOTHING;
+INSERT INTO wiki_page(wiki_id, title, current_revision, status, class) VALUES
+                        ('wiki-2', 'dummy_wikipage2', null, 'OPEN', 'ALBUM') ON CONFLICT (wiki_id) DO NOTHING;
+INSERT INTO wiki_page(wiki_id, title, current_revision, status, class) VALUES
+                        ('wiki-3', 'dummy_wikipage3', null, 'OPEN', 'GEAR') ON CONFLICT (wiki_id) DO NOTHING;
 
 -- mockUser 기입
 INSERT INTO user_info(oauth_id, nickname, profile, point, stack_point, about, lpti, tier_id) VALUES
@@ -30,6 +30,11 @@ INSERT INTO page_revision(revision_id, content, revision_number, created_at, wik
     ('revision-1', '위키내용입니다.', 'r1', '2025-06-03 12:20:23', 'wiki-1', '1') ON CONFLICT (revision_id) DO NOTHING;
 
 -- # service_data
+-- GearClass 기입
+INSERT INTO gear_class(class_name) VALUES ('TURNTABLE') ON CONFLICT (class_name) DO NOTHING;
+INSERT INTO gear_class(class_name) VALUES ('SPEAKER') ON CONFLICT (class_name) DO NOTHING;
+INSERT INTO gear_class(class_name) VALUES ('HEADPHONE') ON CONFLICT (class_name) DO NOTHING;
+
 -- Album 기입
 INSERT INTO album(album_id, name, profile, release_date, release_country, label, wiki_id) VALUES
     ('album-1', '앨범명칭', null, '2025-06-05 00:21:12', 'KR', '으랏차차레이블', null) ON CONFLICT (album_id) DO NOTHING;
