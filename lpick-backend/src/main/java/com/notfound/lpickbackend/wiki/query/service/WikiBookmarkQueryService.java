@@ -1,11 +1,15 @@
 package com.notfound.lpickbackend.wiki.query.service;
 
+import com.notfound.lpickbackend.security.util.UserInfoUtil;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
+import com.notfound.lpickbackend.userinfo.query.repository.UserInfoQueryRepository;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiBookmark;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
+import com.notfound.lpickbackend.wiki.command.application.domain.WikiPageClass;
 import com.notfound.lpickbackend.wiki.query.dto.response.WikiBookmarkResponse;
 import com.notfound.lpickbackend.wiki.query.dto.response.WikiPageBookmarkListResponse;
 import com.notfound.lpickbackend.wiki.query.repository.WikiBookmarkQueryRepository;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +23,8 @@ public class WikiBookmarkQueryService {
 
     private final WikiBookmarkQueryRepository wikiBookmarkQueryRepository;
 
+    private final UserInfoQueryRepository userInfoQueryRepository;
+
 
 
     public WikiBookmarkResponse findByWikiIdAndOauthId(String wikiId, String oauthId) {
@@ -31,9 +37,15 @@ public class WikiBookmarkQueryService {
                 .build();
     }
 
-    public Page<WikiPageBookmarkListResponse> getWikiBookmarkListByUserId(Pageable pageable, UserInfo userInfo) {
+    public Page<WikiPageBookmarkListResponse> getWikiBookmarkListByOauthId(Pageable pageable, @Nullable String targetClass) {
 
-        Page<WikiBookmark> wikiBookmarkList = wikiBookmarkQueryRepository.findAllByOauth_OauthId(userInfo.getOauthId(), pageable);
+        Page<WikiBookmark> wikiBookmarkList;
+
+        if(targetClass == null || targetClass.isBlank()) // targetClass 조건 비어있거나 없으면 사용 X. QueryDSL 추가시 추후 통합예정
+            wikiBookmarkList = wikiBookmarkQueryRepository.findAllByOauth_OauthId(UserInfoUtil.getOAuthId(), pageable);
+        else
+            wikiBookmarkList = wikiBookmarkQueryRepository.findAllByOauth_OauthIdAndWiki_WikiClass(UserInfoUtil.getOAuthId(), WikiPageClass.valueOf(targetClass.toUpperCase()), pageable);
+
 
         return wikiBookmarkList.map(bookmark -> {
             // findByOauth_OauthId()로 불러와진 WikiBookmark Entity는 EntityGraph("wiki")를 사용했으므로 N+1 문제 걱정 없음
@@ -42,6 +54,7 @@ public class WikiBookmarkQueryService {
                     .wikiBookmarkId(bookmark.getWikiBookmarkId())
                     .wikiPageId(wikipage.getWikiId())
                     .wikiTitle(wikipage.getTitle())
+                    .wikiPageClass(wikipage.getWikiClass())
                     .build();
         });
     }

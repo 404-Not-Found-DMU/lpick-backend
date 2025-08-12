@@ -14,6 +14,15 @@ INSERT INTO user_info(oauth_id, nickname, profile, point, stack_point, about, lp
 INSERT INTO user_setting(oauth_id, allow_view_act_count, allow_view_recent_act, allow_view_gear, allow_view_collection, page_theme_setting, is_alarmWiki_edit, is_alarm_new_debate_answer, is_alarm_commented, is_alarm_event) VALUES
                         ('1', true, true, true, true, 'LIGHT', true, true, true, true) ON CONFLICT (oauth_id) DO NOTHING;
 
+-- wikiBookmark 기입
+INSERT INTO wiki_bookmark(wiki_bookmark_id, oauth_id, wiki_id) VALUES
+ ('wiki-bookmark-1', '1', 'wiki-1') ON CONFLICT (wiki_bookmark_id) DO NOTHING ;
+INSERT INTO wiki_bookmark(wiki_bookmark_id, oauth_id, wiki_id) VALUES
+    ('wiki-bookmark-2', '1', 'wiki-2') ON CONFLICT (wiki_bookmark_id) DO NOTHING ;
+INSERT INTO wiki_bookmark(wiki_bookmark_id, oauth_id, wiki_id) VALUES
+    ('wiki-bookmark-3', '1', 'wiki-3') ON CONFLICT (wiki_bookmark_id) DO NOTHING ;
+
+
 -- PageRevision 기입
 INSERT INTO page_revision(revision_id, content, revision_number, created_at, wiki_id, oauth_id) VALUES
     ('revision-6', '위키내용입니다.\n이거저거많이추가됐습니다', 'r1', '2025-06-05 00:21:12', 'wiki-3', '1') ON CONFLICT (revision_id) DO NOTHING;
