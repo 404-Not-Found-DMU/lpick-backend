@@ -25,10 +25,14 @@ import java.time.Instant;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class ArticleQueryServiceTest {
+
     @Mock
     private ArticleQueryRepository articleQueryRepository;
 
@@ -95,37 +99,44 @@ class ArticleQueryServiceTest {
 
     @Test
     void myArticleReadTest() {
-        // given
+
         Pageable pageable = PageRequest.of(0, 5);
         List<ArticleListResponse> myList = List.of(
                 new ArticleListResponse("id1", "내글", Instant.now(), Instant.now(), 0L, 0L, 0L, "mock-oauth-id")
         );
-        given(articleQueryRepository.findMyWithLikeAndCommentAndBookmarkCount("mock-oauth-id", pageable))
+
+        given(articleQueryRepository.findMyWithLikeAndCommentAndBookmarkCount(
+                eq("mock-oauth-id"), any(Pageable.class)))   // ← 핵심
                 .willReturn(new PageImpl<>(myList));
 
-        // when
         List<ArticleListResponse> result = articleQueryService.readMyArticleList(pageable).getContent();
 
-        // then
         assertEquals(1, result.size());
         assertEquals("내글", result.get(0).getTitle());
+
+        // 호출 검증까지 깔끔하게
+        verify(articleQueryRepository).findMyWithLikeAndCommentAndBookmarkCount(
+                eq("mock-oauth-id"), any(Pageable.class));
     }
 
     @Test
     void myLikedArticleReadTest() {
-        // given
+
         Pageable pageable = PageRequest.of(0, 5);
         List<ArticleListResponse> likedList = List.of(
                 new ArticleListResponse("id1", "좋아요한 글", Instant.now(), Instant.now(), 1L, 0L, 0L, "mock-oauth-id")
         );
-        given(articleQueryRepository.findMyLikedWithLikeAndCommentAndBookmarkCount("mock-oauth-id", pageable))
+
+        given(articleQueryRepository.findMyLikedWithLikeAndCommentAndBookmarkCount(
+                eq("mock-oauth-id"), any(Pageable.class)))   // ← 핵심
                 .willReturn(new PageImpl<>(likedList));
 
-        // when
         List<ArticleListResponse> result = articleQueryService.readMyLikedArticleList(pageable).getContent();
 
-        // then
         assertEquals(1, result.size());
         assertEquals("좋아요한 글", result.get(0).getTitle());
+
+        verify(articleQueryRepository).findMyLikedWithLikeAndCommentAndBookmarkCount(
+                eq("mock-oauth-id"), any(Pageable.class));
     }
 }
