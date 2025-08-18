@@ -54,7 +54,8 @@ CREATE TABLE IF NOT EXISTS wiki_page (
                            wiki_id	varchar(40)		NOT NULL,
                            title	varchar(50)		NOT NULL,
                            current_revision	varchar(50)		NULL,
-                           status	varchar(10)		NOT NULL
+                           status	varchar(10)		NOT NULL,
+                           class    varchar(10)     NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS artist_like (

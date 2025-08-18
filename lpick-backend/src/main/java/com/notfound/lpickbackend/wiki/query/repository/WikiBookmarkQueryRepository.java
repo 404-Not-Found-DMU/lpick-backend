@@ -1,6 +1,7 @@
 package com.notfound.lpickbackend.wiki.query.repository;
 
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiBookmark;
+import com.notfound.lpickbackend.wiki.command.application.domain.WikiPageClass;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -20,4 +21,7 @@ public interface WikiBookmarkQueryRepository extends JpaRepository<WikiBookmark,
 
     @EntityGraph(attributePaths = {"wiki"})
     Page<WikiBookmark> findAllByOauth_OauthId(String oauthId, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"wiki"})
+    Page<WikiBookmark> findAllByOauth_OauthIdAndWiki_WikiClass(String oauthId, WikiPageClass wikiClass, Pageable pageable);
 }

@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.wiki.query.controller;
 
+import com.notfound.lpickbackend.security.util.UserInfoUtil;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
 import com.notfound.lpickbackend.userinfo.query.service.UserInfoQueryService;
 import com.notfound.lpickbackend.wiki.query.dto.response.WikiBookmarkResponse;
@@ -7,17 +8,18 @@ import com.notfound.lpickbackend.wiki.query.dto.response.WikiPageBookmarkListRes
 import com.notfound.lpickbackend.wiki.query.service.WikiBookmarkQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1")
+@Validated // RequestParam의 Pattern을 동작시키기 위한 필수 어노테이션
 @Tag(name = "위키 북마크 조회 컨트롤러", description = "위키 북마크 관련 조회 기능 컨트롤러")
 public class WikiBookmarkQueryController {
 
@@ -30,13 +32,16 @@ public class WikiBookmarkQueryController {
     @GetMapping("/wiki/book-mark-list")
     @Operation(summary = "북마크 목록 조회", description = "사용자의 북마크 목록을 조회하는 기능")
     public ResponseEntity<Page<WikiPageBookmarkListResponse>> getWikiBookmarkList(
-            @RequestParam("dummyUserId") String userId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(name = "class", required = false) // 필수가 아니도록 명시
+            @Pattern(
+                    regexp = "^(artist|gear|album|other)$", // 문자열 시작과 끝 명확히 들어오도록 설계
+                    message = "class는 artist, gear, album, other 중 하나여야합니다."
+            )
+            String targetClass
     ) {
-        UserInfo userInfo = userInfoQueryService.getUserInfoById(userId);
-
-        Page<WikiPageBookmarkListResponse> bookmarkList = wikiBookmarkQueryService.getWikiBookmarkListByUserId(PageRequest.of(page, size), userInfo);
+        Page<WikiPageBookmarkListResponse> bookmarkList = wikiBookmarkQueryService.getWikiBookmarkListByOauthId(PageRequest.of(page, size), targetClass);
 
         return ResponseEntity.ok().body(bookmarkList);
     }

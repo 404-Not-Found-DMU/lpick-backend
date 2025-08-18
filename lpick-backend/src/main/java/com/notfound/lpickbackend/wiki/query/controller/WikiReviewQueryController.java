@@ -11,13 +11,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
+@Validated
 @Tag(name = "위키 리뷰 컨트롤러", description = "위키 리뷰 조회 관련 컨트롤러")
 public class WikiReviewQueryController {
 
@@ -29,11 +29,12 @@ public class WikiReviewQueryController {
             @PathVariable("wikiId") String wikiId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
+            @RequestParam(name="sort", required = false)
             @Pattern(
-                    regexp = "createdAt,(asc|desc)|star,(asc|desc)",
+                    regexp = "^createdAt,(asc|desc)|star,(asc|desc)$",
                     message = "sort 기본값은 createdAt,desc(최신순)입니다. sort는 'createdAt,asc', 'createdAt,desc', 'star,asc', 'star,desc' 중 하나거나 존재하지 않아야 합니다."
             )
-            @RequestParam(required = false) String sortParam
+            String sortParam
     ) {
 
         Sort sort;
