@@ -1,7 +1,7 @@
 name: 백엔드 도커 이미지 최신화
 
 on:
-  push:
+  pull_request:
     branches:
       - dev
 
@@ -94,3 +94,4 @@ jobs:
             docker-compose pull
             docker-compose down
             docker-compose up -d
+            docker image prune -f
