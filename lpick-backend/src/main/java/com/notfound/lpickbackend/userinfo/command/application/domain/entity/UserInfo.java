@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.userinfo.command.application.domain.entity;
 
+import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.UserRegistrationRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,5 +55,11 @@ public class UserInfo {
 
     public void editAbout(String about) {
         this.about = about;
+    }
+
+    public void registration(UserRegistrationRequest request, String profile) {
+        this.about = request.getAbout();
+        this.nickname = request.getNickname();
+        this.profile = profile;
     }
 }

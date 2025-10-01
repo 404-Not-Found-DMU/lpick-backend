@@ -35,6 +35,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
+        log.info("load user start");
+
         OAuth2User oAuth2User = getOAuth2User(userRequest);
 
         String oAuthType = userRequest.getClientRegistration().getRegistrationId();
@@ -75,7 +77,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
             // UserSetting 이원화에 따라 사용자 회원가입 시 UserSetting 기본 엔티티 구현 및 기본값 저장 위한 코드 추가.
             UserSetting defaultUserSetting = new UserSetting();
-            defaultUserSetting.setToDefault(); // 디폴트 설정(모두 true, LIGHT 테마)
+            defaultUserSetting.setToDefault(userInfo); // 디폴트 설정(모두 true, LIGHT 테마)
             userSettingCommandRepository.save(defaultUserSetting);
         }
 

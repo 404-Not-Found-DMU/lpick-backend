@@ -60,7 +60,9 @@ public class UserSetting {
     })
     private NotificationSetting notificationSetting;
 
-    public void setToDefault() {
+    public void setToDefault(UserInfo userInfo) {
+        this.oauth = userInfo;
+
         this.myPagePrivacySetting = MyPagePrivacySetting.builder()
                 .allowViewActCount(true)
                 .allowViewCollection(true)

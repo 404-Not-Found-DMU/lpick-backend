@@ -8,17 +8,17 @@ import com.notfound.lpickbackend.security.util.UserInfoUtil;
 import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.LogoutRequestDTO;
 import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.TokenRefreshRequestDTO;
 import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.TokenResponseDTO;
+import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.UserRegistrationRequest;
 import com.notfound.lpickbackend.userinfo.command.application.service.UserInfoCommandService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @Slf4j
@@ -41,11 +41,11 @@ public class UserInfoCommandController {
     }
 
     /*
-    * @CookieValue : HttpServletRequest 에서 해당 Value의 쿠키 추출 후 매개변수 주입.
-    * required 속성 : 해당 쿠키가 존재하지 않을경우 예외처리를 할것인지 안할것인지.. false로 할 시 예외처리 하지 않음.
-    *                CustomError 처리를 위해 false로 설정.
-    * @CookieValue는 스프링 MVC 컨트롤러 메서드 파라미터에서만 동작하는 애노테이션.
-    * */
+     * @CookieValue : HttpServletRequest 에서 해당 Value의 쿠키 추출 후 매개변수 주입.
+     * required 속성 : 해당 쿠키가 존재하지 않을경우 예외처리를 할것인지 안할것인지.. false로 할 시 예외처리 하지 않음.
+     *                CustomError 처리를 위해 false로 설정.
+     * @CookieValue는 스프링 MVC 컨트롤러 메서드 파라미터에서만 동작하는 애노테이션.
+     * */
     @PostMapping("/auth/logout")
     @Operation(summary = "로그아웃", description = "쿠키와 토큰을 삭제 처리 하는 기능")
     ResponseEntity<SuccessCode> oAuthLogoutRequest(
@@ -86,16 +86,33 @@ public class UserInfoCommandController {
                 response,
                 "access_token",
                 tokenResponseDTO.getAccessToken(),
-                accessTokenValidity/1000 // 초 단위라 나누기 1000
+                accessTokenValidity / 1000 // 초 단위라 나누기 1000
         );
         CookieUtil.addCookie(
                 response,
                 "refresh_token",
                 tokenResponseDTO.getRefreshToken(),
-                refreshTokenValidity/1000 // 초 단위라 나누기 1000
+                refreshTokenValidity / 1000 // 초 단위라 나누기 1000
         );
 
         return ResponseEntity.ok(SuccessCode.REFRESH_SUCCESS);
+    }
+
+    @PostMapping(
+            value = "/auth/registration",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    ResponseEntity<SuccessCode> userRegistration(
+            @RequestPart(name = "userinfo") UserRegistrationRequest userInfo,
+            @RequestPart(name = "profileImage") MultipartFile profileImage
+    ) {
+
+        String oAuthId = UserInfoUtil.getOAuthId();
+
+        userCommandService.userRegistration(oAuthId, userInfo, profileImage);
+
+        return ResponseEntity.ok(SuccessCode.SUCCESS);
     }
 
     /* 개발자 전용 토큰 요청 api */
