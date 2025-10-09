@@ -12,6 +12,13 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      # Spring Boot의 공식 바인딩 키
+      - SPRING_ELASTICSEARCH_URIS=http://elasticsearch:9200
+      # 그 외 DB/REDIS 등 기존 환경변수들...
+      - SPRING_PROFILES_ACTIVE=prod
     volumes:
       - ./API-KEY.yml:/app/API-KEY.yml
 

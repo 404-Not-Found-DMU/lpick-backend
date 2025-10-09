@@ -50,10 +50,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 break;
         }
 
-        Optional<UserInfo> optionalUserInfo = userInfoCommandRepository.findByOauthId("kakao" + oAuthId);
+        Optional<UserInfo> optionalUserInfo = userInfoCommandRepository.findByOauthId(oAuthType + oAuthId);
 
 
         if (optionalUserInfo.isPresent()) { // 유저가 있을 때
+            log.warn("user already registration");
             UserInfo userInfo = optionalUserInfo.get();
             return new CustomOAuthUser(userInfo);
         } else { // 유저가 없을 때 (최초 로그인)
@@ -73,12 +74,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .lpti("")
                     .tier(defaultTier)
                     .build();
-            userInfoCommandRepository.save(userInfo);
+            UserInfo createdUserInfo = userInfoCommandRepository.save(userInfo);
             log.info("user save success");
+            log.info("user oauth Id : {}", userInfo.getOauthId());
 
             // UserSetting 이원화에 따라 사용자 회원가입 시 UserSetting 기본 엔티티 구현 및 기본값 저장 위한 코드 추가.
             UserSetting defaultUserSetting = new UserSetting();
-            defaultUserSetting.setToDefault(userInfo); // 디폴트 설정(모두 true, LIGHT 테마)
+            defaultUserSetting.setToDefault(createdUserInfo); // 디폴트 설정(모두 true, LIGHT 테마)
             userSettingCommandRepository.save(defaultUserSetting);
             log.info("user setting save success");
 

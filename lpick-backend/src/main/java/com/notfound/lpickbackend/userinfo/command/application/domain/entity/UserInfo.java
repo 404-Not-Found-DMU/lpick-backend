@@ -58,7 +58,11 @@ public class UserInfo {
     }
 
     public void registration(UserRegistrationRequest request, String profile) {
-        this.about = request.getAbout();
+        if(request.getAbout() == null || request.getAbout().isBlank()) {
+            this.about = "자기소개를 작성해주세요";
+        } else {
+            this.about = request.getAbout();
+        }
         this.nickname = request.getNickname();
         this.profile = profile;
     }

@@ -11,6 +11,10 @@ import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.TokenR
 import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.UserRegistrationRequest;
 import com.notfound.lpickbackend.userinfo.command.application.service.UserInfoCommandService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Encoding;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -103,6 +107,7 @@ public class UserInfoCommandController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @Operation(summary = "최초 회원가입", description = "최초 로그인 시 자기소개와 프로필사진을 등록하는 기능")
     ResponseEntity<SuccessCode> userRegistration(
             @RequestPart(name = "userinfo") UserRegistrationRequest userInfo,
             @RequestPart(name = "profileImage") MultipartFile profileImage
