@@ -92,5 +92,6 @@ services:
       retries: 20
 
 volumes:
+  pgdata:
   es_data:
     driver: local
