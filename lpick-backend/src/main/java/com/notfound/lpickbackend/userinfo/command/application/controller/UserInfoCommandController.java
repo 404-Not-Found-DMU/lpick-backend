@@ -24,6 +24,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @RestController
 @Slf4j
 @RequestMapping("/api/v1")
@@ -146,4 +148,10 @@ public class UserInfoCommandController {
         return ResponseEntity.ok(SuccessCode.DEV_TOKEN_CREATE_SUCCESS);
     }
 
+    @GetMapping("/auth/login-test")
+    @Operation(summary = "카카오 로그인 테스트", description = "카카오 로그인페이지로 리다이렉트해줍니다.")
+    void loginTest(HttpServletResponse response) throws IOException {
+
+        response.sendRedirect("https://lpick.duckdns.org/oauth2/authorization/kakao");
+    }
 }
