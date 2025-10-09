@@ -20,7 +20,7 @@ spring:
             client-id: ${oauth2.client.kakao.client-id}
             authorization-grant-type: ${oauth2.client.kakao.authorization-grant-type}
             client-name: kakao
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            redirect-uri: ${oauth2.client.kakao.redirect-url}
             scope:
               - profile_nickname
               - profile_image
