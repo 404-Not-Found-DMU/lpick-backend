@@ -76,9 +76,9 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
 
         if(userInfo.getAbout() == null || userInfo.getAbout().isEmpty() || userInfo.getAbout().isBlank()) {
             response.sendRedirect("http://localhost:3000/signup");
+        } else {
+            response.sendRedirect("http://localhost:3000/");
         }
-        // redirect : 아직 보낼곳이 없어서 임시로 작성
-        response.sendRedirect("http://localhost:3000/");
     }
 
 }
