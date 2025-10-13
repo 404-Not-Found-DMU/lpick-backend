@@ -86,6 +86,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.addAllowedOriginPattern("https://lpick.duckdns.org"); // nginx 도메인
+        configuration.addAllowedOriginPattern("https://lpick-frontend-deploy-2pom.vercel.app");
         configuration.addAllowedOriginPattern("http://localhost:3000"); // 프론트 로컬 도메인
         configuration.addAllowedOriginPattern("http://3.34.194.165:8080"); // EC2 퍼블릭 IP (현재는 사용 안하지만 일단 추가)
 
