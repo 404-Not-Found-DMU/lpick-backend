@@ -5,10 +5,10 @@
 CREATE TABLE IF NOT EXISTS album (
 	album_id	varchar(40)		NOT NULL,
 	name	varchar(100)		NOT NULL,
-	profile	varchar(200)		NULL,
+	profile	text		NULL,
 	release_date	timestamp		NULL,
 	release_country	varchar(50)		NULL,
-	label	varchar(50)		NULL,
+	label	text		NULL,
 	wiki_id	varchar(40)		NULL
 );
 

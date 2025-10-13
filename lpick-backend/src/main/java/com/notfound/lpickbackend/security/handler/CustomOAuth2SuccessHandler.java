@@ -75,9 +75,9 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
         log.warn("login success");
 
         if(userInfo.getAbout() == null || userInfo.getAbout().isEmpty() || userInfo.getAbout().isBlank()) {
-            response.sendRedirect("http://localhost:3000/signup");
+            response.sendRedirect("https://lpick-frontend-deploy-2pom.vercel.app/signup");
         } else {
-            response.sendRedirect("http://localhost:3000/");
+            response.sendRedirect("https://lpick-frontend-deploy-2pom.vercel.app/");
         }
     }
 
