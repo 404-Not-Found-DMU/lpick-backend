@@ -2,6 +2,7 @@ package com.notfound.lpickbackend.security.util;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.server.Cookie;
 import org.springframework.http.ResponseCookie;
 
 /*
@@ -23,8 +24,8 @@ public class CookieUtil {
     public static void addCookie(HttpServletResponse response, String name, String value, int maxAgeInSec) {
         ResponseCookie cookie = ResponseCookie.from(name, value)
                 .httpOnly(true)
-                .secure(isSecure) // https만 쿠키 전달
-                .sameSite(sameSite) // Cross-Origin 허용
+                .secure(true) // https만 쿠키 전달
+                .sameSite("None") // Cross-Origin 허용
                 .path("/")
                 .maxAge(maxAgeInSec)
                 .build();
@@ -36,8 +37,8 @@ public class CookieUtil {
     public static void deleteCookie(HttpServletResponse response, String name) {
         ResponseCookie cookie = ResponseCookie.from(name, "")
                 .httpOnly(true)
-                .secure(isSecure)
-                .sameSite(sameSite)
+                .secure(true)
+                .sameSite("None")
                 .path("/")
                 .maxAge(0)
                 .build();
