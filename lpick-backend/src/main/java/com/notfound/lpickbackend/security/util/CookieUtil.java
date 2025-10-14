@@ -21,6 +21,7 @@ public class CookieUtil {
                 .secure(true) // https만 쿠키 전달
                 .sameSite("None") // Cross-Origin 허용
                 .path("/")
+                .domain(".lpick.in")
                 .maxAge(maxAgeInSec)
                 .partitioned(true)
                 .build();
@@ -35,6 +36,7 @@ public class CookieUtil {
                 .secure(true)
                 .sameSite("None")
                 .path("/")
+                .domain(".lpick.in")
                 .maxAge(0)
                 .partitioned(true)
                 .build();
