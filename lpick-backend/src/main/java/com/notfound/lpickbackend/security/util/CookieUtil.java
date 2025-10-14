@@ -28,9 +28,10 @@ public class CookieUtil {
                 .sameSite("None") // Cross-Origin 허용
                 .path("/")
                 .maxAge(maxAgeInSec)
+                .partitioned(true)
                 .build();
 
-        response.addHeader("Set-Cookie", cookie.toString() + "; Partitioned");
+        response.addHeader("Set-Cookie", cookie.toString());
     }
 
     // 쿠키 삭제
@@ -41,8 +42,9 @@ public class CookieUtil {
                 .sameSite("None")
                 .path("/")
                 .maxAge(0)
+                .partitioned(true)
                 .build();
 
-        response.addHeader("Set-Cookie", cookie.toString() + "; Partitioned");
+        response.addHeader("Set-Cookie", cookie.toString());
     }
 }
