@@ -15,12 +15,6 @@ public class CookieUtil {
     // secure(true) + sameSite("None") 설정은 쿠키를 위해 필수에 가깝습니다.
     // 해당 설정이 존재해야 Cross-Origin(백엔드 도메인과 다른 경우에도 호출 허용), 쿠키 저장 등의 설정을 동시에 진행할 수 있습니다.
 
-    @Value("${cookie.secure}")
-    private static boolean isSecure;
-
-    @Value("${cookie.same-site}")
-    private static String sameSite;
-
     public static void addCookie(HttpServletResponse response, String name, String value, int maxAgeInSec) {
         ResponseCookie cookie = ResponseCookie.from(name, value)
                 .httpOnly(true)
