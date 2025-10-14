@@ -89,9 +89,9 @@ public class SecurityConfig {
         configuration.addAllowedOrigin("https://lpick-frontend-deploy-2pom.vercel.app");
         configuration.addAllowedOrigin("http://localhost:3000"); // 프론트 로컬 도메인
 
-        configuration.addAllowedOriginPattern("https://lpick.duckdns.org/*"); // nginx 도메인
-        configuration.addAllowedOriginPattern("https://lpick-frontend-deploy-2pom.vercel.app/*");
-        configuration.addAllowedOriginPattern("http://localhost:3000/*"); // 프론트 로컬 도메인
+        configuration.addAllowedOriginPattern("https://lpick.duckdns.org"); // nginx 도메인
+        configuration.addAllowedOriginPattern("https://lpick-frontend-deploy-2pom.vercel.app");
+        configuration.addAllowedOriginPattern("http://localhost:3000"); // 프론트 로컬 도메인
 
         configuration.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
         configuration.addAllowedHeader("*"); // 모든 헤더 허용

@@ -30,7 +30,7 @@ public class CookieUtil {
                 .maxAge(maxAgeInSec)
                 .build();
 
-        response.addHeader("Set-Cookie", cookie.toString());
+        response.addHeader("Set-Cookie", cookie.toString() + "; Partitioned");
     }
 
     // 쿠키 삭제
@@ -43,6 +43,6 @@ public class CookieUtil {
                 .maxAge(0)
                 .build();
 
-        response.addHeader("Set-Cookie", cookie.toString());
+        response.addHeader("Set-Cookie", cookie.toString() + "; Partitioned");
     }
 }
