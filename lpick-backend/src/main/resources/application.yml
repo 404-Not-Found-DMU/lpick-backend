@@ -66,3 +66,13 @@ springdoc:
         url: /v3/api-docs
     oauth2-redirect-url: ${swagger.oauth2-redirect-url} # swagger에서 사용되는 redirect-url
     persistAuthorization: true  # Swagger UI 페이지 새로고침해도 인증정보 유지
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info   # 필요시 readiness,liveness 등 더 포함 가능
+  endpoint:
+    health:
+      probes:
+        enabled: true          # /actuator/health/liveness, /readiness 활성화
