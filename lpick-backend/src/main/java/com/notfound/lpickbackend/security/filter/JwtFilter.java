@@ -39,7 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 pathMatcher.match("/favicon.ico", path) ||
                 pathMatcher.match("/", path) ||
                 pathMatcher.match("/api/v1/developer-token", path) ||
-                pathMacher.match("/actuator/health", path)
+                pathMatcher.match("/actuator/health", path)
         ) {
             filterChain.doFilter(request, response);
             return;
