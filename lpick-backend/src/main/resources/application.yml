@@ -76,3 +76,6 @@ management:
     health:
       probes:
         enabled: true          # /actuator/health/liveness, /readiness 활성화
+  health:
+    elasticsearch:
+      enabled: false
