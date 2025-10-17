@@ -29,7 +29,7 @@ import java.io.IOException;
 @RestController
 @Slf4j
 @RequestMapping("/api/v1")
-@Tag(name = "유저 정보 컨트롤러", description = "로그아웃, 쿠키 재요청 기능")
+@Tag(name = "유저 정보 컨트롤러", description = "로그아웃, 쿠키 재요청, 사용자 정보 요청, 사용자 삭제(테스트 위함) 기능")
 public class UserInfoCommandController {
 
     private final UserInfoCommandService userCommandService;
@@ -125,33 +125,25 @@ public class UserInfoCommandController {
     /* 개발자 전용 토큰 요청 api */
     @PostMapping("/developer-token")
     @Operation(summary = "개발자 전용 토큰 요청", description = "테스트를 위해 1년짜리 토큰을 발급하는 기능")
-    ResponseEntity<SuccessCode> developerTokenRequest(
+    ResponseEntity<TokenResponseDTO> developerTokenRequest(
             HttpServletResponse response
     ) {
 
         TokenResponseDTO tokenResponseDTO = userCommandService.getDeveloperToken();
 
-        // 쿠키 추가
-        CookieUtil.addCookie(
-                response,
-                "access_token",
-                tokenResponseDTO.getAccessToken(),
-                accessTokenValidity * 1000 // 1년
-        );
-        CookieUtil.addCookie(
-                response,
-                "refresh_token",
-                tokenResponseDTO.getRefreshToken(),
-                accessTokenValidity * 1000 // 1년
-        );
-
-        return ResponseEntity.ok(SuccessCode.DEV_TOKEN_CREATE_SUCCESS);
+        return ResponseEntity.ok(tokenResponseDTO);
     }
 
-    @GetMapping("/auth/login-test")
-    @Operation(summary = "카카오 로그인 테스트", description = "카카오 로그인페이지로 리다이렉트해줍니다.")
-    void loginTest(HttpServletResponse response) throws IOException {
+    @DeleteMapping("/auth")
+    @Operation(summary = "회원정보 삭제 테스트", description = "최초 회원 가입 테스트를 위한 삭제 메소드입니다.")
+    ResponseEntity<SuccessCode> deleteUserInfo(
+            @RequestPart(required = false) String oAuthId
+    ) {
 
-        response.sendRedirect("https://lpick.duckdns.org/oauth2/authorization/kakao");
+        userCommandService.deleteUserInfo(oAuthId);
+
+        return ResponseEntity.ok(SuccessCode.DELETE_SUCCESS);
     }
+
+
 }

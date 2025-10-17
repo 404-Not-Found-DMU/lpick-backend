@@ -10,7 +10,9 @@ import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.Logout
 import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.TokenRefreshRequestDTO;
 import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.TokenResponseDTO;
 import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.UserRegistrationRequest;
+import com.notfound.lpickbackend.userinfo.command.repository.UserGearCommandRepository;
 import com.notfound.lpickbackend.userinfo.command.repository.UserInfoCommandRepository;
+import com.notfound.lpickbackend.userinfo.command.repository.UserSettingCommandRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -70,7 +72,7 @@ public class UserInfoCommandService extends DefaultOAuth2UserService {
         // redis whiteList에 refreshToken 저장
         redisService.saveWhitelistRefreshToken(oAuthId, refreshToken, refreshTokenValidity, TimeUnit.MILLISECONDS);
 
-        return new TokenResponseDTO(accessToken, refreshToken);
+        return new TokenResponseDTO(accessToken, refreshToken, userInfo.getOauthId());
     }
 
     /*
@@ -101,7 +103,7 @@ public class UserInfoCommandService extends DefaultOAuth2UserService {
         // redis whiteList에 refreshToken 1년 동안 저장
         redisService.saveWhitelistRefreshToken("1", refreshToken, 365, TimeUnit.DAYS);
 
-        return new TokenResponseDTO(accessToken, refreshToken);
+        return new TokenResponseDTO(accessToken, refreshToken, userInfo.getOauthId());
     }
 
     public void saveUserInfo(UserInfo userInfo) {
@@ -136,5 +138,13 @@ public class UserInfoCommandService extends DefaultOAuth2UserService {
         return userInfoCommandRepository.findByOauthId(oAuthId).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO)
         );
+    }
+
+    @Transactional
+    public void deleteUserInfo(String oAuthId) {
+
+        UserInfo userInfo = getUserInfo(oAuthId);
+
+        userInfo.deleteUserInfo();
     }
 }

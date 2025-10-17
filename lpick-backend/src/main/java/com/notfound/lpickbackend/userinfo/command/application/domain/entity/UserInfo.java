@@ -66,4 +66,11 @@ public class UserInfo {
         this.nickname = request.getNickname();
         this.profile = profile;
     }
+
+    public void deleteUserInfo() {
+        this.profile = null;
+        this.nickname = null;
+        this.about = null;
+        this.lpti = null;
+    }
 }

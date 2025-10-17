@@ -14,4 +14,5 @@ public class TokenResponseDTO {
 
     String accessToken;
     String refreshToken;
+    String oauthId;
 }
