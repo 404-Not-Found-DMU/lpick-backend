@@ -38,7 +38,7 @@ jobs:
 
       - name: Gradle 빌드 (테스트 포함)
         working-directory: ./lpick-backend
-        run: ./gradlew clean build -x test -x integrationTest --build-cache
+        run: ./gradlew clean build -x test --build-cache
 
       - name: Docker Buildx 준비
         uses: docker/setup-buildx-action@v3
