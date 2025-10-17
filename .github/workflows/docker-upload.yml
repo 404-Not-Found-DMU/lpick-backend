@@ -79,7 +79,7 @@ jobs:
             set -e
             cd ~/lpick-server/lpick-backend
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-	    docker compose pull       # 서비스 이름에 맞춰 수정
- 	    docker compose down
+            docker compose pull       # 서비스 이름에 맞춰 수정
+            docker compose down
             docker compose up -d
             docker image prune -f
