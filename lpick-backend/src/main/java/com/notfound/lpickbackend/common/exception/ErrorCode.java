@@ -15,8 +15,8 @@ public enum ErrorCode {
     ILLEGAL_VALUE_DETECTED(HttpStatus.INTERNAL_SERVER_ERROR, "DB 규칙에 맞지 않는 값이 DB에 위치해있습니다."),
 
     // 토큰 관련 에러
-    NOT_VALID_REFRESH_TOKEN(HttpStatus.FORBIDDEN, "유효하지 않은 refresh token입니다."),
-    NOT_VALID_ACCESS_TOKEN(HttpStatus.FORBIDDEN, "유효하지 않은 access token입니다."),
+    NOT_VALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 refresh token입니다."),
+    NOT_VALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 access token입니다."),
     SECURITY_CONTEXT_NOT_FOUND(HttpStatus.UNAUTHORIZED, "Security Context에 인증 정보가 없습니다."),
     MISSING_AUTHORIZATION_HEADER(HttpStatus.BAD_REQUEST, "Authorization 헤더가 누락되었습니다."),
     TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "AccessToken이 쿠키에 존재하지 않습니다."),
@@ -35,7 +35,7 @@ public enum ErrorCode {
     ALREADY_FULL_FAVORITE_ALBUM(HttpStatus.BAD_REQUEST, "favorite 리스트가 가득 찼습니다. 더이상 favorite로 지정할 수 없습니다."),
     ALREADY_FULL_FAVORITE_GEAR(HttpStatus.BAD_REQUEST, "favorite 리스트가 가득 찼습니다. 더이상 favorite로 지정할 수 없습니다."),
     IS_NOT_TEMP_GEAR(HttpStatus.BAD_REQUEST, "허가하려는 Gear는 Temp 상태가 아닙니다."),
-
+    USER_REGISTRATION_FAIL(HttpStatus.BAD_REQUEST, "회원가입에 실패했습니다. 입력정보를 확인해주세요"),
 
     ALREADY_HAS_PARENTS_REQUEST(HttpStatus.BAD_REQUEST,"대댓글에 대댓글을 추가로 작성할 수 없습니다." ),
     ALREADY_HAS_LIKE(HttpStatus.BAD_REQUEST, "이미 좋아요 처리 된 리소스입니다."),

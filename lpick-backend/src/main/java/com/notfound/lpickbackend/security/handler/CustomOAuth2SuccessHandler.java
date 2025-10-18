@@ -51,6 +51,8 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException {
 
+        log.info("kakao Login start");
+
         CustomOAuthUser oAuthUser = (CustomOAuthUser) authentication.getPrincipal();
         String oAuthId = oAuthUser.getName(); // CustomOAuthUser의 oAuthID return받음
         UserInfo userInfo = userInfoCommandRepository.findByOauthId(oAuthId).orElseThrow(
@@ -70,8 +72,13 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
         // redis whiteList에 refreshToken 저장
         redisService.saveWhitelistRefreshToken(oAuthId, refreshToken, refreshTokenValidity, TimeUnit.MILLISECONDS);
 
-        // redirect : 아직 보낼곳이 없어서 임시로 작성
-        response.sendRedirect("http://localhost:3000/");
+        log.warn("login success");
+
+        if(userInfo.getAbout() == null || userInfo.getAbout().isEmpty() || userInfo.getAbout().isBlank()) {
+            response.sendRedirect("https://lpick.in/signup");
+        } else {
+            response.sendRedirect("https://lpick.in/");
+        }
     }
 
 }

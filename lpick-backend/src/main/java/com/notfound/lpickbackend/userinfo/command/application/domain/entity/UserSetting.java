@@ -12,7 +12,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -60,7 +62,14 @@ public class UserSetting {
     })
     private NotificationSetting notificationSetting;
 
-    public void setToDefault() {
+    public void setToDefault(UserInfo userInfo) {
+
+        log.warn("set Setting Default");
+
+        this.oauth = userInfo;
+
+        log.warn("oauth id : {}", oauth.getOauthId());
+
         this.myPagePrivacySetting = MyPagePrivacySetting.builder()
                 .allowViewActCount(true)
                 .allowViewCollection(true)

@@ -5,10 +5,10 @@
 CREATE TABLE IF NOT EXISTS album (
 	album_id	varchar(40)		NOT NULL,
 	name	varchar(100)		NOT NULL,
-	profile	varchar(200)		NULL,
+	profile	text		NULL,
 	release_date	timestamp		NULL,
 	release_country	varchar(50)		NULL,
-	label	varchar(50)		NULL,
+	label	text		NULL,
 	wiki_id	varchar(40)		NULL
 );
 
@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS user_setting (
                            allow_view_gear           boolean       NOT NULL DEFAULT TRUE,
                            allow_view_collection     boolean       NOT NULL DEFAULT TRUE,
                            page_theme_setting        varchar(20)   NOT NULL DEFAULT 'LIGHT',
-                           is_alarmWiki_edit         boolean       NOT NULL DEFAULT TRUE,
+                           is_alarm_wiki_edit         boolean       NOT NULL DEFAULT TRUE,
                            is_alarm_new_debate_answer boolean      NOT NULL DEFAULT TRUE,
                            is_alarm_commented        boolean       NOT NULL DEFAULT TRUE,
                            is_alarm_event            boolean       NOT NULL DEFAULT TRUE

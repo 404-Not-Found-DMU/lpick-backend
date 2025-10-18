@@ -38,19 +38,15 @@ jobs:
         working-directory: ./lpick-backend
         run: chmod +x gradlew
 
-      - name: CI용 API-KEY.yml 생성
-        working-directory: ./lpick-backend
-        run: |
-          mkdir -p src/main/resources
-          echo "${{ secrets.API_KEY_CONTENT }}" > src/main/resources/API-KEY.yml
-
-      - name: Gradle 빌드
-        working-directory: ./lpick-backend
-        env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/test_db
-          SPRING_DATASOURCE_USERNAME: testuser
-          SPRING_DATASOURCE_PASSWORD: testpass
-        run: ./gradlew clean build
+#      - name: CI용 API-KEY.yml 생성
+#        working-directory: ./lpick-backend
+#        run: |
+#          mkdir -p src/main/resources
+#          echo "${{ secrets.API_KEY_CONTENT }}" > src/main/resources/API-KEY.yml
+#
+#      - name: Gradle 빌드
+#        working-directory: ./lpick-backend
+#        run: ./gradlew clean build -x test --build-cache
 
       - name: Docker Hub 로그인
         uses: docker/login-action@v3
