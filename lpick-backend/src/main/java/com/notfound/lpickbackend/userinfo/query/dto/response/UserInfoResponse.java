@@ -11,4 +11,6 @@ public class UserInfoResponse {
 
     private String oauthId;
     private String nickname;
+    private String about;
+    private String profile;
 }

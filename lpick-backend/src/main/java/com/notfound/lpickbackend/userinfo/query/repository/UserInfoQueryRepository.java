@@ -13,7 +13,9 @@ public interface UserInfoQueryRepository extends JpaRepository<UserInfo, String>
     @Query("""
         select new com.notfound.lpickbackend.userinfo.query.dto.response.UserInfoResponse(
             u.oauthId,
-            u.nickname
+            u.nickname,
+            u.about,
+            u.profile
         )
         from UserInfo u
         where u.oauthId = :userId
