@@ -134,13 +134,12 @@ public class UserInfoCommandController {
         return ResponseEntity.ok(tokenResponseDTO);
     }
 
-    @DeleteMapping("/auth")
+    @DeleteMapping("/auth/{oauthId}")
     @Operation(summary = "회원정보 삭제 테스트", description = "최초 회원 가입 테스트를 위한 삭제 메소드입니다.")
     ResponseEntity<SuccessCode> deleteUserInfo(
-            @RequestPart(required = false) String oAuthId
-    ) {
+            @PathVariable String oauthId) {
 
-        userCommandService.deleteUserInfo(oAuthId);
+        userCommandService.deleteUserInfo(oauthId);
 
         return ResponseEntity.ok(SuccessCode.DELETE_SUCCESS);
     }
