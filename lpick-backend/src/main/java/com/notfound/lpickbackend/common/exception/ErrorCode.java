@@ -15,8 +15,8 @@ public enum ErrorCode {
     ILLEGAL_VALUE_DETECTED(HttpStatus.INTERNAL_SERVER_ERROR, "DB 규칙에 맞지 않는 값이 DB에 위치해있습니다."),
 
     // 토큰 관련 에러
-    NOT_VALID_REFRESH_TOKEN(HttpStatus.FORBIDDEN, "유효하지 않은 refresh token입니다."),
-    NOT_VALID_ACCESS_TOKEN(HttpStatus.FORBIDDEN, "유효하지 않은 access token입니다."),
+    NOT_VALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 refresh token입니다."),
+    NOT_VALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 access token입니다."),
     SECURITY_CONTEXT_NOT_FOUND(HttpStatus.UNAUTHORIZED, "Security Context에 인증 정보가 없습니다."),
     MISSING_AUTHORIZATION_HEADER(HttpStatus.BAD_REQUEST, "Authorization 헤더가 누락되었습니다."),
     TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "AccessToken이 쿠키에 존재하지 않습니다."),

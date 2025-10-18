@@ -36,16 +36,18 @@ public class JwtUtil {
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT Token {}", e);
+            throw new CustomException(ErrorCode.NOT_VALID_ACCESS_TOKEN);
         } catch (ExpiredJwtException e) {
             log.info("Expired JWT Token {}", e);
             throw new CustomException(ErrorCode.NOT_VALID_ACCESS_TOKEN);
         } catch (UnsupportedJwtException e) {
             log.info("Unsupported JWT Token {}", e);
+            throw new CustomException(ErrorCode.NOT_VALID_ACCESS_TOKEN);
         } catch (IllegalArgumentException e) {
             log.info("JWT Token claims empty {}", e);
+            throw new CustomException(ErrorCode.NOT_VALID_ACCESS_TOKEN);
         }
 
-        return false;
     }
 
     /* 넘어온 AccessToken으로 인증 객체 추출 */
