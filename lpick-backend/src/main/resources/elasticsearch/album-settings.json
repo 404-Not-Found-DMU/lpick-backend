@@ -1,19 +1,18 @@
 {
-  "settings": {
-    "index": {
-      "number_of_shards": "1",
-      "number_of_replicas": "0",
-      "analysis": {
-        "analyzer": {
-          "korean_analyzer": {
-            "type": "custom",
-            "tokenizer": "korean_tokenizer"
-          }
-        },
-        "tokenizer": {
-          "korean_tokenizer": {
-            "type": "nori_tokenizer"
-          }
+  "index": {
+    "number_of_shards": "1",
+    "number_of_replicas": "0",
+    "analysis": {
+      "analyzer": {
+        "korean_analyzer": {
+          "type": "custom",
+          "tokenizer": "nori_tokenizer"
+        }
+      },
+      "tokenizer": {
+        "nori_tokenizer": {
+          "type": "nori_tokenizer",
+          "decompound_mode": "mixed"
         }
       }
     }

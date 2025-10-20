@@ -21,43 +21,44 @@ services:
       - xpack.security.enabled=false
       - xpack.security.http.ssl.enabled=false   # 내부 통신은 http로 단순화
       - ES_JAVA_OPTS=-Xms512m -Xmx512m          # 메모리 상황에 맞게 조정
+    command: [ "/bin/bash", "-c", "bin/elasticsearch-plugin install analysis-nori -b && /usr/local/bin/docker-entrypoint.sh" ]
     ulimits:
       memlock: { soft: -1, hard: -1 }
     volumes:
       - es_data:/usr/share/elasticsearch/data
     # 운영에서는 ES 포트 노출 금지(내부 전용) → ports 섹션 없음
-    healthcheck:                            # 👈 최소 헬스체크 (패스워드 필요 없음)
-      test: ["CMD-SHELL", "curl -s http://localhost:9200 >/dev/null || exit 1"]
+    healthcheck: # 👈 최소 헬스체크 (패스워드 필요 없음)
+      test: [ "CMD-SHELL", "curl -s http://localhost:9200 >/dev/null || exit 1" ]
       interval: 5s
       timeout: 3s
       retries: 20
 
-  # 운영 기본에선 Kibana/Logstash는 제외(옵션). dev에서 profile로 켜기 권장.
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.14.3
-    container_name: kibana
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD:-changeme}
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
-    profiles: ["dev"]         # 개발에서만 켭니다.
-    ports:
-      - "5601:5601"
-
-  logstash:
-    image: docker.elastic.co/logstash/logstash:8.14.3
-    container_name: logstash
-    volumes:
-      - ./logstash/pipeline:/usr/share/logstash/pipeline
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
-    profiles: ["dev"]
-    ports:
-      - "5044:5044"
+#  # 운영 기본에선 Kibana/Logstash는 제외(옵션). dev에서 profile로 켜기 권장.
+#  kibana:
+#    image: docker.elastic.co/kibana/kibana:8.14.3
+#    container_name: kibana
+#    environment:
+#      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+#      - ELASTICSEARCH_USERNAME=elastic
+#      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD:-changeme}
+#    depends_on:
+#      elasticsearch:
+#        condition: service_healthy
+#    profiles: ["dev"]         # 개발에서만 켭니다.
+#    ports:
+#      - "5601:5601"
+#
+#  logstash:
+#    image: docker.elastic.co/logstash/logstash:8.14.3
+#    container_name: logstash
+#    volumes:
+#      - ./logstash/pipeline:/usr/share/logstash/pipeline
+#    depends_on:
+#      elasticsearch:
+#        condition: service_healthy
+#    profiles: ["dev"]
+#    ports:
+#      - "5044:5044"
 
 volumes:
   es_data:
