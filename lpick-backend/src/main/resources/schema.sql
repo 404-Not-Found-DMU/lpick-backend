@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS album (
 	release_date	timestamp		NULL,
 	release_country	varchar(50)		NULL,
 	label	text		NULL,
+    lpti varchar(20) NULL,
 	wiki_id	varchar(40)		NULL
 );
 

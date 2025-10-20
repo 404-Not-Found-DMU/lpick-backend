@@ -72,7 +72,7 @@ dependencies {
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
     // elastic search
-    implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
+//    implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
 }
 
 def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile

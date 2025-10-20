@@ -58,8 +58,8 @@ public class UserInfoCommandController {
             HttpServletResponse response,
             @CookieValue(name = "access_token", required = false) String accessToken
     ) {
-        if (accessToken == null || accessToken.isEmpty()) { // Cookie에 AccessToken이 없을 경우 예외처리
-            throw new CustomException(ErrorCode.TOKEN_NOT_FOUND);
+        if (accessToken == null || accessToken.isEmpty()) { // Cookie에 AccessToken이 없을 경우 바로 로그아웃
+            return ResponseEntity.ok(SuccessCode.LOGOUT_SUCCESS);
         }
 
         // 인증 객체에서 OAuthId 추출
@@ -70,6 +70,7 @@ public class UserInfoCommandController {
         // 보안을 위한 기존 쿠키 삭제
         CookieUtil.deleteCookie(response, "access_token");
         CookieUtil.deleteCookie(response, "refresh_token");
+        CookieUtil.deleteCookie(response, "JSESSIONID");
 
         return ResponseEntity.ok(SuccessCode.LOGOUT_SUCCESS);
     }
