@@ -78,6 +78,7 @@ services:
       - xpack.security.enabled=false
       - xpack.security.http.ssl.enabled=false   # 내부 통신은 http로 단순화
       - ES_JAVA_OPTS=-Xms512m -Xmx512m          # 메모리 상황에 맞게 조정
+    command: ["/bin/bash", "-c", "bin/elasticsearch-plugin install analysis-nori -b && /usr/local/bin/docker-entrypoint.sh"]
     ulimits:
       memlock: { soft: -1, hard: -1 }
     volumes:
