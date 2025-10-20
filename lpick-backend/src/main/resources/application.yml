@@ -38,8 +38,8 @@ spring:
     redis:
       host: ${redis.name}
       port: 6379
-#  elasticsearch:
-#    uris: http://elasticsearch:9200
+  elasticsearch:
+    uris: http://elasticsearch:9200
 
 token:
   secret: ${secret.token}
