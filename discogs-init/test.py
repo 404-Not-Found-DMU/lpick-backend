@@ -1,107 +1,89 @@
 import gzip
 import xml.etree.ElementTree as ET
-from typing import Optional, List, Tuple
+import os
+from typing import Set, List
 
 # ----------------------------
 # 환경 설정
 # ----------------------------
-XML_PATH = "discogs_20250801_releases.xml.gz" # 확인하려는 파일 경로
-
-# ----------------------------
-# 유틸리티 함수 (기존 코드에서 복사)
-# (구조 확인을 위해 현재 사용되진 않지만, 참조를 위해 유지합니다.)
-# ----------------------------
-def extract_images(elem: ET.Element) -> Tuple[Optional[str], Optional[str]]:
-    """
-    릴리스 엘리먼트에서 대표 이미지 URI (원본/큰 이미지, 150x150)를 추출합니다.
-    Primary 이미지를 우선하고, 없으면 첫 번째 이미지를 사용합니다.
-    """
-    images = elem.find("images")
-    if images is None:
-        return None, None
-    
-    first_uri = first_uri150 = None
-    primary_uri = primary_uri150 = None
-    
-    for img in images.findall("image"):
-        uri = img.attrib.get("uri")
-        uri150 = img.attrib.get("uri150")
-        
-        # 첫 번째 이미지 저장
-        if first_uri is None:
-            first_uri, first_uri150 = uri, uri150
-            
-        # Primary 이미지 저장 (대표 이미지)
-        if img.attrib.get("type") == "primary":
-            # URI가 실제로 존재하는지 확인하여 덮어씁니다.
-            if uri:
-                primary_uri = uri
-            if uri150:
-                primary_uri150 = uri150
-                
-    # Primary가 있으면 Primary를, 없으면 첫 번째 이미지를 반환
-    return (primary_uri or first_uri, primary_uri150 or first_uri150)
-
-def extract_title(elem: ET.Element) -> Optional[str]:
-    """릴리스 제목을 추출합니다."""
-    title_el = elem.find("title")
-    return (title_el.text or "").strip() if title_el is not None else None
-
+# 확인하려는 파일 경로를 여기에 지정합니다.
+# 사용자가 올린 파일 또는 확인하고 싶은 파일의 경로를 입력해 주세요.
+XML_PATH = "discogs_20251001_releases.xml.gz" 
+# 최대 처리할 엘리먼트 개수 (이 개수를 넘으면 분석을 중단하고 결과를 출력합니다.)
+MAX_ELEMENTS_TO_PROCESS = 300000000
 # ----------------------------
 # 메인 테스트 함수
 # ----------------------------
-def run_sample_check():
-    """XML 파일에서 샘플 데이터를 추출하고 원본 XML 구조를 확인합니다."""
+def run_structure_check():
+    """
+    주어진 XML 파일(gzip 압축)을 파싱하여 파일 내부에 존재하는 모든 고유한 태그 이름 목록을 추출합니다.
+    이를 통해 파일의 전체적인 구조를 단순하게 파악할 수 있습니다.
+    """
     
-    processed_count = 0
-    MAX_SAMPLES = 5  # 확인을 위해 추출할 릴리스 샘플 수
+    unique_tags: Set[str] = set()
+    total_elements_processed = 0
     
-    print(f"--- Discogs XML 데이터 샘플 구조 체크 시작 ({XML_PATH}) ---")
+    # MAX_ELEMENTS_TO_PROCESS 설정에 따라 분석 시작 메시지 출력
+    if MAX_ELEMENTS_TO_PROCESS > 0:
+        print(f"--- XML 파일 태그 구조 분석 시작 ({XML_PATH}) (최대 {MAX_ELEMENTS_TO_PROCESS:,}개 엘리먼트 처리) ---")
+    else:
+        print(f"--- XML 파일 태그 구조 분석 시작 ({XML_PATH}) (전체 파일 처리) ---")
 
     try:
+        # 파일이 존재하는지 확인
+        if not os.path.exists(XML_PATH):
+            raise FileNotFoundError
+            
+        # Gzip 파일 열기
         with gzip.open(XML_PATH, "rb") as f:
-            # iterparse는 메모리 효율적으로 XML을 파싱합니다.
+            # iterparse를 사용하여 메모리 효율적으로 XML을 파싱합니다.
+            # 'end' 이벤트를 사용하여 모든 엘리먼트가 닫힐 때 처리합니다.
             context = ET.iterparse(f, events=("end",))
             
             for event, elem in context:
-                if elem.tag != "release":
-                    # 메모리 관리를 위해 처리하지 않은 엘리먼트는 비웁니다.
-                    elem.clear() 
-                    continue
+                # 모든 엘리먼트의 태그 이름을 수집합니다.
+                unique_tags.add(elem.tag)
+                total_elements_processed += 1
                 
-                # ----------------- XML 구조 추출 -----------------
-                # ET.tostring을 사용하여 현재 <release> 엘리먼트의 전체 XML 구조를 문자열로 직렬화합니다.
-                # encoding='utf-8', method='xml' 설정으로 XML 형태로 출력합니다.
-                raw_xml_bytes = ET.tostring(elem, encoding='utf-8', method='xml')
-                raw_xml_string = raw_xml_bytes.decode('utf-8')
-                
-                # ----------------- 로깅 -----------------
-                processed_count += 1
-                
-                print("-" * 70)
-                print(f"[{processed_count}번째 릴리스 XML 원본 구조 (ID: {elem.attrib.get('id')})]")
-                print(raw_xml_string)
-                    
-                # ----------------- 종료 조건 -----------------
-                # 설정된 샘플 수를 확인하면 바로 종료합니다.
-                if processed_count >= MAX_SAMPLES:
-                    print("-" * 70)
-                    print(f"🎉 {MAX_SAMPLES}개 샘플 확인 완료. 테스트를 종료합니다.")
-                    break
+                # 메모리 관리를 위해 처리 후 엘리먼트를 비웁니다.
+                elem.clear() 
 
-                elem.clear() # 메모리 누수 방지
-                
+                # 대용량 파일 처리를 위해 중간 로그를 출력합니다.
+                if total_elements_processed % 1000000 == 0:
+                    print(f"--- 진행 상황: {total_elements_processed:,}개 엘리먼트 처리 완료 ---")
+
+                # 개수 제한 확인
+                if MAX_ELEMENTS_TO_PROCESS > 0 and total_elements_processed >= MAX_ELEMENTS_TO_PROCESS:
+                    print("-" * 70)
+                    print(f"🛑 설정된 최대 개수({MAX_ELEMENTS_TO_PROCESS:,}개)에 도달하여 분석을 중단합니다.")
+                    break
+        
+        print("-" * 70)
+        print("✅ 분석 완료.")
+        
+        # 태그 목록을 알파벳순으로 정렬
+        sorted_tags: List[str] = sorted(list(unique_tags))
+        
+        print(f"\n--- 파일에 존재하는 고유 태그 ({len(sorted_tags)}개) 목록 ---")
+        
+        # 태그 목록을 보기 좋게 출력
+        for tag in sorted_tags:
+            print(f"  - <{tag}>")
+        
+        print("-" * 70)
+        # 최종 통계 출력 시, 처리된 엘리먼트 수와 최대 제한 수를 함께 보여줍니다.
+        limit_text = f" (최대 {MAX_ELEMENTS_TO_PROCESS:,}개)" if MAX_ELEMENTS_TO_PROCESS > 0 else ""
+        print(f"  총 처리된 엘리먼트 수: {total_elements_processed:,}개{limit_text}")
+        
     except FileNotFoundError:
         print(f"❌ 오류: 파일을 찾을 수 없습니다. 경로를 확인해 주세요: {XML_PATH}")
+        print(f"💡 힌트: 코드 상단의 XML_PATH 변수를 사용하려는 파일 경로로 수정해 주세요.")
     except ET.ParseError as e:
         print(f"❌ XML 파싱 오류 발생: {e}")
+        print(f"💡 힌트: XML 파일의 형식이 올바른지 확인해 주세요.")
     except Exception as e:
         print(f"❌ 예상치 못한 오류 발생: {e}")
         
-    print(f"\n--- 최종 통계 ---")
-    print(f"  총 처리된 릴리스: {processed_count:,}개")
-    print("-" * 70)
-
-
+    
 if __name__ == "__main__":
-    run_sample_check()
+    run_structure_check()

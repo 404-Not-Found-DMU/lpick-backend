@@ -141,7 +141,7 @@ def calc_lpti(tags: List[str], year: Optional[int]) -> str:
 # ----------------------------
 INSERT_SQL = """
 INSERT INTO album
-  (album_id, name, profile, release_date, release_country, label, wiki_id, lpti)
+    (album_id, name, profile, release_date, release_country, label, wiki_id, lpti)
 VALUES %s
 ON CONFLICT (album_id) DO NOTHING;
 """

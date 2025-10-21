@@ -35,15 +35,17 @@ public class UserInfoCommandController {
     private final UserInfoCommandService userCommandService;
     private final int accessTokenValidity;
     private final int refreshTokenValidity;
+    private final CookieUtil cookieUtil;
 
     public UserInfoCommandController(
             UserInfoCommandService userCommandService,
             @Value("${token.access_token_expiration_time}") int accessTokenValidity,
-            @Value("${token.refresh_token_expiration_time}") int refreshTokenValidity
+            @Value("${token.refresh_token_expiration_time}") int refreshTokenValidity, CookieUtil cookieUtil
     ) {
         this.userCommandService = userCommandService;
         this.accessTokenValidity = accessTokenValidity;
         this.refreshTokenValidity = refreshTokenValidity;
+        this.cookieUtil = cookieUtil;
     }
 
     /*
@@ -68,9 +70,9 @@ public class UserInfoCommandController {
         userCommandService.logout(new LogoutRequestDTO(accessToken, oAuthId));
 
         // 보안을 위한 기존 쿠키 삭제
-        CookieUtil.deleteCookie(response, "access_token");
-        CookieUtil.deleteCookie(response, "refresh_token");
-        CookieUtil.deleteCookie(response, "JSESSIONID");
+        cookieUtil.deleteCookie(response, "access_token");
+        cookieUtil.deleteCookie(response, "refresh_token");
+        cookieUtil.deleteCookie(response, "JSESSIONID");
 
         return ResponseEntity.ok(SuccessCode.LOGOUT_SUCCESS);
     }
@@ -89,13 +91,13 @@ public class UserInfoCommandController {
         TokenResponseDTO tokenResponseDTO = userCommandService.refresh(new TokenRefreshRequestDTO(oAuthId, accessToken));
 
         // 쿠키 추가
-        CookieUtil.addCookie(
+        cookieUtil.addCookie(
                 response,
                 "access_token",
                 tokenResponseDTO.getAccessToken(),
                 accessTokenValidity / 1000 // 초 단위라 나누기 1000
         );
-        CookieUtil.addCookie(
+        cookieUtil.addCookie(
                 response,
                 "refresh_token",
                 tokenResponseDTO.getRefreshToken(),

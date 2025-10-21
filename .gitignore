@@ -25,6 +25,7 @@ replay_pid*
 
 API-KEY.yml
 application-test.yml
+API-KEY-PROV.yml
 
 # IntelliJ
 .idea/
