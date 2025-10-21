@@ -19,7 +19,7 @@ DB = dict(
     password="root",
 )
 
-XML_PATH = "discogs_20250801_releases.xml.gz"
+XML_PATH = "discogs_20251001_releases.xml.gz"
 
 # 튜닝 포인트
 BATCH_SIZE = 5000       # Writer가 모아서 넣는 건수(크게 갈수록 빠름)

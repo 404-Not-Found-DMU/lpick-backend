@@ -3,10 +3,25 @@
     "number_of_shards": "1",
     "number_of_replicas": "0",
     "analysis": {
+      "filter": {
+        "autocomplete_filter": {
+          "type": "edge_ngram",
+          "min_gram": 1,
+          "max_gram": 20
+        }
+      },
       "analyzer": {
         "korean_analyzer": {
           "type": "custom",
           "tokenizer": "nori_tokenizer"
+        },
+        "autocomplete_analyzer": {
+          "type": "custom",
+          "tokenizer": "nori_tokenizer",
+          "filter": [
+            "lowercase",
+            "autocomplete_filter"
+          ]
         }
       },
       "tokenizer": {

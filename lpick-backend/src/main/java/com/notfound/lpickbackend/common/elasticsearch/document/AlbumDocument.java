@@ -3,6 +3,7 @@ package com.notfound.lpickbackend.common.elasticsearch.document;
 import com.notfound.lpickbackend.servicedata.command.application.domain.Album;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.*;
 
@@ -13,13 +14,19 @@ import java.time.Instant;
 @Document(indexName = "albums") // Elasticsearch 인덱스 이름 지정
 @Mapping(mappingPath = "elasticsearch/album-mapping.json") // 매핑 파일 경로 (선택 사항)
 @Setting(settingPath = "elasticsearch/album-settings.json") // 설정 파일 경로 (선택 사항)
+@ToString
 public class AlbumDocument {
 
     @Id
     @Field(type = FieldType.Keyword) // 정확한 일치 검색에 유리
     private String albumId;
 
-    @Field(type = FieldType.Text, analyzer = "nori") // 텍스트 검색 및 한국어 분석기 (nori) 사용
+    @Field(
+            type = FieldType.Text,
+            analyzer = "autocomplete_analyzer",
+            // 검색 시: 일반적인 Nori 분석기 사용 (일반 검색 품질 유지)
+            searchAnalyzer = "korean_analyzer"
+    )
     private String name;
 
     @Field(type = FieldType.Text, analyzer = "standard") // 간단한 텍스트 검색

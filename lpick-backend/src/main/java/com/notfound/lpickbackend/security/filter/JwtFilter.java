@@ -40,7 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 pathMatcher.match("/", path) ||
                 pathMatcher.match("/api/v1/developer-token", path) ||
                 pathMatcher.match("/actuator/health", path) ||
-                pathMatcher.match("/public", path)
+                pathMatcher.match("/api/v1//public", path)
         ) {
             filterChain.doFilter(request, response);
             return;
