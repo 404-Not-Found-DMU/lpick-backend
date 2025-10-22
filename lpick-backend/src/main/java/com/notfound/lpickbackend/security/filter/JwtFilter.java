@@ -71,10 +71,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // Token에서 토큰 추출
         if (token != null) {
-
             if (jwtUtil.validateToken(token)) {
                 Authentication authentication = jwtUtil.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                log.info("검증된 사용자.");
             }
         }
 

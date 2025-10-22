@@ -1,6 +1,6 @@
 package com.notfound.lpickbackend.debate.query.service;
 
-import com.notfound.lpickbackend.AUTO_ENTITIES.DebateChat;
+import com.notfound.lpickbackend.wiki.command.application.domain.DebateChat;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.debate.query.repository.DebateChatQueryRepository;

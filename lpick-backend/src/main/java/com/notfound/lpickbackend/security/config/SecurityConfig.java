@@ -37,7 +37,8 @@ public class SecurityConfig {
         http.cors(cors -> cors
                 .configurationSource(corsConfigurationSource()));
         http.authorizeHttpRequests(config -> config
-                        .requestMatchers("/login", "/api/v1/developer-token","/swagger-ui.html/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // 개발자용 토큰 요청 허용
+                        .requestMatchers("/ws/**").permitAll() // 웹소켓 목적 핸드셰이크 개방. 핸드셰이크 후 웹소켓 내 각 요청 시 마다만 jwt 검증(비로그인 회원도 토론 참관은 가능)
+                        .requestMatchers("/login", "/api/v1/developer-token","/swagger-ui.html/**", "/swagger-ui/**", "/v3/api-docs/**", "/static/**","/test_websocket_logic.html").permitAll() // 개발자용 토큰 요청 허용
                         .anyRequest().authenticated() // 테스트를 위해 임시로 설정
                 )
                 .formLogin(config -> config.disable()) // 폼 로그인 비활성화

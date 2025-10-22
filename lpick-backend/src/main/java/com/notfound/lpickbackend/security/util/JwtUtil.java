@@ -52,7 +52,7 @@ public class JwtUtil {
     public Authentication getAuthentication(String token) {
 
         /* 토큰을 들고 왔던 들고 오지 않았던(로그인 시) 동일하게 security가 관리 할 UserDetails 타입을 정의 */
-        OAuth2UserDetails oAuth2UserDetails = customOAuth2UserService.getUserDetails(getOAuthId(token));
+        OAuth2UserDetails oAuth2UserDetails = customOAuth2UserService.getUserDetails(getSubject(token));
 
         return new UsernamePasswordAuthenticationToken(oAuth2UserDetails, "", oAuth2UserDetails.getAuthorities());
     }
@@ -64,7 +64,7 @@ public class JwtUtil {
     }
 
     /* Token에서 사용자의 id(subject 클레임) 추출 */
-    public String getOAuthId(String token) {
+    public String getSubject(String token) {
         return parseClaims(token).getSubject();
     }
 }

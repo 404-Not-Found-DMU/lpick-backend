@@ -1,7 +1,6 @@
-package com.notfound.lpickbackend.AUTO_ENTITIES;
+package com.notfound.lpickbackend.wiki.command.application.domain;
 
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
-import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,21 +12,24 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
-@Table(name = "debate")
-public class Debate {
+@Table(name = "debate_chat")
+public class DebateChat {
     @Id
-    @Column(name = "dt_id", nullable = false, length = 40)
-    private String dtId;
+    @Column(name = "dsc_id", nullable = false, length = 40)
+    private String dscId;
+
+    @Column(name = "content", nullable = false, length = Integer.MAX_VALUE)
+    private String content;
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
-    @Column(name = "is_end", nullable = false, length = 10)
-    private String isEnd;
+    @Column(name = "is_blind", nullable = false, length = 10)
+    private String isBlind;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "wiki_id", nullable = false)
-    private WikiPage wiki;
+    @JoinColumn(name = "dt_id", nullable = false)
+    private Debate dt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "oauth_id", nullable = false)
