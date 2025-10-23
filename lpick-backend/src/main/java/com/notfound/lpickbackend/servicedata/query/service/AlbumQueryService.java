@@ -6,6 +6,7 @@ import com.notfound.lpickbackend.common.elasticsearch.repository.AlbumDocumentRe
 import com.notfound.lpickbackend.servicedata.command.application.domain.Album;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
+import com.notfound.lpickbackend.servicedata.query.dto.AlbumSearchResultDTO;
 import com.notfound.lpickbackend.servicedata.query.repository.AlbumQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -77,7 +78,7 @@ public class AlbumQueryService {
      * [2. 전체 검색] 이름 또는 프로필 필드에서 키워드 검색을 수행합니다.
      * 여러 필드에서 관련성이 높은 결과를 찾기 위해 CriteriaQuery를 사용합니다.
      */
-    public List<AlbumDocument> searchAlbumsByKeyword(String keyword) {
+    public List<AlbumSearchResultDTO> searchAlbumsByKeyword(String keyword) {
         // 이름 또는 프로필 필드에서 키워드 포함 검색 조건 설정
         Criteria criteria = new Criteria("name").contains(keyword)
                 .or(new Criteria("profile").contains(keyword));
@@ -86,10 +87,12 @@ public class AlbumQueryService {
         CriteriaQuery query = new CriteriaQuery(criteria);
 
         // 쿼리 실행
-        var searchHits = elasticsearchOperations.search(query, AlbumDocument.class);
+        var searchHits = elasticsearchOperations.search(query, AlbumDocument.class).stream()
+                .map(SearchHit::getContent)
+                .collect(Collectors.toList());;
 
         return searchHits.stream()
-                .map(SearchHit::getContent)
+                .map(AlbumSearchResultDTO::from)
                 .collect(Collectors.toList());
     }
 }

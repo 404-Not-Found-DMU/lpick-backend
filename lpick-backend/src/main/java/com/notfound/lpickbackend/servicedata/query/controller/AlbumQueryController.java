@@ -3,6 +3,7 @@ package com.notfound.lpickbackend.servicedata.query.controller;
 import com.notfound.lpickbackend.common.elasticsearch.document.AlbumDocument;
 import com.notfound.lpickbackend.common.elasticsearch.service.AlbumSyncService;
 import com.notfound.lpickbackend.common.exception.SuccessCode;
+import com.notfound.lpickbackend.servicedata.query.dto.AlbumSearchResultDTO;
 import com.notfound.lpickbackend.servicedata.query.service.AlbumQueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,9 +42,8 @@ public class AlbumQueryController {
     /**
      */
     @GetMapping("/search")
-    public ResponseEntity<List<AlbumDocument>> searchAlbumsByKeyword(@RequestParam("keyword") String keyword) {
+    public ResponseEntity<List<AlbumSearchResultDTO>> searchAlbumsByKeyword(@RequestParam("keyword") String keyword) {
         // AlbumQueryService에서 구현한 통합 검색 메서드를 호출합니다.
-        List<AlbumDocument> searchResults = albumQueryService.searchAlbumsByKeyword(keyword);
-        return ResponseEntity.ok(searchResults);
+        return ResponseEntity.ok(albumQueryService.searchAlbumsByKeyword(keyword));
     }
 }

@@ -26,15 +26,19 @@ public class CookieUtil {
     @Value("${cookie.domain}")
     private final String domain;
 
+    @Value("${cookie.partitioned}")
+    private final boolean partitioned;
+
     // 생성자 주입을 통해 final 필드를 초기화합니다.
     public CookieUtil (
             @Value("${spring.cookie.secure}") boolean secure,
             @Value("${spring.cookie.same-site}") String sameSite,
-            @Value("${cookie.domain}") String domain) {
+            @Value("${cookie.domain}") String domain, boolean partitioned) {
 
         this.secure = secure;
         this.sameSite = sameSite;
         this.domain = domain;
+        this.partitioned = partitioned;
     }
 
     public void addCookie(HttpServletResponse response, String name, String value, int maxAgeInSec) {
@@ -45,7 +49,7 @@ public class CookieUtil {
                 .path("/")
                 .domain(domain)
                 .maxAge(maxAgeInSec)
-                .partitioned(true)
+                .partitioned(partitioned)
                 .build();
 
         response.addHeader("Set-Cookie", cookie.toString());
@@ -60,7 +64,7 @@ public class CookieUtil {
                 .path("/")
                 .domain(domain)
                 .maxAge(0)
-                .partitioned(true)
+                .partitioned(partitioned)
                 .build();
 
         response.addHeader("Set-Cookie", cookie.toString());

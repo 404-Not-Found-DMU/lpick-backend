@@ -42,6 +42,7 @@ spring:
     secure: ${cookie.secure}
     same-site: ${cookie.same-site}
     domain: ${cookie.domain}
+    partitioned: ${cookie.partitioned}
   elasticsearch:
     uris: ${elasticsearch.host}
 
