@@ -33,7 +33,8 @@ public class CookieUtil {
     public CookieUtil (
             @Value("${spring.cookie.secure}") boolean secure,
             @Value("${spring.cookie.same-site}") String sameSite,
-            @Value("${cookie.domain}") String domain, boolean partitioned) {
+            @Value("${cookie.domain}") String domain,
+            @Value("${cookie.partitioned}") boolean partitioned) {
 
         this.secure = secure;
         this.sameSite = sameSite;
