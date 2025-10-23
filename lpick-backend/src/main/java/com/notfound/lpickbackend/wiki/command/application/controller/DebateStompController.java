@@ -27,8 +27,7 @@ public class DebateStompController {
 
 
     @MessageMapping("/rooms/{roomId}/send")
-    public void push(@DestinationVariable String roomId, @RequestBody Map<String, Object> body,  Principal principal,
-                     @Header("simpSessionId") String sessionId) {
+    public void push(@DestinationVariable String roomId, @RequestBody Map<String, Object> body,  Principal principal) {
 
 
         log.info("send 메시지 확인..");
@@ -39,21 +38,8 @@ public class DebateStompController {
                 || principal.getName().startsWith("anonymous");
 
         if (anonymous) {
+            log.info("비로그인이요~");
             throw new StompAppException(StompErrorCode.MESSAGE_SEND_MUST_NEED_LOGIN);
-//            var errorPayload = Map.of(
-//                    "code", "MESSAGE_SEND_MUST_NEED_LOGIN",
-//                    "message", "로그인이 필요합니다."
-//            );
-//            log.info("비로그인이요~");
-//
-//            // 세션 타게팅 헤더 (익명은 userName이 없으므로 sessionId로 지정)
-//            var sha = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
-//            sha.setSessionId(sessionId);   // ★ 이 세션으로만
-//            sha.setLeaveMutable(true);
-//
-//            template.convertAndSendToUser(sessionId, "/queue/errors",
-//                    errorPayload, sha.getMessageHeaders());
-//            return; // soft-deny: 방송하지 않음 (연결은 유지)
         }
 
         log.info("로그인이요~");

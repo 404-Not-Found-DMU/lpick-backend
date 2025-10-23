@@ -1,11 +1,13 @@
 package com.notfound.lpickbackend.wiki.command.application.domain;
 
+import com.notfound.lpickbackend.AUTO_ENTITIES.TOOL.IdPrefixUtil;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Builder
 @AllArgsConstructor
@@ -18,6 +20,12 @@ public class Debate {
     @Id
     @Column(name = "dt_id", nullable = false, length = 40)
     private String dtId;
+
+    public void prePersist() {
+        if (this.dtId == null) {
+            this.dtId = IdPrefixUtil.get(this.getClass().getSimpleName()) + "_" + UUID.randomUUID();
+        }
+    }
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;

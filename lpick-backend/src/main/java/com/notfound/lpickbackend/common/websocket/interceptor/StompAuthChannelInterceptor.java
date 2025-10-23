@@ -21,7 +21,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- *
+ * StompCommand별로 보안 및 검증 처리를 위한 로직을 모아둔 인터셉터.
+ * SEND == 사용자의 로그인 상태에 따라 principal을 채워두기 위한 로직.
+ * SUBSCRIBE ==
  */
 @RequiredArgsConstructor
 @Slf4j
@@ -59,26 +61,21 @@ public class StompAuthChannelInterceptor implements ChannelInterceptor {
             final String dest = acc.getDestination();
             final boolean authenticatedInAccessor = isAuthenticatedInAccessor(acc);
 
-            // 1) 개인 큐 정책
+            // 1) 공개 토픽은 허용
+            if (startsWith(dest, PUBLIC_ROOM)) {
+                log.info("공개여~");
+                return message;
+            }
+
+            // 2) 개인 큐 정책
             if (startsWith(dest, USER_PREFIX)) {
                 
                 if (!authenticatedInAccessor) {
-                    // 익명은 에러 큐만 허용
+                    // 익명은 에러 큐만 허용 <- 익명이 서비스 내 알림 큐(새 댓글 등) 등을 구독하는 고려하지 않은 상황 발생 막기위함! 근데 알림이 없네..
                     if (USER_ERR_DEST.equals(dest)) {
                         log.info("익명에러큐섭스크라이브");
                         return message; // 허용
                     }
-
-                    // (A) 연결 유지형 soft-deny: 이 SUBSCRIBE만 드롭
-                    // 필요 시: 여기서 로깅
-                    // log.debug("Anonymous SUBSCRIBE blocked: dest={}, sid={}", dest, acc.getSessionId());
-
-                    // (선택) 안내를 보내고 싶다면 '이벤트 발행→리스너에서 전송'이나,
-                    //       컨트롤러 경로에서의 소프트 디나이로 일관 처리 권장.
-                    //       아래는 예시 (비권장: 인터셉터가 템플릿 의존하면 순환 리스크)
-                    //
-                    // publisher.publishEvent(new SoftDenyEvent(this, acc.getSessionId(),
-                    //        "SUBSCRIBE_NEEDS_LOGIN", "로그인이 필요합니다."));
 
                     return null; // 프레임만 드롭 → 구독 미등록, 연결 유지
                 }
@@ -86,11 +83,6 @@ public class StompAuthChannelInterceptor implements ChannelInterceptor {
                 log.info("로그인에러큐섭스크라이브");
 
                 // 로그인 사용자의 /user/** 구독은 허용 (실제 라우팅은 자신의 세션/Principal로만 맵핑됨)
-                return message;
-            }
-
-            // 2) 공개 토픽은 허용
-            if (startsWith(dest, PUBLIC_ROOM)) {
                 return message;
             }
 
@@ -117,10 +109,11 @@ public class StompAuthChannelInterceptor implements ChannelInterceptor {
 
     // 헤더에서 jwt 추출
     private String extractToken(StompHeaderAccessor acc) {
-        String auth = acc.getFirstNativeHeader("Authorization");
-        if (StringUtils.hasText(auth) && auth.startsWith("Bearer ")) {
-            return auth.substring(7);
-        }
+        // authorization 헤더 기반 사용버전. 쿠키를 js단에서 까뒤집어야 한다는 점에서 사용 불가! 쿠키에 https only 쓸거니까..
+//        String auth = acc.getFirstNativeHeader("Authorization");
+//        if (StringUtils.hasText(auth) && auth.startsWith("Bearer ")) {
+//            return auth.substring(7);
+//        }
         Map<String, Object> attrs = acc.getSessionAttributes();
         if (attrs != null) {
             Object t = attrs.get("token");
