@@ -3,11 +3,14 @@ package com.notfound.lpickbackend.servicedata.query.service;
 import co.elastic.clients.elasticsearch._types.query_dsl.Operator;
 import com.notfound.lpickbackend.common.elasticsearch.document.AlbumDocument;
 import com.notfound.lpickbackend.common.elasticsearch.repository.AlbumDocumentRepository;
+import com.notfound.lpickbackend.security.util.UserInfoUtil;
 import com.notfound.lpickbackend.servicedata.command.application.domain.Album;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.servicedata.query.dto.AlbumSearchResultDTO;
 import com.notfound.lpickbackend.servicedata.query.repository.AlbumQueryRepository;
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
+import com.notfound.lpickbackend.userinfo.query.repository.UserInfoQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
@@ -18,6 +21,7 @@ import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +33,7 @@ public class AlbumQueryService {
     private final AlbumQueryRepository albumQueryRepository;
     private final AlbumDocumentRepository albumDocumentRepository;
     private final ElasticsearchOperations elasticsearchOperations;
+    private final UserInfoQueryRepository userInfoQueryRepository;
 
     @Transactional(readOnly = true)
     public Album getAlbumById(String albumId) {
@@ -41,6 +46,21 @@ public class AlbumQueryService {
      */
     public List<AlbumDocument> searchAlbumsByName(String name) {
         return albumDocumentRepository.findByNameContaining(name);
+    }
+
+    public List<AlbumSearchResultDTO> recommendRandomAlbums() {
+
+        UserInfo userInfo = getUserInfo();
+
+        List<Album> albums = new ArrayList<>();
+
+        if(userInfo.getLpti() != null) {
+            albums = albumQueryRepository.findRandom5ByLpti(userInfo.getLpti());
+        } else {
+            albums = albumQueryRepository.findTop5ByReleaseDateIsNotNullOrderByReleaseDateDesc();
+        }
+
+        return albums.stream().map(AlbumSearchResultDTO::from).toList();
     }
 
     /**
@@ -94,5 +114,13 @@ public class AlbumQueryService {
         return searchHits.stream()
                 .map(AlbumSearchResultDTO::from)
                 .collect(Collectors.toList());
+    }
+
+    // 서비스 내부에서 사용할 UserInfo 찾는 메소드
+    private UserInfo getUserInfo() {
+
+        return userInfoQueryRepository.findById(UserInfoUtil.getOAuthId()).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO)
+        );
     }
 }

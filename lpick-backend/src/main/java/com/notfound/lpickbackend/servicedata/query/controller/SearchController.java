@@ -2,6 +2,7 @@ package com.notfound.lpickbackend.servicedata.query.controller;
 
 import com.notfound.lpickbackend.common.elasticsearch.service.DataSyncService;
 import com.notfound.lpickbackend.common.exception.SuccessCode;
+import com.notfound.lpickbackend.servicedata.query.dto.AlbumSearchResultDTO;
 import com.notfound.lpickbackend.servicedata.query.dto.SearchResult;
 import com.notfound.lpickbackend.servicedata.query.service.AlbumQueryService;
 import com.notfound.lpickbackend.servicedata.query.service.UnifiedSearchService;
@@ -62,5 +63,12 @@ public class SearchController {
         Pageable pageable = PageRequest.of(page - 1, size);
         // AlbumQueryService에서 구현한 통합 검색 메서드를 호출합니다.
         return ResponseEntity.ok(unifiedSearchService.integratedSearch(keyword, pageable));
+    }
+
+    @GetMapping("/album/recommend")
+    @Operation(summary = "앨범 추천", description = "LPTI기반으로 앨범을 추천합니다.")
+    public ResponseEntity<List<AlbumSearchResultDTO>> getRecommendAlbums() {
+
+        return ResponseEntity.ok(albumQueryService.recommendRandomAlbums());
     }
 }

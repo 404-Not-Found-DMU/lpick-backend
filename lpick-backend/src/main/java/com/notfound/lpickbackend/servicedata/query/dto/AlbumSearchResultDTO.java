@@ -1,6 +1,7 @@
 package com.notfound.lpickbackend.servicedata.query.dto;
 
 import com.notfound.lpickbackend.common.elasticsearch.document.AlbumDocument;
+import com.notfound.lpickbackend.servicedata.command.application.domain.Album;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -29,6 +30,17 @@ public class AlbumSearchResultDTO {
                 .releaseCountry(document.getReleaseCountry())
                 .label(document.getLabel())
                 .lpti(document.getLpti())
+                .build();
+    }
+    public static AlbumSearchResultDTO from(Album album) {
+        return AlbumSearchResultDTO.builder()
+                .albumId(album.getAlbumId())
+                .name(album.getName())
+                .profile(album.getProfile())
+                .releaseDate(album.getReleaseDate())
+                .releaseCountry(album.getReleaseCountry())
+                .label(album.getLabel())
+                .lpti(album.getLpti())
                 .build();
     }
 }
