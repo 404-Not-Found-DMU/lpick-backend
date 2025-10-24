@@ -13,9 +13,12 @@ import java.time.Instant;
 @Builder
 @Document(indexName = "albums") // Elasticsearch 인덱스 이름 지정
 @Mapping(mappingPath = "elasticsearch/album-mapping.json") // 매핑 파일 경로 (선택 사항)
-@Setting(settingPath = "elasticsearch/album-settings.json") // 설정 파일 경로 (선택 사항)
+@Setting(settingPath = "elasticsearch/document-settings.json") // 설정 파일 경로 (선택 사항)
 @ToString
 public class AlbumDocument {
+
+    // 통합 검색을 위한 타입 상수 정의
+    public static final String DOCUMENT_TYPE = "Album";
 
     @Id
     @Field(type = FieldType.Keyword) // 정확한 일치 검색에 유리
@@ -44,8 +47,6 @@ public class AlbumDocument {
     @Field(type = FieldType.Keyword)
     private String lpti;
 
-    // wiki_id는 JPA 엔티티에만 존재하고, Elasticsearch에는 필요하다면 ID만 저장하거나
-    // 검색에 필요한 필드만 포함할 수 있습니다. 여기서는 제외하거나 ID만 포함합니다.
     @Field(type = FieldType.Keyword)
     private String wikiId; // WikiPage 엔티티의 ID
 
