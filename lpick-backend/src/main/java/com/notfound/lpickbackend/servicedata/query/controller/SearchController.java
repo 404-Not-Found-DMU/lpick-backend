@@ -2,7 +2,6 @@ package com.notfound.lpickbackend.servicedata.query.controller;
 
 import com.notfound.lpickbackend.common.elasticsearch.service.DataSyncService;
 import com.notfound.lpickbackend.common.exception.SuccessCode;
-import com.notfound.lpickbackend.servicedata.query.dto.AlbumSearchResultDTO;
 import com.notfound.lpickbackend.servicedata.query.dto.SearchResult;
 import com.notfound.lpickbackend.servicedata.query.service.AlbumQueryService;
 import com.notfound.lpickbackend.servicedata.query.service.UnifiedSearchService;
@@ -54,7 +53,7 @@ public class SearchController {
     /**
      */
     @GetMapping("/search")
-    @Operation
+    @Operation(summary = "통합검색", description = "통합검색 기능입니다.")
     public ResponseEntity<List<SearchResult>> searchAlbumsByKeyword(
             @RequestParam("keyword") String keyword,
             @RequestParam(value = "page", defaultValue = "1") int page,

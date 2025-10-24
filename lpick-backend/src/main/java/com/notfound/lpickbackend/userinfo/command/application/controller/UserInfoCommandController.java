@@ -137,6 +137,17 @@ public class UserInfoCommandController {
         return ResponseEntity.ok(tokenResponseDTO);
     }
 
+    @PatchMapping("/user-info/lpti")
+    @Operation(summary = "LPTI 등록", description = "사용자의 LPTI 검사 결과를 등록합니다.")
+    ResponseEntity<SuccessCode> lptiRequest(
+            @RequestParam(name = "lpti") String lpti
+    ) {
+
+        userCommandService.updateLPTI(lpti);
+
+        return ResponseEntity.ok(SuccessCode.SUCCESS);
+    }
+
     @DeleteMapping("/auth/{oauthId}")
     @Operation(summary = "회원정보 삭제 테스트", description = "최초 회원 가입 테스트를 위한 삭제 메소드입니다.")
     ResponseEntity<SuccessCode> deleteUserInfo(
