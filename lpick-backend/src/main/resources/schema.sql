@@ -86,9 +86,10 @@ CREATE TABLE IF NOT EXISTS debate_chat (
                              dsc_id	varchar(40)		NOT NULL,
                              content	text		NOT NULL,
                              created_at	timestamp		NOT NULL,
-                             is_blind	varchar(10)		NOT NULL,
+                             is_blind	boolean		NOT NULL,
                              dt_id	varchar(40)		NOT NULL,
-                             oauth_id	varchar(40)		NOT NULL
+                             oauth_id	varchar(40)		NOT NULL,
+                             parent_debate_chat_id varchar(40)	NULL
 );
 
 CREATE TABLE IF NOT EXISTS user_info (
@@ -184,7 +185,10 @@ CREATE TABLE IF NOT EXISTS debate (
                         created_at	timestamp		NOT NULL,
                         is_end	varchar(10)		NOT NULL,
                         wiki_id	varchar(40)		NOT NULL,
-                        oauth_id	varchar(40)		NOT NULL
+                        oauth_id	varchar(40)		NOT NULL,
+                        debate_name varchar(50)     NOT NULL,
+                        debate_subject varchar(15)  NOT NULL,
+                        revision_id varchar(40)     NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS auth (
@@ -227,6 +231,19 @@ CREATE TABLE IF NOT EXISTS community_image (
                         id	varchar(40)		NOT NULL,
                         src varchar(255)   NOT NULL,
                         type varchar(10)   NOT NULL
+);
+
+create table if not exists ballot (
+                                      blt_id        varchar(40) primary key,
+                                      oauth_id      varchar(40) not null,
+                                      dt_id         varchar(40) not null,
+                                      ballot_value  varchar(10) not null,
+                                      constraint fk_ballot_debate
+                                          foreign key (dt_id) references debate(dt_id) on delete cascade,
+                                      constraint fk_ballot_oauth
+                                          foreign key (oauth_id) references user_info(oauth_id) on delete cascade,
+                                      constraint uq_ballot_dt_oauth unique (dt_id, oauth_id),
+                                      constraint ck_ballot_value check (ballot_value in ('AGREE','DISAGREE','ABSTAIN'))
 );
 
 -- ==============================================================
@@ -496,6 +513,12 @@ ALTER TABLE debate_chat
     ADD CONSTRAINT FK_user_info_TO_debate_chat_1
         FOREIGN KEY (oauth_id) REFERENCES user_info (oauth_id);
 
+ALTER TABLE debate_chat
+    DROP CONSTRAINT IF EXISTS FK_debate_chat_TO_parent_debate_chat_1 CASCADE;
+ALTER TABLE debate_chat
+    ADD CONSTRAINT FK_debate_chat_TO_parent_debate_chat_1
+        FOREIGN KEY (parent_debate_chat_id) REFERENCES debate_chat (dsc_id);
+
 ALTER TABLE user_info
     DROP CONSTRAINT IF EXISTS FK_tier_TO_user_info_1 CASCADE;
 ALTER TABLE user_info
@@ -603,6 +626,12 @@ ALTER TABLE debate
 ALTER TABLE debate
     ADD CONSTRAINT FK_user_info_TO_debate_1
         FOREIGN KEY (oauth_id) REFERENCES user_info (oauth_id);
+
+ALTER TABLE debate
+    DROP CONSTRAINT IF EXISTS FK_page_revision_TO_debate_1 CASCADE;
+ALTER TABLE debate
+    ADD CONSTRAINT FK_page_revision_TO_debate_1
+        FOREIGN KEY (revision_id) REFERENCES page_revision (revision_id);
 
 ALTER TABLE article_like
     DROP CONSTRAINT IF EXISTS FK_user_info_TO_article_like_1 CASCADE;

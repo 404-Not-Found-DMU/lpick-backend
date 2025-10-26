@@ -3,7 +3,7 @@ package com.notfound.lpickbackend.userinfo.query.service;
 import com.notfound.lpickbackend.common._wrapper.BlindableResponse;
 import com.notfound.lpickbackend.community.query.service.ArticleQueryService;
 import com.notfound.lpickbackend.community.query.service.CommentQueryService;
-import com.notfound.lpickbackend.debate.query.service.DebateChaQueryService;
+import com.notfound.lpickbackend.debate.query.service.DebateChatQueryService;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserSetting;
 import com.notfound.lpickbackend.userinfo.query.dto.response.UserActivityResponse;
 import com.notfound.lpickbackend.wiki.query.service.PageRevisionQueryService;
@@ -19,7 +19,7 @@ public class UserDomainQueryService {
     private final CommentQueryService commentQueryService;
     private final PageRevisionQueryService pageRevisionQueryService;
     private final UserSettingQueryService userSettingQueryService;
-    private final DebateChaQueryService debateChaQueryService;
+    private final DebateChatQueryService debateChatQueryService;
 
     @Transactional(readOnly = true)
     public BlindableResponse<UserActivityResponse> getUserActivityCountByOauthId(String oauthId) {
@@ -48,7 +48,7 @@ public class UserDomainQueryService {
                 .articleCount(articleQueryService.countArticleByOauthId(oauthId))
                 .commentCount(commentQueryService.countCommentByOauthId(oauthId))
                 .wikiEditCount(pageRevisionQueryService.countRevisionByOauthId(oauthId))
-                .debateChatCount(debateChaQueryService.countByOauthId(oauthId))
+                .debateChatCount(debateChatQueryService.countByOauthId(oauthId))
                 .build();
     }
 }

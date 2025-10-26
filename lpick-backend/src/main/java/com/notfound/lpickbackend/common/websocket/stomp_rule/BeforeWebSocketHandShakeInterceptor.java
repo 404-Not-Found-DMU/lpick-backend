@@ -30,10 +30,10 @@ public class BeforeWebSocketHandShakeInterceptor implements HandshakeInterceptor
                     if (jwt.validateToken(token)) {
                         log.info("사쿠라여?");
                         attrs.put("uid", jwt.getSubject(token));
-                        Long exp = jwt.getExpirationMillis(token);
-                        if (exp != null) attrs.put("expMs", exp);
-                        String jti = jwt.getId(token);
-                        if (jti != null) attrs.put("jti", jti);
+//                        Long exp = jwt.getExpirationMillis(token);
+//                        if (exp != null) attrs.put("expMs", exp);
+//                        String jti = jwt.getId(token);
+//                        if (jti != null) attrs.put("jti", jti);
                     }
                     break;
                 }

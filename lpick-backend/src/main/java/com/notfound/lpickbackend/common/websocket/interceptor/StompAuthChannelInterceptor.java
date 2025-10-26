@@ -1,6 +1,7 @@
 package com.notfound.lpickbackend.common.websocket.interceptor;
 
 import com.notfound.lpickbackend.security.util.JwtUtil;
+import com.notfound.lpickbackend.wiki.query.service.DebateQueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -12,6 +13,8 @@ import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 
 import java.security.Principal;
@@ -25,15 +28,21 @@ import java.util.UUID;
  * SEND == 사용자의 로그인 상태에 따라 principal을 채워두기 위한 로직.
  * SUBSCRIBE ==
  */
+@Component
 @RequiredArgsConstructor
 @Slf4j
 public class StompAuthChannelInterceptor implements ChannelInterceptor {
 
+
+    private static final AntPathMatcher MATCHER = new AntPathMatcher(); // Destination의 PathVariable 뽑기 위한 클래스
     private static final String USER_PREFIX   = "/user/";
     private static final String USER_ERR_DEST = "/user/queue/errors";
-    private static final String PUBLIC_ROOM   = "/topic/rooms/";
+    private static final String TOPIC_PREFIX   = "/topic/"; // subscribe의 대상이 되는 전치사
+    private static final String DEBATE_TOPIC_PATTERN = "/topic/debate/{debateId}"; // 토론방 구독 목적의 경로 양식
 
     private final JwtUtil jwt;
+
+    private final DebateQueryService debateQueryService;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -47,22 +56,39 @@ public class StompAuthChannelInterceptor implements ChannelInterceptor {
 
 
         /* SEND == 클라 to 서버로 메시지 보내는 경우의 stompCOMMAND. 현재 서버는 토론방에 대한 의견 제공(채팅)시에만 send 활용하므로 해당 내역에 대해 처리  */
-        if (cmd == StompCommand.SEND) {
-            // 컨트롤러에서 soft-deny 처리할 것이므로, 여기선 Principal만 보장
-            if (authenticated && acc.getUser() == null) {
-                acc.setUser(toAuth(jwt.getSubject(token)));
-            }
-            if (!authenticated && acc.getUser() == null) {
-                acc.setUser(toAnonymous(acc));
-            }
+        // SEND, SUBSCRIBE 등 모든 클라이언트에게 전송받은 메시지에서 jwt를 검증한다.
+        if (authenticated && acc.getUser() == null) {
+            acc.setUser(toAuth(jwt.getSubject(token)));
         }
-        else if (StompCommand.SUBSCRIBE.equals(cmd)) {
+        if (!authenticated && acc.getUser() == null) {
+            acc.setUser(toAnonymous(acc));
+        }
+
+
+        if (StompCommand.SUBSCRIBE.equals(cmd)) {
             log.info("구독검증");
             final String dest = acc.getDestination();
             final boolean authenticatedInAccessor = isAuthenticatedInAccessor(acc);
 
             // 1) 공개 토픽은 허용
-            if (startsWith(dest, PUBLIC_ROOM)) {
+            if (startsWith(dest, TOPIC_PREFIX)) {
+
+                // 토론방 구독인 경우 토론방의 상태를 검증하고 구독여부 결정
+                // destination이 null이 아니고, 경로 패턴이 '토론방 구독'목적의 경로와 매칭되는 경우
+                if (dest != null && MATCHER.match(DEBATE_TOPIC_PATTERN, dest)) {
+                    log.info("토론방섭스크라이브");
+                    
+                    String debateId = MATCHER
+                            .extractUriTemplateVariables(DEBATE_TOPIC_PATTERN, dest)
+                            .get("debateId");
+
+                    // 여기서 서비스 호출
+                    if (!debateQueryService.isDebateOpen(debateId)) {
+                        // soft-deny 처리 (프레임 드롭 or 세션 타게팅 안내 전송)
+                        return null;
+                    }
+                }
+
                 log.info("공개여~");
                 return message;
             }
@@ -90,10 +116,7 @@ public class StompAuthChannelInterceptor implements ChannelInterceptor {
             // log.debug("Invalid SUBSCRIBE dest blocked: dest={}, user={}", dest, acc.getUser());
             return null;
         }
-        else {
-            if (authenticated) acc.setUser(toAuth(jwt.getSubject(token)));
-            else acc.setUser(toAnonymous(acc));
-        }
+
 
         // SUBSCRIBE는 정책에 따라 필요 시 추가(익명 에러큐 허용 등)
         return message;

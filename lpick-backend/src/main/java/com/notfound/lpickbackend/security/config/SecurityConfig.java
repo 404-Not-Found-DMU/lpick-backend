@@ -89,6 +89,7 @@ public class SecurityConfig {
         configuration.addAllowedOriginPattern("https://lpick.duckdns.org"); // nginx 도메인
         configuration.addAllowedOriginPattern("http://localhost:3000"); // 프론트 로컬 도메인
         configuration.addAllowedOriginPattern("http://3.34.194.165:8080"); // EC2 퍼블릭 IP (현재는 사용 안하지만 일단 추가)
+        configuration.addAllowedOriginPattern("http://localhost:8080"); // EC2 퍼블릭 IP (현재는 사용 안하지만 일단 추가)
 
         configuration.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
         configuration.addAllowedHeader("*"); // 모든 헤더 허용
