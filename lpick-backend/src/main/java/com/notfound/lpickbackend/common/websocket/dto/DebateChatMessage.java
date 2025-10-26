@@ -10,5 +10,6 @@ import java.time.Instant;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor @Builder
 public class DebateChatMessage {
+    private String parentDebateChatId;
     @NotBlank private String content;
 }
