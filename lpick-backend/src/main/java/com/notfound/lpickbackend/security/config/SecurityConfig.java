@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .configurationSource(corsConfigurationSource()));
         http.authorizeHttpRequests(config -> config
                         .requestMatchers("/ws/**").permitAll() // 웹소켓 목적 핸드셰이크 개방. 핸드셰이크 후 웹소켓 내 각 요청 시 마다만 jwt 검증(비로그인 회원도 토론 참관은 가능)
-                        .requestMatchers("/login", "/api/v1/developer-token","/swagger-ui.html/**", "/swagger-ui/**", "/v3/api-docs/**", "/static/**","/test_websocket_logic.html").permitAll() // 개발자용 토큰 요청 허용
+                        .requestMatchers("/login", "/api/v1/developer-token","/swagger-ui.html/**", "/swagger-ui/**", "/v3/api-docs/**", "/static/**","/test_websocket_logic.html", "/actuator/**").permitAll() // 개발자용 토큰 요청 허용
                         .anyRequest().authenticated() // 테스트를 위해 임시로 설정
                 )
                 .formLogin(config -> config.disable()) // 폼 로그인 비활성화
@@ -86,10 +86,19 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
+        configuration.addAllowedOrigin("https://lpick.duckdns.org"); // nginx 도메인
+        configuration.addAllowedOrigin("https://lpick-frontend-deploy-2pom.vercel.app");
+        configuration.addAllowedOrigin("http://localhost:3000"); // 프론트 로컬 도메인
+        configuration.addAllowedOrigin("http://localhost:8080"); // 프론트 로컬 도메인
+        configuration.addAllowedOrigin("https://lpick.in");
+
+
+        configuration.addAllowedOriginPattern("https://*.lpick.in");
         configuration.addAllowedOriginPattern("https://lpick.duckdns.org"); // nginx 도메인
+        configuration.addAllowedOriginPattern("https://lpick-frontend-deploy-2pom.vercel.app");
         configuration.addAllowedOriginPattern("http://localhost:3000"); // 프론트 로컬 도메인
         configuration.addAllowedOriginPattern("http://3.34.194.165:8080"); // EC2 퍼블릭 IP (현재는 사용 안하지만 일단 추가)
-        configuration.addAllowedOriginPattern("http://localhost:8080"); // EC2 퍼블릭 IP (현재는 사용 안하지만 일단 추가)
+        configuration.addAllowedOriginPattern("http://localhost:8080"); // 프론트 로컬 도메인
 
         configuration.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
         configuration.addAllowedHeader("*"); // 모든 헤더 허용

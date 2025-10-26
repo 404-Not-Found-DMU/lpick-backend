@@ -1,6 +1,7 @@
 package com.notfound.lpickbackend.userinfo.query.service;
 
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
+import com.notfound.lpickbackend.userinfo.query.dto.response.UserInfoResponse;
 import com.notfound.lpickbackend.userinfo.query.repository.UserInfoQueryRepository;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
@@ -16,5 +17,9 @@ public class UserInfoQueryService {
     public UserInfo getUserInfoById(String userId) {
         return userInfoQueryRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.AUTHENTICATION_FAILED));
+    }
+
+    public UserInfoResponse getUserInfo(String userId) {
+        return userInfoQueryRepository.findByOAuthId(userId);
     }
 }

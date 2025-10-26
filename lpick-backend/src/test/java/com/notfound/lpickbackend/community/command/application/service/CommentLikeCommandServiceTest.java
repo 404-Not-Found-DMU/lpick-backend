@@ -1,7 +1,5 @@
 package com.notfound.lpickbackend.community.command.application.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.community.command.domain.Comment;
@@ -13,11 +11,14 @@ import com.notfound.lpickbackend.userinfo.command.application.domain.entity.User
 import com.notfound.lpickbackend.userinfo.query.repository.UserInfoQueryRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -25,27 +26,34 @@ import static org.mockito.Mockito.*;
 class CommentLikeCommandServiceTest {
 
 
-    private final CommentLikeCommandRepository likeRepo = mock(CommentLikeCommandRepository.class);
-    private final CommentQueryRepository commentRepo = mock(CommentQueryRepository.class);
-    private final UserInfoQueryRepository userRepo = mock(UserInfoQueryRepository.class);
-
-    private final CommentLikeCommandService service = new CommentLikeCommandService(
-            likeRepo, commentRepo, userRepo
-    );
-
     private static final String COMMENT_ID = "comment-123";
     private static final String USER_ID = "user-456";
+
+    @Mock CommentLikeCommandRepository likeRepo;
+    @Mock CommentQueryRepository commentRepo;
+    @Mock UserInfoQueryRepository userRepo;
+
+    @InjectMocks
+    CommentLikeCommandService service;
+
+    private CustomException assertThrowsWithOauth(ErrorCode expected, Runnable invoke) {
+        try (MockedStatic<UserInfoUtil> mocked = mockStatic(UserInfoUtil.class)) {
+            mocked.when(UserInfoUtil::getOAuthId).thenReturn(USER_ID);
+            CustomException ex = assertThrows(CustomException.class, invoke::run);
+            assertEquals(expected, ex.getErrorCode());
+            return ex;
+        }
+    }
 
     @Test
     void createCommentLike_NOT_FOUND_COMMENT() {
         when(commentRepo.findById(COMMENT_ID)).thenReturn(Optional.empty());
 
-        try (MockedStatic<UserInfoUtil> mocked = mockStatic(UserInfoUtil.class)) {
-            mocked.when(UserInfoUtil::getOAuthId).thenReturn(USER_ID);
+        assertThrowsWithOauth(ErrorCode.NOT_FOUND_COMMENT,
+                () -> service.createCommentLike(COMMENT_ID));
 
-            assertThrows(CustomException.class, () ->
-                    service.createCommentLike(COMMENT_ID), ErrorCode.NOT_FOUND_COMMENT.name());
-        }
+        verify(commentRepo).findById(COMMENT_ID);
+        verifyNoMoreInteractions(commentRepo, userRepo, likeRepo);
     }
 
     @Test
@@ -54,12 +62,12 @@ class CommentLikeCommandServiceTest {
         when(commentRepo.findById(COMMENT_ID)).thenReturn(Optional.of(comment));
         when(userRepo.findById(USER_ID)).thenReturn(Optional.empty());
 
-        try (MockedStatic<UserInfoUtil> mocked = mockStatic(UserInfoUtil.class)) {
-            mocked.when(UserInfoUtil::getOAuthId).thenReturn(USER_ID);
+        assertThrowsWithOauth(ErrorCode.NOT_FOUND_USER_INFO,
+                () -> service.createCommentLike(COMMENT_ID));
 
-            assertThrows(CustomException.class, () ->
-                    service.createCommentLike(COMMENT_ID), ErrorCode.NOT_FOUND_USER_INFO.name());
-        }
+        verify(commentRepo).findById(COMMENT_ID);
+        verify(userRepo).findById(USER_ID);
+        verifyNoMoreInteractions(commentRepo, userRepo, likeRepo);
     }
 
     @Test
@@ -72,24 +80,24 @@ class CommentLikeCommandServiceTest {
         when(userRepo.findById(USER_ID)).thenReturn(Optional.of(user));
         when(likeRepo.findByOauthAndComment(user, comment)).thenReturn(Optional.of(like));
 
-        try (MockedStatic<UserInfoUtil> mocked = mockStatic(UserInfoUtil.class)) {
-            mocked.when(UserInfoUtil::getOAuthId).thenReturn(USER_ID);
+        assertThrowsWithOauth(ErrorCode.ALREADY_HAS_LIKE,
+                () -> service.createCommentLike(COMMENT_ID));
 
-            assertThrows(CustomException.class, () ->
-                    service.createCommentLike(COMMENT_ID), ErrorCode.ALREADY_HAS_LIKE.name());
-        }
+        verify(commentRepo).findById(COMMENT_ID);
+        verify(userRepo).findById(USER_ID);
+        verify(likeRepo).findByOauthAndComment(user, comment);
+        verifyNoMoreInteractions(commentRepo, userRepo, likeRepo);
     }
 
     @Test
     void deleteCommentLike_NOT_FOUND_COMMENT() {
         when(commentRepo.findById(COMMENT_ID)).thenReturn(Optional.empty());
 
-        try (MockedStatic<UserInfoUtil> mocked = mockStatic(UserInfoUtil.class)) {
-            mocked.when(UserInfoUtil::getOAuthId).thenReturn(USER_ID);
+        assertThrowsWithOauth(ErrorCode.NOT_FOUND_COMMENT,
+                () -> service.deleteCommentLike(COMMENT_ID));
 
-            assertThrows(CustomException.class, () ->
-                    service.deleteCommentLike(COMMENT_ID), ErrorCode.NOT_FOUND_COMMENT.name());
-        }
+        verify(commentRepo).findById(COMMENT_ID);
+        verifyNoMoreInteractions(commentRepo, userRepo, likeRepo);
     }
 
     @Test
@@ -98,12 +106,12 @@ class CommentLikeCommandServiceTest {
         when(commentRepo.findById(COMMENT_ID)).thenReturn(Optional.of(comment));
         when(userRepo.findById(USER_ID)).thenReturn(Optional.empty());
 
-        try (MockedStatic<UserInfoUtil> mocked = mockStatic(UserInfoUtil.class)) {
-            mocked.when(UserInfoUtil::getOAuthId).thenReturn(USER_ID);
+        assertThrowsWithOauth(ErrorCode.NOT_FOUND_USER_INFO,
+                () -> service.deleteCommentLike(COMMENT_ID));
 
-            assertThrows(CustomException.class, () ->
-                    service.deleteCommentLike(COMMENT_ID), ErrorCode.NOT_FOUND_USER_INFO.name());
-        }
+        verify(commentRepo).findById(COMMENT_ID);
+        verify(userRepo).findById(USER_ID);
+        verifyNoMoreInteractions(commentRepo, userRepo, likeRepo);
     }
 
     @Test
@@ -111,21 +119,21 @@ class CommentLikeCommandServiceTest {
         Comment comment = mock(Comment.class);
         UserInfo user = mock(UserInfo.class);
         CommentLike like = mock(CommentLike.class);
+        UserInfo otherUser = mock(UserInfo.class);
 
         when(commentRepo.findById(COMMENT_ID)).thenReturn(Optional.of(comment));
         when(userRepo.findById(USER_ID)).thenReturn(Optional.of(user));
         when(likeRepo.findByOauthAndComment(user, comment)).thenReturn(Optional.of(like));
-
-        // 좋아요 객체가 다른 유저의 것이라고 가정
-        UserInfo otherUser = mock(UserInfo.class);
         when(otherUser.getOauthId()).thenReturn("other-user-id");
         when(like.getOauth()).thenReturn(otherUser);
 
-        try (MockedStatic<UserInfoUtil> mocked = mockStatic(UserInfoUtil.class)) {
-            mocked.when(UserInfoUtil::getOAuthId).thenReturn(USER_ID);
+        assertThrowsWithOauth(ErrorCode.FORBIDDEN_RESOURCE_ACCESS,
+                () -> service.deleteCommentLike(COMMENT_ID));
 
-            assertThrows(CustomException.class, () ->
-                    service.deleteCommentLike(COMMENT_ID), ErrorCode.FORBIDDEN_RESOURCE_ACCESS.name());
-        }
+        verify(commentRepo).findById(COMMENT_ID);
+        verify(userRepo).findById(USER_ID);
+        verify(likeRepo).findByOauthAndComment(user, comment);
+        verify(like).getOauth();
+        verifyNoMoreInteractions(commentRepo, userRepo, likeRepo, like);
     }
 }

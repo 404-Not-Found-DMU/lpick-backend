@@ -20,7 +20,7 @@ spring:
             client-id: ${oauth2.client.kakao.client-id}
             authorization-grant-type: ${oauth2.client.kakao.authorization-grant-type}
             client-name: kakao
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            redirect-uri: ${oauth2.client.kakao.redirect-url}
             scope:
               - profile_nickname
               - profile_image
@@ -38,10 +38,8 @@ spring:
     redis:
       host: ${redis.name}
       port: 6379
-
-cookie:
-  secure: ${cookie.secure}
-  same-site: ${cookie.same}
+#  elasticsearch:
+#    uris: http://elasticsearch:9200
 
 token:
   secret: ${secret.token}
@@ -71,3 +69,16 @@ springdoc:
     oauth2-redirect-url: ${swagger.oauth2-redirect-url} # swagger에서 사용되는 redirect-url
     persistAuthorization: true  # Swagger UI 페이지 새로고침해도 인증정보 유지
 
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info   # 필요시 readiness,liveness 등 더 포함 가능
+  endpoint:
+    health:
+      probes:
+        enabled: true          # /actuator/health/liveness, /readiness 활성화
+  health:
+    elasticsearch:
+      enabled: false

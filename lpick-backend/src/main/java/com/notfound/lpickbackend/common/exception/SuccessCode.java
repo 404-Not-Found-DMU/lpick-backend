@@ -40,7 +40,7 @@ public enum SuccessCode {
     BOOKMARK_DELETE_SUCCESS(HttpStatus.NO_CONTENT, "북마크 삭제 성공" ),
     LIKE_DELETE_SUCCESS(HttpStatus.NO_CONTENT, "좋아요 삭제 성공" ),
     USER_ALBUM_RECORD_DELETE_SUCCESS(HttpStatus.NO_CONTENT, "사용자 소유 앨범 내 녹음 파일 삭제 성공"),
-    ;
+    DELETE_SUCCESS(HttpStatus.NO_CONTENT, "삭제 성공");
 
     private final HttpStatus httpStatus;
     private final String message;

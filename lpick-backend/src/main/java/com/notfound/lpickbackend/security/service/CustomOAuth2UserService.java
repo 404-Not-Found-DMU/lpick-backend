@@ -35,6 +35,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
+        log.info("load user start");
+
         OAuth2User oAuth2User = getOAuth2User(userRequest);
 
         String oAuthType = userRequest.getClientRegistration().getRegistrationId();
@@ -48,12 +50,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 break;
         }
 
-        Optional<UserInfo> optionalUserInfo = userInfoCommandRepository.findByOauthId(oAuthId);
+        Optional<UserInfo> optionalUserInfo = userInfoCommandRepository.findByOauthId(oAuthType + oAuthId);
 
-        UserInfo userInfo = null;
 
         if (optionalUserInfo.isPresent()) { // 유저가 있을 때
-            userInfo = optionalUserInfo.get();
+            log.warn("user already registration");
+            UserInfo userInfo = optionalUserInfo.get();
+            return new CustomOAuthUser(userInfo);
         } else { // 유저가 없을 때 (최초 로그인)
             // default
             Tier defaultTier = tierCommandRepository.findById(DEFAULT_TIER_ID).orElseThrow(
@@ -61,7 +64,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             );
 
             // 기본값으로 회원가입 처리
-            userInfo = UserInfo.builder()
+            UserInfo userInfo = UserInfo.builder()
                     .oauthId(oAuthType + oAuthId) // 전치사로 OAuthType 추가
                     .nickname("")
                     .profile("")
@@ -71,15 +74,18 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .lpti("")
                     .tier(defaultTier)
                     .build();
-            userInfoCommandRepository.save(userInfo);
+            UserInfo createdUserInfo = userInfoCommandRepository.save(userInfo);
+            log.info("user save success");
+            log.info("user oauth Id : {}", userInfo.getOauthId());
 
             // UserSetting 이원화에 따라 사용자 회원가입 시 UserSetting 기본 엔티티 구현 및 기본값 저장 위한 코드 추가.
             UserSetting defaultUserSetting = new UserSetting();
-            defaultUserSetting.setToDefault(); // 디폴트 설정(모두 true, LIGHT 테마)
+            defaultUserSetting.setToDefault(createdUserInfo); // 디폴트 설정(모두 true, LIGHT 테마)
             userSettingCommandRepository.save(defaultUserSetting);
-        }
+            log.info("user setting save success");
 
-        return new CustomOAuthUser(userInfo);
+            return new CustomOAuthUser(userInfo);
+        }
     }
 
     public OAuth2UserDetails getUserDetails(String oAuthId) {

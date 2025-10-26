@@ -11,7 +11,7 @@ INSERT INTO wiki_page(wiki_id, title, current_revision, status, class) VALUES
 -- mockUser 기입
 INSERT INTO user_info(oauth_id, nickname, profile, point, stack_point, about, lpti, tier_id) VALUES
     ('1', 'mock_user', '', 0, 0, '자기소개', null, '1') ON CONFLICT (oauth_id) DO NOTHING;
-INSERT INTO user_setting(oauth_id, allow_view_act_count, allow_view_recent_act, allow_view_gear, allow_view_collection, page_theme_setting, is_alarmWiki_edit, is_alarm_new_debate_answer, is_alarm_commented, is_alarm_event) VALUES
+INSERT INTO user_setting(oauth_id, allow_view_act_count, allow_view_recent_act, allow_view_gear, allow_view_collection, page_theme_setting, is_alarm_wiki_edit, is_alarm_new_debate_answer, is_alarm_commented, is_alarm_event) VALUES
                         ('1', true, true, true, true, 'LIGHT', true, true, true, true) ON CONFLICT (oauth_id) DO NOTHING;
 
 -- wikiBookmark 기입
