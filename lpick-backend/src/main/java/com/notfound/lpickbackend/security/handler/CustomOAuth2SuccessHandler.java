@@ -29,6 +29,7 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
 
     private final int accessTokenValidity;
     private final int refreshTokenValidity;
+    private final CookieUtil cookieUtil;
 
     public CustomOAuth2SuccessHandler(
             @Value("${token.access_token_expiration_time}"
@@ -37,13 +38,14 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
             ) int refreshTokenValidity,
             UserInfoCommandRepository userInfoCommandRepository,
             JwtTokenProvider jwtTokenProvider,
-            RedisService redisService
+            RedisService redisService, CookieUtil cookieUtil
     ) {
         this.accessTokenValidity = accessTokenValidity;
         this.refreshTokenValidity = refreshTokenValidity;
         this.userInfoCommandRepository = userInfoCommandRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.redisService = redisService;
+        this.cookieUtil = cookieUtil;
     }
 
     @Override
@@ -66,19 +68,45 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
         String refreshToken = jwtTokenProvider.createRefreshToken(oAuthId, userInfo);
 
         // 쿠키에 저장
-        CookieUtil.addCookie(response, "access_token", accessToken, accessTokenValidity); // 1시간
-        CookieUtil.addCookie(response, "refresh_token", refreshToken, refreshTokenValidity); // 7일
+        cookieUtil.addCookie(response, "access_token", accessToken, accessTokenValidity); // 1시간
+        cookieUtil.addCookie(response, "refresh_token", refreshToken, refreshTokenValidity); // 7일
 
         // redis whiteList에 refreshToken 저장
         redisService.saveWhitelistRefreshToken(oAuthId, refreshToken, refreshTokenValidity, TimeUnit.MILLISECONDS);
 
         log.warn("login success");
 
+        String host = getEffectiveHost(request);
+        log.warn(host);
         if(userInfo.getAbout() == null || userInfo.getAbout().isEmpty() || userInfo.getAbout().isBlank()) {
-            response.sendRedirect("https://lpick.in/signup");
+            if(isLocalhost(host)) {
+                response.sendRedirect("http://localhost:3000/signup");
+            } else {
+                response.sendRedirect("https://lpick.in/signup");
+            }
         } else {
-            response.sendRedirect("https://lpick.in/");
+            if(isLocalhost(host)) {
+                response.sendRedirect("http://localhost:3000/");
+            } else {
+                response.sendRedirect("https://lpick.in/");
+            }
         }
+    }
+
+    /** 프록시 환경 고려하여 유효한 Host 선택 */
+    private String getEffectiveHost(HttpServletRequest req) {
+        String xfHost = req.getHeader("X-Forwarded-Host");
+        if (xfHost != null && !xfHost.isBlank()) return xfHost;
+        String host = req.getHeader("Host");
+        if (host != null && !host.isBlank()) return host;
+        return req.getServerName();
+    }
+
+    /** 로컬호스트 판별 */
+    private boolean isLocalhost(String host) {
+        if (host == null) return false;
+        String h = host.toLowerCase();
+        return h.contains("localhost") || h.startsWith("127.0.0.1") || h.startsWith("0.0.0.0");
     }
 
 }

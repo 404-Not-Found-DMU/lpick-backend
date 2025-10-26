@@ -1,0 +1,15 @@
+{
+  "properties": {
+    "artistId": {
+      "type": "keyword"
+    },
+    "name": {
+      "type": "text",
+      "analyzer": "autocomplete_analyzer",
+      "search_analyzer": "korean_analyzer"
+    },
+    "groupName": {
+      "type": "keyword"
+    }
+  }
+}

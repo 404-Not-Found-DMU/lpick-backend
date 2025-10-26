@@ -38,8 +38,13 @@ spring:
     redis:
       host: ${redis.name}
       port: 6379
-#  elasticsearch:
-#    uris: http://elasticsearch:9200
+  cookie:
+    secure: ${cookie.secure}
+    same-site: ${cookie.same-site}
+    domain: ${cookie.domain}
+    partitioned: ${cookie.partitioned}
+  elasticsearch:
+    uris: ${elasticsearch.host}
 
 token:
   secret: ${secret.token}

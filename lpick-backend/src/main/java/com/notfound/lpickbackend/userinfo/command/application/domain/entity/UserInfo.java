@@ -73,4 +73,8 @@ public class UserInfo {
         this.about = null;
         this.lpti = null;
     }
+
+    public void updateLPTI(String lpti) {
+        this.lpti = lpti;
+    }
 }

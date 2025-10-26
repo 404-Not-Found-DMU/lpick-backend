@@ -45,8 +45,8 @@ INSERT INTO gear_class(class_name) VALUES ('SPEAKER') ON CONFLICT (class_name) D
 INSERT INTO gear_class(class_name) VALUES ('HEADPHONE') ON CONFLICT (class_name) DO NOTHING;
 
 -- Album 기입
-INSERT INTO album(album_id, name, profile, release_date, release_country, label, wiki_id) VALUES
-    ('album-1', '앨범명칭', null, '2025-06-05 00:21:12', 'KR', '으랏차차레이블', null) ON CONFLICT (album_id) DO NOTHING;
+INSERT INTO album(album_id, name, profile, release_date, release_country, label, lpti, wiki_id) VALUES
+    ('album-1', '앨범명칭', null, '2025-06-05 00:21:12', 'KR', '으랏차차레이블', 'CMVS',  null) ON CONFLICT (album_id) DO NOTHING;
 
 -- Gear 기입
 INSERT INTO gear(id, name, model_name, brand, eq_class, wiki_id) VALUES
