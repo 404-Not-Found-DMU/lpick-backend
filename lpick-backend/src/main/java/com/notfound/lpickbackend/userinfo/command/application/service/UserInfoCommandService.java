@@ -5,14 +5,13 @@ import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.common.redis.RedisService;
 import com.notfound.lpickbackend.common.s3.service.S3Uploader;
 import com.notfound.lpickbackend.security.util.JwtTokenProvider;
+import com.notfound.lpickbackend.security.util.UserInfoUtil;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
 import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.LogoutRequestDTO;
 import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.TokenRefreshRequestDTO;
 import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.TokenResponseDTO;
 import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.UserRegistrationRequest;
-import com.notfound.lpickbackend.userinfo.command.repository.UserGearCommandRepository;
 import com.notfound.lpickbackend.userinfo.command.repository.UserInfoCommandRepository;
-import com.notfound.lpickbackend.userinfo.command.repository.UserSettingCommandRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -146,5 +145,15 @@ public class UserInfoCommandService extends DefaultOAuth2UserService {
         UserInfo userInfo = getUserInfo(oAuthId);
 
         userInfo.deleteUserInfo();
+    }
+
+    @Transactional
+    public void updateLPTI(String lpti) {
+
+        String oauthId = UserInfoUtil.getOAuthId();
+
+        UserInfo userInfo = getUserInfo(oauthId);
+
+        userInfo.updateLPTI(lpti);
     }
 }

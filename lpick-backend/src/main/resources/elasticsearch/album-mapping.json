@@ -1,0 +1,25 @@
+{
+  "properties": {
+    "albumId": {
+      "type": "keyword"
+    },
+    "title": {
+      "type": "text",
+      "analyzer": "korean_analyzer",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
+    },
+    "description": {
+      "type": "text",
+      "analyzer": "korean_analyzer"
+    },
+    "createdAt": {
+      "type": "date",
+      "format": "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+    }
+  }
+}

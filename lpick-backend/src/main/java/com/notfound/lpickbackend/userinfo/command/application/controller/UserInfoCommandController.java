@@ -35,15 +35,17 @@ public class UserInfoCommandController {
     private final UserInfoCommandService userCommandService;
     private final int accessTokenValidity;
     private final int refreshTokenValidity;
+    private final CookieUtil cookieUtil;
 
     public UserInfoCommandController(
             UserInfoCommandService userCommandService,
             @Value("${token.access_token_expiration_time}") int accessTokenValidity,
-            @Value("${token.refresh_token_expiration_time}") int refreshTokenValidity
+            @Value("${token.refresh_token_expiration_time}") int refreshTokenValidity, CookieUtil cookieUtil
     ) {
         this.userCommandService = userCommandService;
         this.accessTokenValidity = accessTokenValidity;
         this.refreshTokenValidity = refreshTokenValidity;
+        this.cookieUtil = cookieUtil;
     }
 
     /*
@@ -58,8 +60,8 @@ public class UserInfoCommandController {
             HttpServletResponse response,
             @CookieValue(name = "access_token", required = false) String accessToken
     ) {
-        if (accessToken == null || accessToken.isEmpty()) { // Cookie에 AccessToken이 없을 경우 예외처리
-            throw new CustomException(ErrorCode.TOKEN_NOT_FOUND);
+        if (accessToken == null || accessToken.isEmpty()) { // Cookie에 AccessToken이 없을 경우 바로 로그아웃
+            return ResponseEntity.ok(SuccessCode.LOGOUT_SUCCESS);
         }
 
         // 인증 객체에서 OAuthId 추출
@@ -68,8 +70,9 @@ public class UserInfoCommandController {
         userCommandService.logout(new LogoutRequestDTO(accessToken, oAuthId));
 
         // 보안을 위한 기존 쿠키 삭제
-        CookieUtil.deleteCookie(response, "access_token");
-        CookieUtil.deleteCookie(response, "refresh_token");
+        cookieUtil.deleteCookie(response, "access_token");
+        cookieUtil.deleteCookie(response, "refresh_token");
+        cookieUtil.deleteCookie(response, "JSESSIONID");
 
         return ResponseEntity.ok(SuccessCode.LOGOUT_SUCCESS);
     }
@@ -88,13 +91,13 @@ public class UserInfoCommandController {
         TokenResponseDTO tokenResponseDTO = userCommandService.refresh(new TokenRefreshRequestDTO(oAuthId, accessToken));
 
         // 쿠키 추가
-        CookieUtil.addCookie(
+        cookieUtil.addCookie(
                 response,
                 "access_token",
                 tokenResponseDTO.getAccessToken(),
                 accessTokenValidity / 1000 // 초 단위라 나누기 1000
         );
-        CookieUtil.addCookie(
+        cookieUtil.addCookie(
                 response,
                 "refresh_token",
                 tokenResponseDTO.getRefreshToken(),
@@ -132,6 +135,17 @@ public class UserInfoCommandController {
         TokenResponseDTO tokenResponseDTO = userCommandService.getDeveloperToken();
 
         return ResponseEntity.ok(tokenResponseDTO);
+    }
+
+    @PatchMapping("/user-info/lpti")
+    @Operation(summary = "LPTI 등록", description = "사용자의 LPTI 검사 결과를 등록합니다.")
+    ResponseEntity<SuccessCode> lptiRequest(
+            @RequestParam(name = "lpti") String lpti
+    ) {
+
+        userCommandService.updateLPTI(lpti);
+
+        return ResponseEntity.ok(SuccessCode.SUCCESS);
     }
 
     @DeleteMapping("/auth/{oauthId}")

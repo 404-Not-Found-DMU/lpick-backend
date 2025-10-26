@@ -1,0 +1,15 @@
+{
+  "properties": {
+    "name": {
+      "type": "keyword"
+    },
+    "modelName": {
+      "type": "text",
+      "analyzer": "autocomplete_analyzer",
+      "search_analyzer": "korean_analyzer"
+    },
+    "brand": {
+      "type": "keyword"
+    }
+  }
+}
