@@ -13,4 +13,5 @@ public class UserInfoResponse {
     private String nickname;
     private String about;
     private String profile;
+    private String lpti;
 }
