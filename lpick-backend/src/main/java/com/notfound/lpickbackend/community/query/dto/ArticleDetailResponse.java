@@ -27,6 +27,8 @@ public class ArticleDetailResponse {
 
     private String oauthId;
 
+    private String author;
+
     private boolean liked; // 조회 요청한 사람이 좋아요 눌렀는지
 
     private boolean bookmarked; // 조회 요청한 사람이 북마크 했는지
@@ -41,7 +43,8 @@ public class ArticleDetailResponse {
             Long likeCount,
             Long commentCount,
             Long bookmarkCount,
-            String oauthId
+            String oauthId,
+            String author
     ) {
         this.articleId = articleId;
         this.title = title;
@@ -52,5 +55,6 @@ public class ArticleDetailResponse {
         this.commentCount = commentCount;
         this.bookmarkCount = bookmarkCount;
         this.oauthId = oauthId;
+        this.author = author;
     }
 }

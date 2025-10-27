@@ -139,7 +139,9 @@ CREATE TABLE IF NOT EXISTS article (
                                        created_at	timestamp		NOT NULL,
                                        modified_at	timestamp		NULL,
                                        is_del	varchar(10)		NOT NULL,
-                                       oauth_id	varchar(40)		NOT NULL
+                                       oauth_id	varchar(40)		NOT NULL,
+                                       article_type varchar(40) NOT NULL,
+                                       article_badge varchar(40) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS comment_like (

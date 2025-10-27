@@ -47,6 +47,14 @@ public class Article {
     @Column(name = "is_del", nullable = false, length = 10)
     private ArticleStatus isDel;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "article_type", nullable = false, length = 40)
+    private ArticleType articleType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "article_badge", nullable = false, length = 40)
+    private ArticleBadge articleBadge;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "oauth_id", nullable = false)
     private UserInfo oauth;
@@ -66,9 +74,11 @@ public class Article {
         this.modifiedAt = Instant.now();
     }
 
-    public void updateContent(String title, String content) {
+    public void updateContent(String title, String content, ArticleBadge articleBadge, ArticleType articleType) {
         this.title = title;
         this.content = content;
+        this.articleBadge = articleBadge;
+        this.articleType = articleType;
     }
 
     // 게시글의 삭제 여부 체크 메소드
