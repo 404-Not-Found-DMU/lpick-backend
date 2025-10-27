@@ -64,6 +64,7 @@ public class CommentQueryRepositoryImpl implements CustomCommentQueryRepository{
                         c.isDel,
                         c.article.articleId.as("articleId"),
                         c.oauth.oauthId.as("oauthId"),
+                        c.oauth.nickname.as("author"),
                         cl.count().intValue().as("likeCount"), // 좋아요 개수
                         likedExpr.as("liked") // 좋아요 유무 liked 필드에 매핑
                 ))
@@ -80,7 +81,8 @@ public class CommentQueryRepositoryImpl implements CustomCommentQueryRepository{
                         c.modifiedAt,
                         c.isDel,
                         c.article.articleId,
-                        c.oauth.oauthId
+                        c.oauth.oauthId,
+                        c.oauth.nickname
                 )
                 .orderBy(c.createdAt.desc())
                 .offset(pageable.getOffset())
@@ -117,6 +119,7 @@ public class CommentQueryRepositoryImpl implements CustomCommentQueryRepository{
                             child.article.articleId.as("articleId"),
                             child.parentComment.commentId.as("parentCommentId"), // 부모 아이디
                             child.oauth.oauthId.as("oauthId"),
+                            c.oauth.nickname.as("author"),
                             clChild.count().intValue().as("likeCount"), // 좋아요 개수
                             likedExpr.as("liked")
                     ))
@@ -130,7 +133,8 @@ public class CommentQueryRepositoryImpl implements CustomCommentQueryRepository{
                             child.modifiedAt,
                             child.article.articleId,
                             child.parentComment.commentId,
-                            child.oauth.oauthId
+                            child.oauth.oauthId,
+                            c.oauth.nickname
                     )
                     .orderBy(child.createdAt.asc())
                     .fetch();
@@ -163,6 +167,7 @@ public class CommentQueryRepositoryImpl implements CustomCommentQueryRepository{
                         c.isDel,
                         c.article.articleId.as("articleId"),
                         c.oauth.oauthId.as("oauthId"),
+                        c.oauth.nickname.as("author"),
                         Expressions.TRUE.as("liked"), // 내가 좋아요 누른 목록이므로 항상 true
                         cl.count().intValue().as("likeCount")
                 ))
@@ -179,7 +184,8 @@ public class CommentQueryRepositoryImpl implements CustomCommentQueryRepository{
                         c.modifiedAt,
                         c.isDel,
                         c.article.articleId,
-                        c.oauth.oauthId
+                        c.oauth.oauthId,
+                        c.oauth.nickname
                 )
                 .orderBy(c.createdAt.desc())
                 .offset(pageable.getOffset())
@@ -217,6 +223,7 @@ public class CommentQueryRepositoryImpl implements CustomCommentQueryRepository{
                         c.isDel,
                         c.article.articleId.as("articleId"),
                         c.oauth.oauthId.as("oauthId"),
+                        c.oauth.nickname.as("author"),
                         Expressions.TRUE.as("liked"), // 내가 좋아요 누른 목록이므로 항상 true
                         cl.count().intValue().as("likeCount")
                 ))
@@ -233,7 +240,8 @@ public class CommentQueryRepositoryImpl implements CustomCommentQueryRepository{
                         c.modifiedAt,
                         c.isDel,
                         c.article.articleId,
-                        c.oauth.oauthId
+                        c.oauth.oauthId,
+                        c.oauth.nickname
                 )
                 .orderBy(c.createdAt.desc())
                 .offset(pageable.getOffset())

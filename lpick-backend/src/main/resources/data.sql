@@ -47,10 +47,17 @@ INSERT INTO gear_class(class_name) VALUES ('HEADPHONE') ON CONFLICT (class_name)
 -- Album 기입
 INSERT INTO album(album_id, name, profile, release_date, release_country, label, lpti, wiki_id) VALUES
     ('album-1', '앨범명칭', null, '2025-06-05 00:21:12', 'KR', '으랏차차레이블', 'CMVS',  null) ON CONFLICT (album_id) DO NOTHING;
+INSERT INTO album(album_id, name, profile, release_date, release_country, label, lpti, wiki_id) VALUES
+    ('album-2', '푸른밤의 멜로디', 'profile_blue.jpg', '2024-11-10 10:00:00', 'US', 'Blue Note', 'JAZZ',  null) ON CONFLICT (album_id) DO NOTHING;
+INSERT INTO album(album_id, name, profile, release_date, release_country, label, lpti, wiki_id) VALUES
+    ('album-3', '도시의 불빛', 'city_lights.png', '2023-01-15 18:30:00', 'UK', 'Electric Records', 'ELEC',  null) ON CONFLICT (album_id) DO NOTHING;
+INSERT INTO album(album_id, name, profile, release_date, release_country, label, lpti, wiki_id) VALUES
+    ('album-4', '숲속의 속삭임', null, '2025-02-20 05:00:00', 'KR', '어쿠스틱뮤직', 'FOLK',  null) ON CONFLICT (album_id) DO NOTHING;
 
 -- Gear 기입
 INSERT INTO gear(id, name, model_name, brand, eq_class, wiki_id) VALUES
     ('gear-1', '명칭', 'dp-300f', 'Denon', 'TURNTABLE', null) ON CONFLICT (id) DO NOTHING;
+
 
 
 -- Role 기입
@@ -63,7 +70,13 @@ INSERT INTO auth(auth_id, name) VALUES
                         ('3', 'ADMIN') ON CONFLICT (auth_id) DO NOTHING ;
 
 
-
+-- UserAlbum 기입 (oauth_id = '1' 사용)
+INSERT INTO user_album(user_album_id, record_file, is_favorite, album_id, oauth_id) VALUES
+    ('user_album_1', 'my_record_file.mp3', true, 'album-1', '1');
+INSERT INTO user_album(user_album_id, record_file, is_favorite, album_id, oauth_id) VALUES
+    ('user_album_2', 'my_fav_song.wav', true, 'album-3', '1');
+INSERT INTO user_album(user_album_id, record_file, is_favorite, album_id, oauth_id) VALUES
+    ('user_album_3', null, false, 'album-4', '1');
 
 
 

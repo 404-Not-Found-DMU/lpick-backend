@@ -17,26 +17,10 @@ services:
       - SPRING_ELASTICSEARCH_URIS=http://elasticsearch:9200
       # 그 외 DB/REDIS 등 기존 환경변수들...
       - SPRING_PROFILES_ACTIVE=prod
+      - TZ=Asia/Seoul
     volumes:
       - ./API-KEY.yml:/app/API-KEY.yml
-
-#  postgres:
-#    image: postgres:15
-#    container_name: postgres
-#    restart: always
-#    environment:
-#      POSTGRES_DB: lpick
-#      POSTGRES_USER: postgres
-#      POSTGRES_PASSWORD: root
-#    volumes:
-#      - pgdata:/var/lib/postgresql/data
-#    ports:
-#      - "5432:5432"
-#    healthcheck:
-#      test: ["CMD-SHELL", "pg_isready -U postgres"]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 5
+      - /var/logs/lpick:/var/logs/lpick
 
   redis:
     image: redis:7.2-alpine
@@ -44,31 +28,6 @@ services:
     restart: always
     ports:
       - "6379:6379"
-
-#  nginx:
-#    image: nginx:latest
-#    container_name: nginx
-#    ports:
-#      - "80:80"
-#      - "443:443"
-#    volumes:
-#      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-#      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-#      - ./certbot/www:/var/www/certbot
-#      - ./certbot/conf:/etc/letsencrypt
-#    depends_on:
-#      - backend
-#
-#  certbot:
-#    image: certbot/certbot
-#    container_name: certbot
-#    volumes:
-#      - ./certbot/www:/var/www/certbot
-#      - ./certbot/conf:/etc/letsencrypt
-#    entrypoint: >
-#      sh -c "certbot certonly --webroot --webroot-path=/var/www/certbot
-#      --email yealkki38@gmail.com --agree-tos --no-eff-email
-#      -d lpick.duckdns.org"
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.14.3
@@ -78,6 +37,7 @@ services:
       - xpack.security.enabled=false
       - xpack.security.http.ssl.enabled=false   # 내부 통신은 http로 단순화
       - ES_JAVA_OPTS=-Xms512m -Xmx512m          # 메모리 상황에 맞게 조정
+      - TZ=Asia/Seoul
     command: ["/bin/bash", "-c", "bin/elasticsearch-plugin install analysis-nori -b && /usr/local/bin/docker-entrypoint.sh"]
     ulimits:
       memlock: { soft: -1, hard: -1 }
@@ -89,6 +49,20 @@ services:
       interval: 5s
       timeout: 3s
       retries: 20
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.14.3
+    container_name: logstash
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+      - /var/logs/lpick:/var/logs/lpick
+    environment: # 👈 [추가] Logstash 시간대를 KST로 설정
+      - TZ=Asia/Seoul
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    ports:
+      - "5044:5044"
 
 volumes:
   pgdata:

@@ -15,7 +15,8 @@ public interface UserInfoQueryRepository extends JpaRepository<UserInfo, String>
             u.oauthId,
             u.nickname,
             u.about,
-            u.profile
+            u.profile,
+            u.lpti
         )
         from UserInfo u
         where u.oauthId = :userId
