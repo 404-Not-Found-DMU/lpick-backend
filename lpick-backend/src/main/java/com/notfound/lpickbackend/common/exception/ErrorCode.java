@@ -25,6 +25,7 @@ public enum ErrorCode {
     INSUFFICIENT_ACCESS_LEVEL(HttpStatus.FORBIDDEN, "접근 권한이 부족합니다."),
 
     // 400 에러
+    ILLEGAL_ENUM_VALUE_DETECTED(HttpStatus.BAD_REQUEST, "요구 enum에 맞지 않는 string을 이용하고 있습니다."),
     NOT_MATCH_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "허용되지 않은 확장자입니다."),
     INVALID_FIELD_DATA(HttpStatus.BAD_REQUEST, "잘못된 필드 데이터입니다."),
     ACCESS_DENIED(HttpStatus.BAD_REQUEST, "올바르지 않은 접근입니다. "),
@@ -35,10 +36,17 @@ public enum ErrorCode {
     ALREADY_FULL_FAVORITE_ALBUM(HttpStatus.BAD_REQUEST, "favorite 리스트가 가득 찼습니다. 더이상 favorite로 지정할 수 없습니다."),
     ALREADY_FULL_FAVORITE_GEAR(HttpStatus.BAD_REQUEST, "favorite 리스트가 가득 찼습니다. 더이상 favorite로 지정할 수 없습니다."),
     IS_NOT_TEMP_GEAR(HttpStatus.BAD_REQUEST, "허가하려는 Gear는 Temp 상태가 아닙니다."),
-    USER_REGISTRATION_FAIL(HttpStatus.BAD_REQUEST, "회원가입에 실패했습니다. 입력정보를 확인해주세요"),
 
+    CAN_NOT_OPEN_DEBATE_AGAIN(HttpStatus.BAD_REQUEST, "토론을 재시작할 수는 없습니다."),
+    ALREADY_BALLOT_IN_DEBATE(HttpStatus.BAD_REQUEST, "해당 토론에 이미 투표했습니다!"),
+    DEBATE_STATUS_IS_OPEN(HttpStatus.BAD_REQUEST, "아직 진행 중인 토론입니다.(투표 참여 및 확인 불가)"),
+    DEBATE_STATUS_IS_CLOSE(HttpStatus.BAD_REQUEST, "이미 종료된 토론입니다."),
+
+    USER_REGISTRATION_FAIL(HttpStatus.BAD_REQUEST, "회원가입에 실패했습니다. 입력정보를 확인해주세요"),
     ALREADY_HAS_PARENTS_REQUEST(HttpStatus.BAD_REQUEST,"대댓글에 대댓글을 추가로 작성할 수 없습니다." ),
     ALREADY_HAS_LIKE(HttpStatus.BAD_REQUEST, "이미 좋아요 처리 된 리소스입니다."),
+    
+    
     // 401 에러
     AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "인증 실패"),
 
@@ -64,6 +72,7 @@ public enum ErrorCode {
     NOT_FOUND_USER_ALBUM(HttpStatus.NOT_FOUND,"사용자는 해당 앨범을 지니고 있지 않습니다."),
     NOT_FOUND_ALBUM(HttpStatus.NOT_FOUND, "앨범 정보를 찾을 수 없습니다."),
 
+    NOT_FOUND_DEBATE(HttpStatus.NOT_FOUND, "토론 정보를 찾을 수 없습니다."),
     NOT_FOUND_DEBATE_CHAT(HttpStatus.NOT_FOUND, "토론 댓글 정보를 찾을 수 없습니다."),
 
     NOT_FOUND_USER_GEAR(HttpStatus.NOT_FOUND, "사용자는 해당 음향기기를 지니고 있지 않습니다."),
@@ -71,9 +80,8 @@ public enum ErrorCode {
     NOT_FOUND_GEAR_CLASS(HttpStatus.NOT_FOUND, "해당 타입의 음향기기 종류를 찾을 수 없습니다."),
 
 
-    // 처리 방법에 논의가 필요한 에러 코드 임시할당용
-    DO_NOT_KEEP_UP_THIS_ERROR_WHEN_MERGE(HttpStatus.I_AM_A_TEAPOT, "이 에러 코드는 실제 사용 목적이 아닙니다."),
-    ;
+    // 처리 방법에 논의가 필요한 에러 코드 임시할당용,
+    DO_NOT_KEEP_UP_THIS_ERROR_WHEN_MERGE(HttpStatus.I_AM_A_TEAPOT, "이 에러 코드는 실제 사용 목적이 아닙니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

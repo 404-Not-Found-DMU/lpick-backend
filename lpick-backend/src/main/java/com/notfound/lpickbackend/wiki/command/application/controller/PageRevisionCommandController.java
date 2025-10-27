@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.wiki.command.application.controller;
 
+import com.notfound.lpickbackend.security.details.OAuth2UserDetails;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
 import com.notfound.lpickbackend.userinfo.query.service.UserInfoQueryService;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.PageRevisionRequest;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/v1")
@@ -29,7 +31,6 @@ public class PageRevisionCommandController {
      * 사용자기준, 위키 문서를 수정하는 경우이나 PageRevision은 Update가 아닌 새 버전을 Create 하는 방식이므로 본 요청 사용
      *
      * @param request - 리비전을 등록할 위키문서의 id, 위키문서 내역 content를 지니는 class
-     * @param dummyUserId - 사용자의 primary key인 oauthId를 기입한다.
      * @return PageRevisionResponse를 반환한다.
      * */
     // post임에도 requestParam이 쓰인이유는, SpringSecurity 기반 적용 되지 않았기 때문.
@@ -38,10 +39,10 @@ public class PageRevisionCommandController {
     public ResponseEntity<PageRevisionResponse> createPageRevision(
             @RequestBody PageRevisionRequest request,
             @PathVariable("wikiId") String wikiId,
-            @RequestParam("dummyUserId") String dummyUserId
+            @AuthenticationPrincipal OAuth2UserDetails userDetail
     ) {
 
-        UserInfo user = userInfoQueryService.getUserInfoById(dummyUserId);
+        UserInfo user = userInfoQueryService.getUserInfoById(userDetail.getUsername());
 
         PageRevisionResponse newRevision = pageRevisionCommandService.createNewRevision(request, wikiId, user);
 

@@ -137,6 +137,31 @@ public class UserInfoCommandController {
         return ResponseEntity.ok(tokenResponseDTO);
     }
 
+    /* 개발자 전용 토큰 요청 api */
+    @PostMapping("/developer-token/cookie")
+    @Operation(summary = "개발자 전용 토큰 요청", description = "테스트를 위해 1년짜리 토큰을 발급하는 기능- 쿠키 기반")
+    ResponseEntity<SuccessCode> developerTokenRequest_cookie(
+            HttpServletResponse response
+    ) {
+
+        TokenResponseDTO tokenResponseDTO = userCommandService.getDeveloperToken();
+
+        // 쿠키 추가
+        cookieUtil.addCookie(
+                response,
+                "access_token",
+                tokenResponseDTO.getAccessToken(),
+                accessTokenValidity * 1000 // 1년
+        );
+        cookieUtil.addCookie(
+                response,
+                "refresh_token",
+                tokenResponseDTO.getRefreshToken(),
+                accessTokenValidity * 1000 // 1년
+        );
+        return ResponseEntity.ok(SuccessCode.DEV_TOKEN_CREATE_SUCCESS);
+    }
+
     @PatchMapping("/user-info/lpti")
     @Operation(summary = "LPTI 등록", description = "사용자의 LPTI 검사 결과를 등록합니다.")
     ResponseEntity<SuccessCode> lptiRequest(

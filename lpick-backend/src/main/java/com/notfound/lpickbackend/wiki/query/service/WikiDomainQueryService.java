@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.wiki.query.service;
 
+import com.notfound.lpickbackend.security.details.OAuth2UserDetails;
 import com.notfound.lpickbackend.wiki.command.application.domain.PageRevision;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiBookmark;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
@@ -25,12 +26,18 @@ public class WikiDomainQueryService {
     private final WikiBookmarkQueryService wikiBookmarkQueryService;
     private final WikiReviewQueryService wikiReviewQueryService;
 
-    public WikiPageViewResponse getWikiPageView(String wikiId, String userId) {
+    public WikiPageViewResponse getWikiPageView(String wikiId, OAuth2UserDetails userDetail) {
         WikiPage wikiPage = wikiPageQueryService.getWikiPageById(wikiId);
 
         PageRevision pageRevision = pageRevisionQueryService.findByPageRevision_revisionNumberAndWiki_wikiId(wikiPage.getCurrentRevision(), wikiId);
 
-        Optional<WikiBookmark> bookmarkOptional = wikiBookmarkQueryService.findByWiki_WikiIdAndOauth_oauthId(wikiId, userId);
+
+        // 로그인 시 - 소유 유무에 따라 Optional 형식 반환
+        // 비로그인 시  - 무조건 empty
+        Optional<WikiBookmark> bookmarkOptional =
+                userDetail != null ?
+                        wikiBookmarkQueryService.findByWiki_WikiIdAndOauth_oauthId(wikiId, userDetail.getUsername())
+                : Optional.empty();
 
         // 페이지 단위가 아닌, wiki 컴포넌트 기준으로 반환하도록 수정. 위키 리뷰 목록은 별도의 요청을 이미 소유하고있음.
 //        Page<ReviewResponse> reviewList = wikiReviewQueryService.getReviewResponseListInWiki(
@@ -55,7 +62,6 @@ public class WikiDomainQueryService {
                     .wikiPageClass(wikiPage.getWikiClass())
                     .build();
         }).toList();
-
     }
 
     private WikiPageViewResponse toViewResponse(WikiPage wikiEntity, PageRevision revisionEntity, Optional<WikiBookmark> bookmarkOptionalEntity) {

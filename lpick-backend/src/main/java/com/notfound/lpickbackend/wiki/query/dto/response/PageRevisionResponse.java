@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.wiki.query.dto.response;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.notfound.lpickbackend.userinfo.query.dto.response.UserIdNamePairResponse;
 import lombok.*;
 
@@ -9,7 +10,7 @@ import java.time.Instant;
 @EqualsAndHashCode // 테스트 비교목적
 public class PageRevisionResponse {
     @Builder
-    public PageRevisionResponse(String revisionId, String content, Instant createdAt, UserIdNamePairResponse createWho) {
+    public PageRevisionResponse(String revisionId, JsonNode content, Instant createdAt, UserIdNamePairResponse createWho) {
         this.revisionId = revisionId;
         this.content = content;
         this.createdAt = createdAt;
@@ -17,7 +18,7 @@ public class PageRevisionResponse {
     }
 
     private String revisionId;
-    private String content;
+    private JsonNode content;
     private Instant createdAt;
     private UserIdNamePairResponse createWho;
 }

@@ -1,9 +1,12 @@
 package com.notfound.lpickbackend.wiki.command.application.domain;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.notfound.lpickbackend.AUTO_ENTITIES.TOOL.IdPrefixUtil;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -19,7 +22,7 @@ import java.util.UUID;
 @Table(name = "page_revision")
 public class PageRevision {
     @Builder
-    public PageRevision(String revisionId, String content, String revisionNumber, Instant createdAt, WikiPage wiki, UserInfo userInfo) {
+    public PageRevision(String revisionId, JsonNode content, String revisionNumber, Instant createdAt, WikiPage wiki, UserInfo userInfo) {
         this.revisionId = revisionId;
         this.content = content;
         this.revisionNumber = revisionNumber;
@@ -39,8 +42,9 @@ public class PageRevision {
     @Column(name = "revision_id", nullable = false, length = 40)
     private String revisionId;
 
-    @Column(name = "content", nullable = false, length = Integer.MAX_VALUE)
-    private String content;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb", nullable = false)
+    private JsonNode content;         // ← 파일 원문을 그대로
 
     @Column(name = "revision_number", nullable = false, length = 50)
     private String revisionNumber;
