@@ -1,4 +1,7 @@
 spring:
+  profiles:
+    # push할땐 꼭 prod로
+    active: ${profile.active}
   config:
     import:
       - optional:file:/app/API-KEY.yml
@@ -87,3 +90,6 @@ management:
   health:
     elasticsearch:
       enabled: false
+
+discogs:
+  token: ${discogs.token}

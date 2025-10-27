@@ -25,6 +25,8 @@ public class ParentsCommentResponse {
 
     private String oauthId;
 
+    private String author;
+
     private boolean liked;
 
     private int likeCount;

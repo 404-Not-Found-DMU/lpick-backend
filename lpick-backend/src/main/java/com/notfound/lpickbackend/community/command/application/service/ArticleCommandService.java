@@ -36,6 +36,8 @@ public class ArticleCommandService {
         Article newArticle = Article.builder()
                 .title(articleCreateRequest.getTitle())
                 .content(articleCreateRequest.getContent())
+                .articleBadge(articleCreateRequest.getBadge())
+                .articleType(articleCreateRequest.getType())
                 .oauth(userInfo)
                 .isDel(ArticleStatus.N)
                 .build();
@@ -60,7 +62,9 @@ public class ArticleCommandService {
 
         article.updateContent(
                 articleUpdateRequest.getTitle(),
-                articleUpdateRequest.getContent()
+                articleUpdateRequest.getContent(),
+                articleUpdateRequest.getBadge(),
+                articleUpdateRequest.getType()
         );
 
         articleCommandRepository.save(article);

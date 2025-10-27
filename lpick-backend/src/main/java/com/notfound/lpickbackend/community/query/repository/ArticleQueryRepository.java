@@ -28,7 +28,8 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
         COUNT(DISTINCT l),
         COUNT(DISTINCT c),
         COUNT(DISTINCT b),
-        a.oauth.oauthId
+        a.oauth.oauthId,
+        a.oauth.nickname
     )
     FROM Article a
     LEFT JOIN ArticleLike l ON l.article = a
@@ -48,7 +49,8 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
         COUNT(DISTINCT l),
         COUNT(DISTINCT c),
         COUNT(DISTINCT b),
-        a.oauth.oauthId
+        a.oauth.oauthId,
+        a.oauth.nickname
     )
     FROM Article a
     LEFT JOIN ArticleLike l ON l.article = a
@@ -69,7 +71,8 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
         COUNT(DISTINCT l2),
         COUNT(DISTINCT c),
         COUNT(DISTINCT b),
-        a.oauth.oauthId
+        a.oauth.oauthId,
+        a.oauth.nickname
     )
     FROM ArticleLike l
     JOIN l.article a
@@ -93,7 +96,8 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
         COUNT(DISTINCT l),
         COUNT(DISTINCT c),
         COUNT(DISTINCT b),
-        a.oauth.oauthId
+        a.oauth.oauthId,
+        a.oauth.nickname
     )
     FROM Article a
     LEFT JOIN ArticleLike l ON l.article = a
