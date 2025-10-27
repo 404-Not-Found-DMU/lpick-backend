@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.security.config;
 
+import com.notfound.lpickbackend.common.redis.RedisService;
 import com.notfound.lpickbackend.security.filter.JwtFilter;
 import com.notfound.lpickbackend.security.handler.CustomOAuth2SuccessHandler;
 import com.notfound.lpickbackend.security.service.CustomOAuth2UserService;
@@ -28,6 +29,7 @@ public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
+    private final RedisService redisService;
     private final JwtUtil jwtUtil;
 
     @Bean
@@ -38,7 +40,7 @@ public class SecurityConfig {
                 .configurationSource(corsConfigurationSource()));
         http.authorizeHttpRequests(config -> config
                         .requestMatchers("/ws/**").permitAll() // 웹소켓 목적 핸드셰이크 개방. 핸드셰이크 후 웹소켓 내 각 요청 시 마다만 jwt 검증(비로그인 회원도 토론 참관은 가능)
-                        .requestMatchers("/login", "/api/v1/developer-token","/swagger-ui.html/**", "/swagger-ui/**", "/v3/api-docs/**", "/static/**","/test_websocket_logic.html", "/actuator/**", "/api/v1/public/**").permitAll() // 개발자용 토큰 요청 허용
+                        .requestMatchers("/login", "/api/v1/developer-token","/api/v1/developer-token/cookie","/swagger-ui.html/**", "/swagger-ui/**", "/v3/api-docs/**", "/static/**","/test_websocket_logic.html", "/actuator/**", "/api/v1/public/**").permitAll() // 개발자용 토큰 요청 허용
                         .anyRequest().authenticated() // 테스트를 위해 임시로 설정
                 )
                 .formLogin(config -> config.disable()) // 폼 로그인 비활성화
@@ -49,7 +51,7 @@ public class SecurityConfig {
                 .successHandler(customOAuth2SuccessHandler)
         );
 
-        http.addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtFilter(jwtUtil, redisService), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

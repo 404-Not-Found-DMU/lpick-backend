@@ -3,248 +3,242 @@
 -- ==============================================================
 
 CREATE TABLE IF NOT EXISTS album (
-	album_id	varchar(40)		NOT NULL,
-	name	varchar(100)		NOT NULL,
-	profile	text		NULL,
-	release_date	timestamp		NULL,
-	release_country	varchar(50)		NULL,
-	label	text		NULL,
-    lpti varchar(20) NULL,
-	wiki_id	varchar(40)		NULL
+                                     album_id	varchar(40)		NOT NULL,
+                                     name	varchar(100)		NOT NULL,
+                                     profile	text		NULL,
+                                     release_date	timestamp		NULL,
+                                     release_country	varchar(50)		NULL,
+                                     label	text		NULL,
+                                     lpti varchar(20) NULL,
+                                     wiki_id	varchar(40)		NULL
 );
 
 CREATE TABLE IF NOT EXISTS genre (
-                       genre_id	varchar(40)		NOT NULL,
-                       name	varchar(50)		NOT NULL
+                                     genre_id	varchar(40)		NOT NULL,
+                                     name	varchar(50)		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS user_gear (
-                           user_gear_id	varchar(40)		NOT NULL,
-                           is_favorite boolean      NOT NULL DEFAULT FALSE,
-                           oauth_id	varchar(40)		NOT NULL,
-                           eq_id	varchar(40)		NOT NULL
+                                         user_gear_id	varchar(40)		NOT NULL,
+                                         is_favorite boolean      NOT NULL DEFAULT FALSE,
+                                         oauth_id	varchar(40)		NOT NULL,
+                                         eq_id	varchar(40)		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS page_revision (
-                               revision_id	varchar(40)		NOT NULL,
-                               content	Text		NOT NULL,
-                               revision_number	varchar(50)		NOT NULL,
-                               created_at	timestamp		NOT NULL,
-                               wiki_id	varchar(40)		NOT NULL,
-                               oauth_id	varchar(40)		NOT NULL
+                                             revision_id	varchar(40)		NOT NULL,
+                                             content	jsonb 		NOT NULL,
+                                             revision_number	varchar(50)		NOT NULL,
+                                             created_at	timestamp		NOT NULL,
+                                             wiki_id	varchar(40)		NOT NULL,
+                                             oauth_id	varchar(40)		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS tier (
-                      tier_id	varchar(40)		NOT NULL,
-                      name	varchar(50)		NOT NULL,
-                      point_scope	integer		NOT NULL
+                                    tier_id	varchar(40)		NOT NULL,
+                                    name	varchar(50)		NOT NULL,
+                                    point_scope	integer		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS comment (
-                         comment_id	varchar(40)		NOT NULL,
-                         content	text		NOT NULL,
-                         created_at	timestamp		NOT NULL,
-                         modified_at	timestamp		NULL,
-                         is_del	varchar(10)		NOT NULL,
-                         article_id	varchar(40)		NOT NULL,
-                         parent_comment_id	varchar(40)		NULL,
-                         oauth_id	varchar(40)		NOT NULL
+                                       comment_id	varchar(40)		NOT NULL,
+                                       content	text		NOT NULL,
+                                       created_at	timestamp		NOT NULL,
+                                       modified_at	timestamp		NULL,
+                                       is_del	varchar(10)		NOT NULL,
+                                       article_id	varchar(40)		NOT NULL,
+                                       parent_comment_id	varchar(40)		NULL,
+                                       oauth_id	varchar(40)		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS wiki_page (
-                           wiki_id	varchar(40)		NOT NULL,
-                           title	varchar(50)		NOT NULL,
-                           current_revision	varchar(50)		NULL,
-                           status	varchar(10)		NOT NULL,
-                           class    varchar(10)     NOT NULL
+                                         wiki_id	varchar(40)		NOT NULL,
+                                         title	varchar(50)		NOT NULL,
+                                         current_revision	varchar(50)		NULL,
+                                         status	varchar(10)		NOT NULL,
+                                         class    varchar(10)     NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS artist_like (
-                             artist_like_id	varchar(40)		NOT NULL,
-                             oauth_id	varchar(40)		NOT NULL,
-                             artist_id	varchar(40)		NOT NULL
+                                           artist_like_id	varchar(40)		NOT NULL,
+                                           oauth_id	varchar(40)		NOT NULL,
+                                           artist_id	varchar(40)		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS article_bookmark (
-                                  article_bookmark_id	varchar(40)		NOT NULL,
-                                  oauth_id	varchar(40)		NOT NULL,
-                                  article_id	varchar(40)		NOT NULL
+                                                article_bookmark_id	varchar(40)		NOT NULL,
+                                                oauth_id	varchar(40)		NOT NULL,
+                                                article_id	varchar(40)		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS album_genre (
-                             album_genre_id	varchar(40)		NOT NULL,
-                             album_id	varchar(40)		NOT NULL,
-                             genre_id	varchar(40)		NOT NULL
+                                           album_genre_id	varchar(40)		NOT NULL,
+                                           album_id	varchar(40)		NOT NULL,
+                                           genre_id	varchar(40)		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS artist_album (
-                              artist_album_id	varchar(40)		NOT NULL,
-                              artist_id	varchar(40)		NOT NULL,
-                              album_id	varchar(40)		NOT NULL
+                                            artist_album_id	varchar(40)		NOT NULL,
+                                            artist_id	varchar(40)		NOT NULL,
+                                            album_id	varchar(40)		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS debate_chat (
-                             dsc_id	varchar(40)		NOT NULL,
-                             content	text		NOT NULL,
-                             created_at	timestamp		NOT NULL,
-                             is_blind	boolean		NOT NULL,
-                             dt_id	varchar(40)		NOT NULL,
-                             oauth_id	varchar(40)		NOT NULL,
-                             parent_debate_chat_id varchar(40)	NULL
+                                           dsc_id	varchar(40)		NOT NULL,
+                                           content	text		NOT NULL,
+                                           created_at	timestamp		NOT NULL,
+                                           is_blind	boolean		NOT NULL,
+                                           dt_id	varchar(40)		NOT NULL,
+                                           oauth_id	varchar(40)		NOT NULL,
+                                           parent_debate_chat_id varchar(40)	NULL
 );
 
 CREATE TABLE IF NOT EXISTS user_info (
-                           oauth_id	varchar(50)		NOT NULL,
-                           nickname	varchar(50)		NOT NULL,
-                           profile	varchar(200)		NULL,
-                           point	integer	DEFAULT 0	NOT NULL,
-                           stack_point	integer	DEFAULT 0	NOT NULL,
-                           about	text		NULL,
-                           LPTI	char(4)		NULL,
-                           tier_id	varchar(40)		NOT NULL
+                                         oauth_id	varchar(50)		NOT NULL,
+                                         nickname	varchar(50)		NOT NULL,
+                                         profile	varchar(200)		NULL,
+                                         point	integer	DEFAULT 0	NOT NULL,
+                                         stack_point	integer	DEFAULT 0	NOT NULL,
+                                         about	text		NULL,
+                                         LPTI	char(4)		NULL,
+                                         tier_id	varchar(40)		NOT NULL
 );
 
 
 CREATE TABLE IF NOT EXISTS user_setting (
-                           oauth_id                  varchar(50)   NOT NULL,
-                           allow_view_act_count      boolean       NOT NULL DEFAULT TRUE,
-                           allow_view_recent_act     boolean       NOT NULL DEFAULT TRUE,
-                           allow_view_gear           boolean       NOT NULL DEFAULT TRUE,
-                           allow_view_collection     boolean       NOT NULL DEFAULT TRUE,
-                           page_theme_setting        varchar(20)   NOT NULL DEFAULT 'LIGHT',
-                           is_alarm_wiki_edit         boolean       NOT NULL DEFAULT TRUE,
-                           is_alarm_new_debate_answer boolean      NOT NULL DEFAULT TRUE,
-                           is_alarm_commented        boolean       NOT NULL DEFAULT TRUE,
-                           is_alarm_event            boolean       NOT NULL DEFAULT TRUE
+                                            oauth_id                  varchar(50)   NOT NULL,
+                                            allow_view_act_count      boolean       NOT NULL DEFAULT TRUE,
+                                            allow_view_recent_act     boolean       NOT NULL DEFAULT TRUE,
+                                            allow_view_gear           boolean       NOT NULL DEFAULT TRUE,
+                                            allow_view_collection     boolean       NOT NULL DEFAULT TRUE,
+                                            page_theme_setting        varchar(20)   NOT NULL DEFAULT 'LIGHT',
+                                            is_alarm_wiki_edit         boolean       NOT NULL DEFAULT TRUE,
+                                            is_alarm_new_debate_answer boolean      NOT NULL DEFAULT TRUE,
+                                            is_alarm_commented        boolean       NOT NULL DEFAULT TRUE,
+                                            is_alarm_event            boolean       NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE IF NOT EXISTS user_album (
-                            user_album_id	varchar(40)		NOT NULL,
-                            record_file	varchar(200)		NULL,
-                            is_favorite boolean         NOT NULL DEFAULT FALSE,
-                            album_id	varchar(40)		NOT NULL,
-                            oauth_id	varchar(40)		NOT NULL
+                                          user_album_id	varchar(40)		NOT NULL,
+                                          record_file	varchar(200)		NULL,
+                                          is_favorite boolean         NOT NULL DEFAULT FALSE,
+                                          album_id	varchar(40)		NOT NULL,
+                                          oauth_id	varchar(40)		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS review_like (
-                             review_like_id	varchar(40)		NOT NULL,
-                             oauth_id	varchar(40)		NOT NULL,
-                             review_id	varchar(40)		NOT NULL
+                                           review_like_id	varchar(40)		NOT NULL,
+                                           oauth_id	varchar(40)		NOT NULL,
+                                           review_id	varchar(40)		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS article (
-                         article_id	varchar(40)		NOT NULL,
-                         title	varchar(50)		NOT NULL,
-                         content	text		NOT NULL,
-                         created_at	timestamp		NOT NULL,
-                         modified_at	timestamp		NULL,
-                         is_del	varchar(10)		NOT NULL,
-                         oauth_id	varchar(40)		NOT NULL
+                                       article_id	varchar(40)		NOT NULL,
+                                       title	varchar(50)		NOT NULL,
+                                       content	text		NOT NULL,
+                                       created_at	timestamp		NOT NULL,
+                                       modified_at	timestamp		NULL,
+                                       is_del	varchar(10)		NOT NULL,
+                                       oauth_id	varchar(40)		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS comment_like (
-                              comment_like_id	varchar(40)		NOT NULL,
-                              oauth_id	varchar(40)		NOT NULL,
-                              comment_id	varchar(40)		NOT NULL
+                                            comment_like_id	varchar(40)		NOT NULL,
+                                            oauth_id	varchar(40)		NOT NULL,
+                                            comment_id	varchar(40)		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS user_auth (
-                           auth_id	varchar(50)		NOT NULL,
-                           oauth_id	varchar(40)		NOT NULL
+                                         auth_id	varchar(50)		NOT NULL,
+                                         oauth_id	varchar(40)		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS wiki_bookmark (
-                               wiki_bookmark_id	varchar(40)		NOT NULL,
-                               oauth_id	varchar(40)		NOT NULL,
-                               wiki_id	varchar(40)		NOT NULL
+                                             wiki_bookmark_id	varchar(40)		NOT NULL,
+                                             oauth_id	varchar(40)		NOT NULL,
+                                             wiki_id	varchar(40)		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS artist (
-                        artist_id	varchar(40)		NOT NULL,
-                        name	varchar(50)		NOT NULL,
-                        debut_at	timestamp		NULL,
-                        group_name	varchar(50)		NULL,
-                        company	varchar(50)		NULL,
-                        wiki_id	varchar(40)		NULL
+                                      artist_id	varchar(40)		NOT NULL,
+                                      name	varchar(50)		NOT NULL,
+                                      debut_at	timestamp		NULL,
+                                      group_name	varchar(50)		NULL,
+                                      company	varchar(50)		NULL,
+                                      wiki_id	varchar(40)		NULL
 );
 
 CREATE TABLE IF NOT EXISTS review (
-                        review_id	varchar(40)		NOT NULL,
-                        star	real		NOT NULL,
-                        content	text		NOT NULL,
-                        oauth_id	varchar(40)		NOT NULL,
-                        created_at  timestamp      NOT NULL,
-                        wiki_id	varchar(40)		NOT NULL
+                                      review_id	varchar(40)		NOT NULL,
+                                      star	real		NOT NULL,
+                                      content	text		NOT NULL,
+                                      oauth_id	varchar(40)		NOT NULL,
+                                      created_at  timestamp      NOT NULL,
+                                      wiki_id	varchar(40)		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS gear_class (
-                            class_name	varchar(40)		NOT NULL
+    class_name	varchar(40)		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS debate (
-                        dt_id	varchar(40)		NOT NULL,
-                        created_at	timestamp		NOT NULL,
-                        is_end	varchar(10)		NOT NULL,
-                        wiki_id	varchar(40)		NOT NULL,
-                        oauth_id	varchar(40)		NOT NULL,
-                        debate_name varchar(50)     NOT NULL,
-                        debate_subject varchar(15)  NOT NULL,
-                        revision_id varchar(40)     NOT NULL
+                                      dt_id	varchar(40)		NOT NULL,
+                                      created_at	timestamp		NOT NULL,
+                                      is_end	varchar(10)		NOT NULL,
+                                      wiki_id	varchar(40)		NOT NULL,
+                                      oauth_id	varchar(40)		NOT NULL,
+                                      debate_name varchar(50)     NOT NULL,
+                                      debate_subject varchar(15)  NOT NULL,
+                                      revision_id varchar(40)     NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS auth (
-                      auth_id	varchar(40)		NOT NULL,
-                      name	varchar(50)		NOT NULL
+                                    auth_id	varchar(40)		NOT NULL,
+                                    name	varchar(50)		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS article_like (
-                              article_like_id	varchar(40)		NOT NULL,
-                              oauth_id	varchar(40)		NOT NULL,
-                              article_id	varchar(40)		NOT NULL
+                                            article_like_id	varchar(40)		NOT NULL,
+                                            oauth_id	varchar(40)		NOT NULL,
+                                            article_id	varchar(40)		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS gear (
-                      id	varchar(40)		NOT NULL,
-                      name	varchar(50)		NOT NULL,
-                      model_name	varchar(100)		NULL,
-                      brand	varchar(50)		NULL,
-                      is_temp  boolean NOT NULL DEFAULT FALSE,
-                      eq_class	varchar(50)		NOT NULL,
-                      wiki_id	varchar(40)		NULL
+                                    id	varchar(40)		NOT NULL,
+                                    name	varchar(50)		NOT NULL,
+                                    model_name	varchar(100)		NULL,
+                                    brand	varchar(50)		NULL,
+                                    is_temp  boolean NOT NULL DEFAULT FALSE,
+                                    eq_class	varchar(50)		NOT NULL,
+                                    wiki_id	varchar(40)		NULL
 );
 
 CREATE TABLE IF NOT EXISTS report (
-                        report_id	varchar(40)		NOT NULL,
-                        oauth_id	varchar(40)		NOT NULL,
-                        report_why	varchar(50)		NOT NULL,
-                        report_explain	text		NOT NULL,
-                        created_at	timestamp		NOT NULL
+                                      report_id	varchar(40)		NOT NULL,
+                                      oauth_id	varchar(40)		NOT NULL,
+                                      report_why	varchar(50)		NOT NULL,
+                                      report_explain	text		NOT NULL,
+                                      created_at	timestamp		NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS service_data_image (
-                        id	varchar(40)		NOT NULL,
-                        src varchar(255)   NOT NULL,
-                        type varchar(10)   NOT NULL
+                                                  id	varchar(40)		NOT NULL,
+                                                  src varchar(255)   NOT NULL,
+                                                  type varchar(10)   NOT NULL
 
 );
 
 CREATE TABLE IF NOT EXISTS community_image (
-                        id	varchar(40)		NOT NULL,
-                        src varchar(255)   NOT NULL,
-                        type varchar(10)   NOT NULL
+                                               id	varchar(40)		NOT NULL,
+                                               src varchar(255)   NOT NULL,
+                                               type varchar(10)   NOT NULL
 );
 
 create table if not exists ballot (
                                       blt_id        varchar(40) primary key,
                                       oauth_id      varchar(40) not null,
                                       dt_id         varchar(40) not null,
-                                      ballot_value  varchar(10) not null,
-                                      constraint fk_ballot_debate
-                                          foreign key (dt_id) references debate(dt_id) on delete cascade,
-                                      constraint fk_ballot_oauth
-                                          foreign key (oauth_id) references user_info(oauth_id) on delete cascade,
-                                      constraint uq_ballot_dt_oauth unique (dt_id, oauth_id),
-                                      constraint ck_ballot_value check (ballot_value in ('AGREE','DISAGREE','ABSTAIN'))
+                                      ballot_value  varchar(10) not null
 );
 
 -- ==============================================================
@@ -362,7 +356,7 @@ ALTER TABLE review
     ADD CONSTRAINT PK_REVIEW PRIMARY KEY (review_id);
 
 ALTER TABLE gear
-DROP CONSTRAINT IF EXISTS PK_GEAR CASCADE;
+    DROP CONSTRAINT IF EXISTS PK_GEAR CASCADE;
 ALTER TABLE gear
     ADD CONSTRAINT PK_GEAR PRIMARY KEY (id);
 
@@ -663,3 +657,31 @@ ALTER TABLE report
 ALTER TABLE report
     ADD CONSTRAINT FK_user_info_TO_report_1
         FOREIGN KEY (oauth_id) REFERENCES user_info (oauth_id);
+
+-- FK: ballot.dt_id -> debate(dt_id)
+ALTER TABLE ballot
+    DROP CONSTRAINT IF EXISTS fk_ballot_debate CASCADE;
+ALTER TABLE ballot
+    ADD CONSTRAINT fk_ballot_debate
+        FOREIGN KEY (dt_id) REFERENCES debate(dt_id) ON DELETE CASCADE;
+
+-- FK: ballot.oauth_id -> user_info(oauth_id)
+ALTER TABLE ballot
+    DROP CONSTRAINT IF EXISTS fk_ballot_oauth CASCADE;
+ALTER TABLE ballot
+    ADD CONSTRAINT fk_ballot_oauth
+        FOREIGN KEY (oauth_id) REFERENCES user_info(oauth_id) ON DELETE CASCADE;
+
+-- UNIQUE (dt_id, oauth_id)
+ALTER TABLE ballot
+    DROP CONSTRAINT IF EXISTS uq_ballot_dt_oauth CASCADE;
+ALTER TABLE ballot
+    ADD CONSTRAINT uq_ballot_dt_oauth
+        UNIQUE (dt_id, oauth_id);
+
+-- CHECK (ballot_value)
+ALTER TABLE ballot
+    DROP CONSTRAINT IF EXISTS ck_ballot_value CASCADE;
+ALTER TABLE ballot
+    ADD CONSTRAINT ck_ballot_value
+        CHECK (ballot_value IN ('AGREE','DISAGREE','ABSTAIN'));

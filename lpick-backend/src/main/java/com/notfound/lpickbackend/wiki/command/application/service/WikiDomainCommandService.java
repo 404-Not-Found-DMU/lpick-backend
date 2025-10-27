@@ -1,6 +1,7 @@
 package com.notfound.lpickbackend.wiki.command.application.service;
 
 
+import com.notfound.lpickbackend.security.details.OAuth2UserDetails;
 import com.notfound.lpickbackend.servicedata.command.application.domain.Album;
 import com.notfound.lpickbackend.servicedata.command.application.domain.Artist;
 import com.notfound.lpickbackend.servicedata.command.application.domain.Gear;
@@ -12,6 +13,7 @@ import com.notfound.lpickbackend.wiki.query.service.PageRevisionQueryService;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.WikiPageCreateRequestDTO;
 import com.notfound.lpickbackend.wiki.query.service.WikiPageQueryService;
+import com.notfound.lpickbackend.wiki.revision_domain.WikiSchema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class WikiDomainCommandService {
+
+    private final WikiSchema wikiSchema;
 
     private final PageRevisionCommandService pageRevisionCommandService;
     private final PageRevisionQueryService pageRevisionQueryService;
@@ -37,16 +41,19 @@ public class WikiDomainCommandService {
      * CRUD : CREATE
      * */
     @Transactional
-    public void createWikiPageAndRevision(WikiPageCreateRequestDTO wikiRequestDTO) {
+    public void createWikiPageAndRevision(WikiPageCreateRequestDTO wikiRequestDTO, OAuth2UserDetails userDetail) {
 
-        String wikiId = wikiPageCommandService.createWikiPage(wikiRequestDTO.getTitle());
+        // service 처리 전 사전 검증
+        wikiSchema.validateOrThrow(wikiRequestDTO.getContent());
+
+        String wikiId = wikiPageCommandService.createWikiPage(wikiRequestDTO.getTitle(), wikiRequestDTO.getWikiPageClass());
 
         PageRevisionRequest pageRevisionRequestDTO = PageRevisionRequest.
                 builder().
                 content(wikiRequestDTO.getContent()).
                 build();
 
-        UserInfo userInfo = getUserInfo(wikiRequestDTO.getUserId());
+        UserInfo userInfo = this.getUserInfo(userDetail.getUsername());
 
         pageRevisionCommandService.createNewRevision(pageRevisionRequestDTO, wikiId, userInfo);
     }

@@ -46,6 +46,9 @@ public class JwtUtil {
         } catch (IllegalArgumentException e) {
             log.info("JWT Token claims empty {}", e);
             throw new CustomException(ErrorCode.NOT_VALID_ACCESS_TOKEN);
+        } catch (Exception e) { // 나머지 예외 래핑용
+            log.info("JwtUtil - validateToken : 등록된 예외가 아닌 논외의 예외 발생. {}", e);
+            throw new CustomException(ErrorCode.NOT_VALID_ACCESS_TOKEN);
         }
 
     }

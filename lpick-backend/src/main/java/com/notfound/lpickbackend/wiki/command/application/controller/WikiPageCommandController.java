@@ -1,15 +1,18 @@
 package com.notfound.lpickbackend.wiki.command.application.controller;
 
 import com.notfound.lpickbackend.common.exception.SuccessCode;
+import com.notfound.lpickbackend.security.details.OAuth2UserDetails;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.WikiPageCreateRequestDTO;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.WikiStatusRequest;
 import com.notfound.lpickbackend.wiki.command.application.service.WikiDomainCommandService;
 import com.notfound.lpickbackend.wiki.command.application.service.WikiPageCommandService;
+import com.notfound.lpickbackend.wiki.revision_domain.WikiSchema;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,12 +25,14 @@ public class WikiPageCommandController {
     private final WikiPageCommandService wikiPageCommandService;
 
     @PostMapping("/wiki")
-    @Operation(summary = "위키 페이지 생성", description = "위키 페이지 최초 생성 기능")
+    @Operation(summary = "위키 페이지 생성", description = "위키 페이지 최초 생성 기능, WikiPageClass - ARTIST, GEAR, ALBUM, OTHER")
     public ResponseEntity<SuccessCode> createWikiPage(
-            @RequestBody WikiPageCreateRequestDTO wikiPageCreateRequestDTO
-    ) {
+            @RequestBody WikiPageCreateRequestDTO wikiPageCreateRequestDTO,
+            @AuthenticationPrincipal OAuth2UserDetails userDetail
+            ) {
 
-        wikiDomainCommandService.createWikiPageAndRevision(wikiPageCreateRequestDTO);
+        
+        wikiDomainCommandService.createWikiPageAndRevision(wikiPageCreateRequestDTO, userDetail);
 
         return ResponseEntity.ok(SuccessCode.CREATE_SUCCESS);
     }

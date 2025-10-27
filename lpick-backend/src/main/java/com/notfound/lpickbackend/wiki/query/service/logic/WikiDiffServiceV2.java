@@ -22,8 +22,11 @@ public class WikiDiffServiceV2 {
 
         if(pageRevisionList.size() < 2) throw new IllegalArgumentException("리비전 비교대상이 정상적으로 불러와지지않음.");
 
-        String oldContent = pageRevisionList.get(0).getContent();
-        String newContent = pageRevisionList.get(1).getContent();
+        // 땜빵땜질땜빵땜질땜빵땜질땜빵땜질땜빵땜질땜빵땜질땜빵땜질땜빵땜질
+        // 땜빵땜질땜빵땜질땜빵땜질땜빵땜질땜빵땜질땜빵땜질땜빵땜질땜빵땜질
+        // 땜빵땜질땜빵땜질땜빵땜질땜빵땜질땜빵땜질땜빵땜질땜빵땜질땜빵땜질
+        String oldContent = "";//pageRevisionList.get(0).getContent();
+        String newContent = "";//pageRevisionList.get(1).getContent();
 
         return generateDiffHtml(oldContent, newContent, oldVersion, newVersion);
     }
