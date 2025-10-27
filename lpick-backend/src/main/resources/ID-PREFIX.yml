@@ -10,7 +10,7 @@ Auth : AUT
 Comment : CM
 CommentLike : CML
 Debate : DBT
-DebateChat : DBTC
+DebateChat : DTC
 Gear : GR
 GearClass : GC
 Genre : GEN
@@ -26,3 +26,4 @@ WikiBookmark : WPB
 WikiPage : WP
 CommunityImage : CIM
 ServiceDataImage : DIM
+Ballot : BLT

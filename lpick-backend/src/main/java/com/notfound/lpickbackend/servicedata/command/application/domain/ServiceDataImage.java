@@ -14,8 +14,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class ServiceDataImage extends BaseEntity {
-
-
     @Column(name = "src", nullable = false, length = 255)
     private String src;
 

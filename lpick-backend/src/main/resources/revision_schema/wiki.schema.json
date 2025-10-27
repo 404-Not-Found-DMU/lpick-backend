@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/wiki.schema.json",
+  "title": "Wiki Page Revision (Unified)",
+  "type": "object",
+  "additionalProperties": false,
+
+  "required": ["categoryData", "textBlocks"],
+  "properties": {
+    "schemaVersion": { "type": "string" },
+
+    "categoryData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "data"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["artist", "equipment", "lp", "other"]
+        },
+        "data": {}
+      },
+
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "artist" } }, "required": ["type"] },
+          "then": { "properties": { "data": { "$ref": "#/$defs/Artist" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "equipment" } }, "required": ["type"] },
+          "then": { "properties": { "data": { "$ref": "#/$defs/Equipment" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "lp" } }, "required": ["type"] },
+          "then": { "properties": { "data": { "$ref": "#/$defs/Lp" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "other" } }, "required": ["type"] },
+          "then": { "properties": { "data": { "$ref": "#/$defs/Other" } } }
+        }
+      ]
+    },
+
+    "textBlocks": { "$ref": "#/$defs/TextBlocks" }
+  },
+
+  "$defs": {
+    "TextBlocks": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/TextBlock" }
+    },
+
+    "TextBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "content", "depth"],
+      "properties": {
+        "id":      { "type": "string", "minLength": 1 },
+        "title":   { "type": "string" },
+        "content": { "type": "string" },
+        "depth":   { "type": "integer", "minimum": 0 }
+      }
+    },
+
+    "Equipment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "brand", "releaseYear", "description", "equipmentType", "imageUrl"],
+      "properties": {
+        "name":         { "type": "string" },
+        "brand":        { "type": "string" },
+        "releaseYear":  { "type": "string", "pattern": "^[0-9]{4}(-[0-9]{2})?$" },
+        "description":  { "type": "string" },
+        "equipmentType":{ "type": "string" },
+        "imageUrl":     { "type": "string" }
+      }
+    },
+
+    "Artist": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "country", "activePeriod", "roles", "imageUrl", "discography", "activities"],
+      "properties": {
+        "name":         { "type": "string" },
+        "country":      { "type": "string" },
+        "activePeriod": { "type": "string" },
+        "roles":        { "type": "array", "items": { "type": "string" } },
+        "imageUrl":     { "type": "string" },
+
+        "discography": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "title", "releaseDate", "type", "role"],
+            "properties": {
+              "id":          { "type": "string" },
+              "title":       { "type": "string" },
+              "releaseDate": { "type": "string" },
+              "type":        { "type": "string" },
+              "role":        { "type": "string" }
+            }
+          }
+        },
+
+        "activities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "year", "title", "description", "type"],
+            "properties": {
+              "id":          { "type": "string" },
+              "year":        { "type": "string" },
+              "title":       { "type": "string" },
+              "description": { "type": "string" },
+              "type":        { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "Lp": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["infobox", "tracklist"],
+      "properties": {
+        "infobox": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["title", "artist", "coverUrl", "releaseDate", "genre", "label", "tableColor", "lpInfos"],
+          "properties": {
+            "title":       { "type": "string" },
+            "artist":      { "type": "string" },
+            "coverUrl":    { "type": "string" },
+            "releaseDate": { "type": "string", "pattern": "^[0-9]{4}(-[0-9]{2}-[0-9]{2})?$" },
+            "genre":       { "type": "string" },
+            "label":       { "type": "string" },
+            "tableColor":  { "type": "string" },
+
+            "lpInfos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["id","alias","material","rpm","diameter","weight","pressingCountry","pressingInfo","condition","isColored","labelType","format","specialNotes"],
+                "properties": {
+                  "id":              { "type": "string" },
+                  "alias":           { "type": "string" },
+                  "material":        { "type": "string" },
+                  "rpm":             { "type": "string" },
+                  "diameter":        { "type": "string" },
+                  "weight":          { "type": "string" },
+                  "pressingCountry": { "type": "string" },
+                  "pressingInfo":    { "type": "string" },
+                  "condition":       { "type": "string" },
+                  "isColored":       { "type": "boolean" },
+                  "labelType":       { "type": "string" },
+                  "format":          { "type": "string" },
+                  "specialNotes":    { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+
+        "tracklist": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["tracks"],
+          "properties": {
+            "tracks": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["id", "number", "title", "length"],
+                "properties": {
+                  "id":     { "type": "string" },
+                  "number": { "type": "string", "pattern": "^[0-9]+$" },
+                  "title":  { "type": "string" },
+                  "length": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "Other": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "content"],
+      "properties": {
+        "title":   { "type": "string" },
+        "content": { "type": "string" }
+      }
+    }
+  }
+}

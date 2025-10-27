@@ -2,7 +2,6 @@ package com.notfound.lpickbackend.wiki.command.application.domain;
 
 import com.notfound.lpickbackend.servicedata.command.application.domain.Album;
 import com.notfound.lpickbackend.servicedata.command.application.domain.Artist;
-import com.notfound.lpickbackend.AUTO_ENTITIES.Debate;
 import com.notfound.lpickbackend.servicedata.command.application.domain.Gear;
 import com.notfound.lpickbackend.AUTO_ENTITIES.TOOL.IdPrefixUtil;
 import com.notfound.lpickbackend.common.exception.CustomException;

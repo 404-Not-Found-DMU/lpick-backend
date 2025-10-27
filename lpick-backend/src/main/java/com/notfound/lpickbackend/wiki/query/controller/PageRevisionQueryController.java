@@ -61,15 +61,16 @@ public class PageRevisionQueryController {
                 .body(pageRevisionQueryService.getPageRevisionResponse(wikiId, version));
     }
 
-    @GetMapping("/wiki/{wikiId}/revision/difference")
-    @Operation(summary = "위키 버전 비교", description = "위키 버전간의 차이를 비교하는 기능")
-    public ResponseEntity<String> getDiffLineHtml(
-            @PathVariable("wikiId") String wikiId,
-            @RequestParam("old") String oldVersion,
-            @RequestParam("new") String newVersion
-    ) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(WikiDiffServiceV2.getTwoRevisionDiffHtml(wikiId, oldVersion, newVersion));
-    }
+    // 일시 비활성화
+//    @GetMapping("/wiki/{wikiId}/revision/difference")
+//    @Operation(summary = "위키 버전 비교", description = "위키 버전간의 차이를 비교하는 기능")
+//    public ResponseEntity<String> getDiffLineHtml(
+//            @PathVariable("wikiId") String wikiId,
+//            @RequestParam("old") String oldVersion,
+//            @RequestParam("new") String newVersion
+//    ) {
+//        return ResponseEntity.status(HttpStatus.OK)
+//                .body(WikiDiffServiceV2.getTwoRevisionDiffHtml(wikiId, oldVersion, newVersion));
+//    }
 
 }

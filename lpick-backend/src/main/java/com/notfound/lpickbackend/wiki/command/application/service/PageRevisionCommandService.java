@@ -9,6 +9,7 @@ import com.notfound.lpickbackend.wiki.command.repository.PageRevisionCommandRepo
 import com.notfound.lpickbackend.wiki.query.dto.response.PageRevisionResponse;
 import com.notfound.lpickbackend.wiki.query.service.PageRevisionQueryService;
 import com.notfound.lpickbackend.wiki.query.service.WikiPageQueryService;
+import com.notfound.lpickbackend.wiki.revision_domain.WikiSchema;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class PageRevisionCommandService {
+
+    private final WikiSchema wikiSchema;
 
     private final WikiPageCommandService wikiPageCommandService;
     private final WikiPageQueryService wikiPageQueryService;
@@ -29,6 +32,8 @@ public class PageRevisionCommandService {
 
     @Transactional
     public PageRevisionResponse createNewRevision(PageRevisionRequest request, String wikiId, UserInfo user) {
+
+        wikiSchema.validateOrThrow(request.getContent());
 
         // WikiId 값을 지니는 wikiPage 엔티티가 존재하는지 확인.
         WikiPage targetWikiPage = wikiPageQueryService.getWikiPageById(wikiId);

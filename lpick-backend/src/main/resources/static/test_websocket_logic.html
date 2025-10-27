@@ -1,0 +1,147 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>SockJS + STOMP Quick Test (V2.1)</title>
+<style>
+    body{font-family:system-ui, sans-serif;max-width:720px;margin:20px auto}
+    input,button{font-size:14px;padding:6px 10px;margin:4px}
+    #log{white-space:pre-wrap;border:1px solid #ccc;border-radius:8px;padding:10px;height:280px;overflow:auto}
+    .row{margin:8px 0}.dim{opacity:.5}
+    label{margin-left:8px}
+</style>
+
+<h2>SockJS + STOMP Quick Test (V2.1)</h2>
+
+<div class="row">
+    SockJS Endpoint:
+    <input id="endpoint" size="40" value="/ws"/>
+    <button id="btnConnect">Connect</button>
+    <button id="btnDisconnect">Disconnect</button>
+    <label><input type="checkbox" id="useCookie"> use access_token cookie → Authorization</label>
+</div>
+
+<div class="row">
+    Room ID:
+    <input id="roomId" value="test"/>
+    <button id="btnSub">Subscribe (/topic/rooms/{roomId})</button>
+</div>
+
+<div class="row">
+    (Optional) JWT (manual):
+    <input id="jwt" size="60" placeholder="Bearer eyJ... (선택)"/>
+</div>
+
+<div class="row">
+    Send to room:
+    <input id="msg" size="40" value="hello from sockjs"/>
+    <button id="btnSend" class="dim" title="JWT 없으면 서버에서 거부됨">
+        SEND (/app/rooms/{roomId}/send)
+    </button>
+</div>
+
+<div id="log"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+<script>
+    let sock = null, client = null, subError = null, subRoom = null;
+
+    const log = (...a) => {
+        const el = document.getElementById('log');
+        el.textContent += a.join(' ') + '\n';
+        el.scrollTop = el.scrollHeight;
+    };
+
+    (function fixEndpointForFile(){
+        const ep = document.getElementById('endpoint');
+        if (location.protocol === 'file:' && !/^https?:\/\//i.test(ep.value)) {
+            ep.value = 'http://localhost:8080/ws'; // 로컬 서버로 보정
+        }
+    })();
+
+    const ui = {
+        sendBtn: document.getElementById('btnSend'),
+        jwtInput: document.getElementById('jwt'),
+        useCookie: document.getElementById('useCookie'),
+        setSendDim(on){ ui.sendBtn.classList.toggle('dim', on); }
+    };
+
+    function readCookie(name){
+        // HttpOnly면 JS로 접근 불가 → 이 함수는 개발/테스트용
+        const m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/[$()*+.?[\\\]^{|}]/g, '\\$&') + '=([^;]*)'));
+        return m ? decodeURIComponent(m[1]) : null;
+    }
+
+    function buildAuthHeader(){
+        // 우선순위: manual 입력 > cookie(access_token)
+        let v = ui.jwtInput.value.trim();
+        if (!v && ui.useCookie.checked) {
+            const token = readCookie('access_token');
+            if (token) v = 'Bearer ' + token;
+        }
+        return v ? { Authorization: v } : {};
+    }
+
+    function connect() {
+        const ENDPOINT = document.getElementById('endpoint').value.trim();
+        sock = new SockJS(ENDPOINT);
+        client = Stomp.over(sock);
+        client.debug = (m) => log('[stomp]', m);
+
+        const headers = buildAuthHeader(); // ★ CONNECT 헤더
+        client.connect(headers, frame => {
+            log('CONNECTED', JSON.stringify(frame.headers));
+
+            // 에러 큐 자동 구독 (+ 헤더 주입 가능)
+            subError = client.subscribe('/user/queue/errors', msg => {
+                log('APP-ERROR', msg.body);
+            }, buildAuthHeader()); // ★ SUBSCRIBE 헤더 (선택)
+
+            log('SUBSCRIBED /user/queue/errors');
+
+        }, err => {
+            log('ERROR', err);
+        });
+    }
+
+    function disconnect() {
+        if (client && client.connected) {
+            if (subError) { subError.unsubscribe(); subError = null; }
+            if (subRoom)  { subRoom.unsubscribe();  subRoom = null;  }
+            client.disconnect(() => log('DISCONNECTED'));
+        } else {
+            log('not connected');
+        }
+    }
+
+    function subscribeRoom() {
+        if (!client || !client.connected) { log('not connected'); return; }
+        const roomId = document.getElementById('roomId').value.trim();
+        const dest = `/topic/rooms/${roomId}`;
+        subRoom = client.subscribe(dest, message => {
+            log('MESSAGE', message.body);
+        }, buildAuthHeader()); // ★ SUBSCRIBE 헤더 (선택)
+        log('SUBSCRIBED', dest);
+    }
+
+    function sendToRoom() {
+        if (!client || !client.connected) { log('not connected'); return; }
+        const roomId = document.getElementById('roomId').value.trim();
+        const body = { roomId, content: document.getElementById('msg').value, type: 'MESSAGE' };
+
+        const headers = Object.assign({ 'content-type': 'application/json' }, buildAuthHeader()); // ★ SEND 헤더
+        client.send(`/app/rooms/${roomId}/send`, headers, JSON.stringify(body));
+        log('SEND ->', `/app/rooms/${roomId}/send`, JSON.stringify(body));
+    }
+
+    // UI
+    document.getElementById('btnConnect').onclick = connect;
+    document.getElementById('btnDisconnect').onclick = disconnect;
+    document.getElementById('btnSub').onclick = subscribeRoom;
+    document.getElementById('btnSend').onclick = sendToRoom;
+
+    // 버튼 상태
+    const updateBtn = () => ui.setSendDim(!(ui.jwtInput.value.trim() || (ui.useCookie.checked && readCookie('access_token'))));
+    ui.jwtInput.addEventListener('input', updateBtn);
+    ui.useCookie.addEventListener('change', updateBtn);
+    updateBtn();
+</script>

@@ -1,5 +1,7 @@
 package com.notfound.lpickbackend.wiki.command.application.dto.request;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.notfound.lpickbackend.wiki.command.application.domain.WikiPageClass;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,9 +16,8 @@ public class WikiPageCreateRequestDTO {
     // 문서 제목
     String title;
 
-    // 문서 내용
-    String content;
+    WikiPageClass wikiPageClass;
 
-    // 임시로 넣는 사용자 ID
-    String userId;
+    // 문서 내용
+    JsonNode content;
 }
