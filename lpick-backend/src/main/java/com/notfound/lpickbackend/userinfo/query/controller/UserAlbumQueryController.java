@@ -2,6 +2,7 @@ package com.notfound.lpickbackend.userinfo.query.controller;
 
 import com.notfound.lpickbackend.common._wrapper.BlindableResponse;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
+import com.notfound.lpickbackend.userinfo.query.dto.response.UserAlbumOwnedHeader;
 import com.notfound.lpickbackend.userinfo.query.dto.response.UserAlbumOwnedResponse;
 import com.notfound.lpickbackend.userinfo.query.service.UserAlbumQueryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,14 +26,14 @@ public class UserAlbumQueryController {
 
         @GetMapping("/user-album")
         @Operation(summary = "사용자 소유 앨범 페이지네이션 조회", description = "페이지네이션을 기반으로 사용자가 소유한 앨범의 목록 조회 가능. 상세 조회를 바로 제공.(필요시 제목 및 커버만 반환으로 수정가능)")
-        public ResponseEntity<Page<UserAlbumOwnedResponse>> getUserOwnedAlbumList(
+        public ResponseEntity<Page<UserAlbumOwnedHeader>> getUserOwnedAlbumList(
                 @RequestParam("page")int page,
                 @RequestParam("size")int size
         ) {
-                Page<UserAlbumOwnedResponse> userAlbumList
+                Page<UserAlbumOwnedHeader> userAlbumList
                         = userAlbumQueryService.getOwnAlbumList(
                                 UserInfoUtil.getOAuthId(),
-                                PageRequest.of(page, size)
+                                PageRequest.of(page - 1, size)
                         );
 
                 return ResponseEntity.status(HttpStatus.OK).body(userAlbumList);
@@ -40,7 +41,7 @@ public class UserAlbumQueryController {
 
         @GetMapping("/my-page/{oauthId}/user-album")
         @Operation(summary = "대상 사용자의 소유 앨범 페이지네이션 조회", description = "설정에 따라 표기되지 않을 수 있음. 페이지네이션을 기반으로 사용자가 소유한 앨범의 목록 조회 가능. 상세 조회를 바로 제공.(필요시 제목 및 커버만 반환으로 수정가능)")
-        public ResponseEntity<BlindableResponse<Page<UserAlbumOwnedResponse>>> getUserOwnedAlbumListByOauthId(
+        public ResponseEntity<BlindableResponse<Page<UserAlbumOwnedHeader>>> getUserOwnedAlbumListByOauthId(
                 @PathVariable("oauthId")String oauthId,
                 @RequestParam("page")int page,
                 @RequestParam("size")int size
@@ -48,7 +49,7 @@ public class UserAlbumQueryController {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         userAlbumQueryService.getUserAlbumListByOauthId(
                                 oauthId,
-                                PageRequest.of(page, size)
+                                PageRequest.of(page - 1, size)
                         )
                 );
         }
@@ -65,7 +66,7 @@ public class UserAlbumQueryController {
         /** 사용자가 설정한 favorite 리스트 제공.*/
         @GetMapping("/user-album/favorite")
         @Operation(summary = "사용자가 소유한 favorite 앨범 목록 조회", description = "사용자가 추천 앨범으로 선정해둔 앨범의 목록만 조회.(최대 10개)")
-        public ResponseEntity<List<UserAlbumOwnedResponse>> getUserOwnedFavoriteAlbum(
+        public ResponseEntity<List<UserAlbumOwnedHeader>> getUserOwnedFavoriteAlbum(
 
         ) {
                 return ResponseEntity.status(HttpStatus.OK).body(userAlbumQueryService.getUserFavoriteAlbumList(UserInfoUtil.getOAuthId()));

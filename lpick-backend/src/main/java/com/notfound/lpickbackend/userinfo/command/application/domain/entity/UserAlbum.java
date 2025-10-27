@@ -7,24 +7,29 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.Instant;
 import java.util.UUID;
 
 
 @NoArgsConstructor
 @Getter
 @Setter
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "user_album")
 public class UserAlbum {
 
     @Builder
-    public UserAlbum(String userAlbumId, String recordFile, boolean isFavorite, Album album, UserInfo oauth) {
+    public UserAlbum(String userAlbumId, String recordFile, boolean isFavorite, Instant createdAt, Album album, UserInfo oauth) {
         this.userAlbumId = userAlbumId;
         this.recordFile = recordFile;
+        this.isFavorite = isFavorite;
+        this.createdAt = createdAt;
         this.album = album;
         this.oauth = oauth;
-        this.isFavorite = isFavorite;
     }
 
     @PrePersist
@@ -43,6 +48,10 @@ public class UserAlbum {
 
     @Column(name = "is_favorite") // 10개까지만 설정 가능하게 하기. + 추후 favorite 지정 시간 등으로 정렬조건 추가 할것.
     private boolean isFavorite;
+
+    @CreatedDate
+    @Column(name = "created_at", nullable = false)
+    private Instant createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "album_id", nullable = false)

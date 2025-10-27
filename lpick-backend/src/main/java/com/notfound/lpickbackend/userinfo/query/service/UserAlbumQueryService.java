@@ -6,6 +6,7 @@ import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.servicedata.query.service.GenreQueryService;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserAlbum;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserSetting;
+import com.notfound.lpickbackend.userinfo.query.dto.response.UserAlbumOwnedHeader;
 import com.notfound.lpickbackend.userinfo.query.dto.response.UserAlbumOwnedResponse;
 import com.notfound.lpickbackend.userinfo.query.repository.UserAlbumQueryRepository;
 import lombok.RequiredArgsConstructor;
@@ -44,20 +45,20 @@ public class UserAlbumQueryService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserAlbumOwnedResponse> getUserFavoriteAlbumList(String oAuthId) {
+    public List<UserAlbumOwnedHeader> getUserFavoriteAlbumList(String oAuthId) {
         return userAlbumQueryReposiory.findAllUserAlbumByIsFavorite(oAuthId);
     }
 
     /** 요청자 본인의 앨범 목록 내역 가져올때만 사용. */
     @Transactional(readOnly = true)
-    public Page<UserAlbumOwnedResponse> getOwnAlbumList(String oAuthId, Pageable pageable) {
+    public Page<UserAlbumOwnedHeader> getOwnAlbumList(String oAuthId, Pageable pageable) {
 
         return userAlbumQueryReposiory.findAllUserAlbumByOauthId(oAuthId, pageable);
     }
 
     @Transactional(readOnly = true)
     /** 타인 마이페이지 진입 시 컬렉션 획득 위해 사용 */
-    public BlindableResponse<Page<UserAlbumOwnedResponse>> getUserAlbumListByOauthId(String oAuthId, Pageable pageable) {
+    public BlindableResponse<Page<UserAlbumOwnedHeader>> getUserAlbumListByOauthId(String oAuthId, Pageable pageable) {
         UserSetting userSetting = userSettingQueryService.findById(oAuthId);
 
         if(!userSetting.getMyPagePrivacySetting().isUserAllowViewCollection())

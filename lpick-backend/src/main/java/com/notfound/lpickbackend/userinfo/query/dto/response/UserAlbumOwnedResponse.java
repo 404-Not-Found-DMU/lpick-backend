@@ -12,6 +12,7 @@ public class UserAlbumOwnedResponse {
     private String userAlbumId;
     private String name;
     private String profile; // 앨범커버
+    private Instant createdAt;
     private String artistName;
     private String recordFile; // 유무에 따라 null로 기입.
     private Instant releaseDate;
@@ -19,10 +20,11 @@ public class UserAlbumOwnedResponse {
     private String label;
     private boolean isFavorite;
 
-    public UserAlbumOwnedResponse(String userAlbumId, String name, String profile, String artistName, String recordFile, Instant releaseDate, String releaseCountry, String label, boolean isFavorite) {
+    public UserAlbumOwnedResponse(String userAlbumId, String name, String profile, Instant createdAt, String artistName, String recordFile, Instant releaseDate, String releaseCountry, String label, boolean isFavorite) {
         this.userAlbumId = userAlbumId;
         this.name = name;
         this.profile = profile;
+        this.createdAt = createdAt;
         this.artistName = artistName;
         this.recordFile = recordFile;
         this.releaseDate = releaseDate;
