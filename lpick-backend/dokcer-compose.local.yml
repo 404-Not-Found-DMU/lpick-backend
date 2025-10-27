@@ -36,7 +36,7 @@ services:
     container_name: logstash
     volumes:
       - ./logstash/pipeline:/usr/share/logstash/pipeline
-      - C:/logs/lpick:/var/logs/lpick:ro
+      - ./logs/lpick:/var/logs/lpick:ro
     environment: # 👈 [추가] Logstash 시간대를 KST로 설정
       - TZ=Asia/Seoul
     depends_on:
