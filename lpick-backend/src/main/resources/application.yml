@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: dev
   config:
     import:
       - optional:file:/app/API-KEY.yml
@@ -84,3 +86,6 @@ management:
   health:
     elasticsearch:
       enabled: false
+
+discogs:
+  token: ${discogs.token}

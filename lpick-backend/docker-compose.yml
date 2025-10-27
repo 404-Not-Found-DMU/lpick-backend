@@ -19,6 +19,7 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
     volumes:
       - ./API-KEY.yml:/app/API-KEY.yml
+      - /var/logs/lpick:/var/logs/lpick
 
 #  postgres:
 #    image: postgres:15
@@ -89,6 +90,18 @@ services:
       interval: 5s
       timeout: 3s
       retries: 20
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.14.3
+    container_name: logstash
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+      - /var/logs/lpick:/var/logs/lpick
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    ports:
+      - "5044:5044"
 
 volumes:
   pgdata:
