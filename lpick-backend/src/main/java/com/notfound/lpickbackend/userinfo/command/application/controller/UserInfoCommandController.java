@@ -128,13 +128,27 @@ public class UserInfoCommandController {
     /* 개발자 전용 토큰 요청 api */
     @PostMapping("/developer-token")
     @Operation(summary = "개발자 전용 토큰 요청", description = "테스트를 위해 1년짜리 토큰을 발급하는 기능")
-    ResponseEntity<TokenResponseDTO> developerTokenRequest(
+    ResponseEntity<SuccessCode> developerTokenRequest(
             HttpServletResponse response
     ) {
 
         TokenResponseDTO tokenResponseDTO = userCommandService.getDeveloperToken();
 
-        return ResponseEntity.ok(tokenResponseDTO);
+        // 쿠키 추가
+        cookieUtil.addCookie(
+                response,
+                "access_token",
+                tokenResponseDTO.getAccessToken(),
+                accessTokenValidity / 1000 // 초 단위라 나누기 1000
+        );
+        cookieUtil.addCookie(
+                response,
+                "refresh_token",
+                tokenResponseDTO.getRefreshToken(),
+                refreshTokenValidity / 1000 // 초 단위라 나누기 1000
+        );
+
+        return ResponseEntity.ok(SuccessCode.SUCCESS);
     }
 
     /* 개발자 전용 토큰 요청 api */

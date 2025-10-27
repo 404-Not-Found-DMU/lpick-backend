@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS debate_chat (
 
 CREATE TABLE IF NOT EXISTS user_info (
                                          oauth_id	varchar(50)		NOT NULL,
-                                         nickname	varchar(50)		NOT NULL,
+                                         nickname	varchar(50)	        NULL,
                                          profile	varchar(200)		NULL,
                                          point	integer	DEFAULT 0	NOT NULL,
                                          stack_point	integer	DEFAULT 0	NOT NULL,

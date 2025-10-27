@@ -6,9 +6,6 @@ import co.elastic.clients.elasticsearch._types.aggregations.StringTermsAggregate
 import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.json.JsonData;
-import com.notfound.lpickbackend.servicedata.command.application.domain.Album;
-import com.notfound.lpickbackend.servicedata.command.application.domain.Artist;
-import com.notfound.lpickbackend.servicedata.command.application.domain.Gear;
 import com.notfound.lpickbackend.servicedata.query.repository.AlbumQueryRepository;
 import com.notfound.lpickbackend.servicedata.query.repository.ArtistQueryRepository;
 import com.notfound.lpickbackend.servicedata.query.repository.GearQueryRepository;
@@ -27,7 +24,6 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 

@@ -22,7 +22,7 @@ public class UserInfo {
     @Column(name = "oauth_id", nullable = false, length = 50)
     private String oauthId;
 
-    @Column(name = "nickname", nullable = false, length = 50)
+    @Column(name = "nickname", nullable = true, length = 50)
     private String nickname;
 
     @Column(name = "profile", length = 200)
@@ -68,9 +68,9 @@ public class UserInfo {
     }
 
     public void deleteUserInfo() {
-        this.profile = null;
-        this.nickname = null;
-        this.about = null;
+        this.profile = "";
+        this.nickname = "";
+        this.about = "";
         this.lpti = null;
     }
 
