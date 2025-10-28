@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.wiki.command.application.controller;
 
+import com.notfound.lpickbackend.common.dto.IdResponse;
 import com.notfound.lpickbackend.common.exception.SuccessCode;
 import com.notfound.lpickbackend.security.details.OAuth2UserDetails;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.WikiPageCreateRequestDTO;
@@ -26,15 +27,15 @@ public class WikiPageCommandController {
 
     @PostMapping("/wiki")
     @Operation(summary = "위키 페이지 생성", description = "위키 페이지 최초 생성 기능, WikiPageClass - ARTIST, GEAR, ALBUM, OTHER")
-    public ResponseEntity<SuccessCode> createWikiPage(
+    public ResponseEntity<IdResponse> createWikiPage(
             @RequestBody WikiPageCreateRequestDTO wikiPageCreateRequestDTO,
             @AuthenticationPrincipal OAuth2UserDetails userDetail
             ) {
 
         
-        wikiDomainCommandService.createWikiPageAndRevision(wikiPageCreateRequestDTO, userDetail);
+        String wikiId = wikiDomainCommandService.createWikiPageAndRevision(wikiPageCreateRequestDTO, userDetail);
 
-        return ResponseEntity.ok(SuccessCode.CREATE_SUCCESS);
+        return ResponseEntity.ok(new IdResponse(wikiId));
     }
 
     /**

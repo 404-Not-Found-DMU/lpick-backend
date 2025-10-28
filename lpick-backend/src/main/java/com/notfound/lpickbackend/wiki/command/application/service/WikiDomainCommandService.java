@@ -41,7 +41,7 @@ public class WikiDomainCommandService {
      * CRUD : CREATE
      * */
     @Transactional
-    public void createWikiPageAndRevision(WikiPageCreateRequestDTO wikiRequestDTO, OAuth2UserDetails userDetail) {
+    public String createWikiPageAndRevision(WikiPageCreateRequestDTO wikiRequestDTO, OAuth2UserDetails userDetail) {
 
         // service 처리 전 사전 검증
         wikiSchema.validateOrThrow(wikiRequestDTO.getContent());
@@ -56,6 +56,8 @@ public class WikiDomainCommandService {
         UserInfo userInfo = this.getUserInfo(userDetail.getUsername());
 
         pageRevisionCommandService.createNewRevision(pageRevisionRequestDTO, wikiId, userInfo);
+
+        return wikiId;
     }
     /** Target : WikiPage
      * Method : PATCH

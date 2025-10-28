@@ -18,7 +18,7 @@ import java.time.Instant;
 public class AlbumDocument {
 
     // 통합 검색을 위한 타입 상수 정의
-    public static final String DOCUMENT_TYPE = "Album";
+    public static final String DOCUMENT_TYPE = "ALBUM";
 
     @Id
     @Field(type = FieldType.Keyword) // 정확한 일치 검색에 유리

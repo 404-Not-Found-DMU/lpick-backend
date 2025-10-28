@@ -1,17 +1,16 @@
 package com.notfound.lpickbackend.common.elasticsearch.service;
 
-import com.notfound.lpickbackend.common.elasticsearch.document.AlbumDocument;
-import com.notfound.lpickbackend.common.elasticsearch.document.ArtistDocument;
-import com.notfound.lpickbackend.common.elasticsearch.document.GearDocument;
-import com.notfound.lpickbackend.common.elasticsearch.repository.AlbumDocumentRepository;
-import com.notfound.lpickbackend.common.elasticsearch.repository.ArtistDocumentRepository;
-import com.notfound.lpickbackend.common.elasticsearch.repository.GearDocumentRepository;
+import com.notfound.lpickbackend.common.elasticsearch.document.*;
+import com.notfound.lpickbackend.common.elasticsearch.repository.*;
+import com.notfound.lpickbackend.community.command.domain.Article;
+import com.notfound.lpickbackend.community.query.repository.ArticleQueryRepository;
 import com.notfound.lpickbackend.servicedata.command.application.domain.Album;
 import com.notfound.lpickbackend.servicedata.command.application.domain.Artist;
 import com.notfound.lpickbackend.servicedata.command.application.domain.Gear;
 import com.notfound.lpickbackend.servicedata.query.repository.AlbumQueryRepository;
 import com.notfound.lpickbackend.servicedata.query.repository.ArtistQueryRepository;
 import com.notfound.lpickbackend.servicedata.query.repository.GearQueryRepository;
+import com.notfound.lpickbackend.wiki.query.repository.WikiPageQueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,11 +31,15 @@ public class DataSyncService { // AlbumSyncService에서 이름 변경
     private final AlbumQueryRepository albumQueryRepository;
     private final ArtistQueryRepository artistQueryRepository;
     private final GearQueryRepository gearQueryRepository;
+    private final ArticleQueryRepository articleQueryRepository;
+    private final WikiPageQueryRepository wikiPageQueryRepository;
 
     //--- Elasticsearch Repositories
     private final AlbumDocumentRepository albumDocumentRepository;
     private final ArtistDocumentRepository artistDocumentRepository;
     private final GearDocumentRepository gearDocumentRepository;
+    private final ArticleDocumentRepository articleDocumentRepository;
+    private final WikiPageDocumentRepository wikiPageDocumentRepository;
 
     @Transactional(readOnly = true)
     protected <T, D> void syncAllData(
@@ -96,6 +99,13 @@ public class DataSyncService { // AlbumSyncService에서 이름 변경
         syncAllData(gearQueryRepository, gearDocumentRepository, GearDocument::from, "Gear");
     }
 
+    public void syncAllArticles() {
+        syncAllData(articleQueryRepository, articleDocumentRepository, ArticleDocument::from, "Article");
+    }
+    public void syncAllWikiPage() {
+        syncAllData(wikiPageQueryRepository, wikiPageDocumentRepository, WikiPageDocument::from, "WikiPage");
+    }
+
     /**
      * 앨범이 저장/수정될 때 Elasticsearch에 반영합니다.
      */
@@ -139,6 +149,15 @@ public class DataSyncService { // AlbumSyncService에서 이름 변경
      */
     public void deleteGear(String gearId) {
         gearDocumentRepository.deleteById(gearId);
+    }
+
+    public void syncArticle(Article article) {
+        ArticleDocument document = ArticleDocument.from(article);
+        articleDocumentRepository.save(document);
+    }
+
+    public void deleteArticle(String articleId) {
+        articleDocumentRepository.deleteById(articleId);
     }
 }
 

@@ -39,6 +39,8 @@ public class SearchController {
         dataSyncService.syncAllAlbums();
         dataSyncService.syncAllArtists();
         dataSyncService.syncAllGears();
+        dataSyncService.syncAllArticles();
+        dataSyncService.syncAllWikiPage();
         return ResponseEntity.ok(SuccessCode.SUCCESS);
     }
 
@@ -56,8 +58,8 @@ public class SearchController {
     /**
      */
     @GetMapping("/search")
-    @Operation(summary = "통합검색", description = "통합검색 기능입니다.")
-    public ResponseEntity<List<SearchResult>> searchAlbumsByKeyword(
+    @Operation(summary = "통합검색", description = "통합검색 기능입니다. 게시글과 위키를 포함합니다.")
+    public ResponseEntity<List<SearchResult>> searchAllByKeyword(
             @RequestParam("keyword") String keyword,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
@@ -65,6 +67,53 @@ public class SearchController {
         Pageable pageable = PageRequest.of(page - 1, size);
         // AlbumQueryService에서 구현한 통합 검색 메서드를 호출합니다.
         return ResponseEntity.ok(unifiedSearchService.integratedSearch(keyword, pageable));
+    }
+
+    @GetMapping("/search/album")
+    @Operation(summary = "앨범 검색", description = "앨범 검색 기능입니다.")
+    public ResponseEntity<List<SearchResult>> searchAlbumsByKeyword(
+            @RequestParam("keyword") String keyword,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        // AlbumQueryService에서 구현한 통합 검색 메서드를 호출합니다.
+        return ResponseEntity.ok(unifiedSearchService.searchByType(keyword, pageable, new String[]{"albums"}));
+    }
+
+    @GetMapping("/search/gear")
+    @Operation(summary = "장비 검색", description = "장비검색 기능입니다.")
+    public ResponseEntity<List<SearchResult>> searchGearByKeyword(
+            @RequestParam("keyword") String keyword,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        // AlbumQueryService에서 구현한 통합 검색 메서드를 호출합니다.
+        return ResponseEntity.ok(unifiedSearchService.searchByType(keyword, pageable, new String[]{"gears"}));
+    }
+    @GetMapping("/search/artist")
+    @Operation(summary = "아티스트 검색", description = "아티스트 검색 기능입니다.")
+    public ResponseEntity<List<SearchResult>> searchArtistByKeyword(
+            @RequestParam("keyword") String keyword,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        // AlbumQueryService에서 구현한 통합 검색 메서드를 호출합니다.
+        return ResponseEntity.ok(unifiedSearchService.searchByType(keyword, pageable, new String[]{"artists"}));
+    }
+
+    @GetMapping("/search/article")
+    @Operation(summary = "게시글 검색", description = "게시글 검색 기능입니다.")
+    public ResponseEntity<List<SearchResult>> searchArticleByKeyword(
+            @RequestParam("keyword") String keyword,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        // AlbumQueryService에서 구현한 통합 검색 메서드를 호출합니다.
+        return ResponseEntity.ok(unifiedSearchService.searchByType(keyword, pageable, new String[]{"articles"}));
     }
 
     @GetMapping("/album/recommend")

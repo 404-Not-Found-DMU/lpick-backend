@@ -18,7 +18,7 @@ import java.time.Instant;
 public class ArtistDocument {
 
     // 통합 검색을 위한 타입 상수 정의
-    public static final String DOCUMENT_TYPE = "Artist";
+    public static final String DOCUMENT_TYPE = "ARTIST";
 
     @Id
     @Field(type = FieldType.Keyword)
