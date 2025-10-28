@@ -4,6 +4,7 @@ import com.notfound.lpickbackend.common._wrapper.BlindableResponse;
 import com.notfound.lpickbackend.userinfo.command.application.domain.embed.MyPagePrivacySetting;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserSetting;
+import com.notfound.lpickbackend.userinfo.query.dto.response.UserAlbumOwnedHeader;
 import com.notfound.lpickbackend.userinfo.query.dto.response.UserAlbumOwnedResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -59,7 +60,7 @@ class UserAlbumQueryServiceTest {
     void getUserAlbumListByOauthIdWhenUserWantBlind() {
         given(userSettingQueryService.findById(oauthId)).willReturn(userSetting);
 
-        BlindableResponse<Page<UserAlbumOwnedResponse>> testResult
+        BlindableResponse<Page<UserAlbumOwnedHeader>> testResult
                 = userAlbumQueryService.getUserAlbumListByOauthId(
                         oauthId, PageRequest.of(1, 10));
 
