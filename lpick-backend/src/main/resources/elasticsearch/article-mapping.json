@@ -1,9 +1,9 @@
 {
   "properties": {
-    "name": {
+    "articleId": {
       "type": "keyword"
     },
-    "modelName": {
+    "title": {
       "type": "text",
       "analyzer": "autocomplete_analyzer",
       "search_analyzer": "korean_analyzer",
@@ -13,9 +13,6 @@
           "ignore_above": 256
         }
       }
-    },
-    "brand": {
-      "type": "keyword"
     }
   }
 }

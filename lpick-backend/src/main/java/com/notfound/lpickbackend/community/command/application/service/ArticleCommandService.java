@@ -29,7 +29,7 @@ public class ArticleCommandService {
     *  4. img 태그가 포함된 content 자체를 DB에 저장
     * */
     @Transactional
-    public void createArticle(ArticleCreateRequest articleCreateRequest) {
+    public Article createArticle(ArticleCreateRequest articleCreateRequest) {
 
         UserInfo userInfo = getUserInfo();
 
@@ -41,6 +41,8 @@ public class ArticleCommandService {
                 .build();
 
         articleCommandRepository.save(newArticle);
+
+        return newArticle;
     }
 
     @Transactional

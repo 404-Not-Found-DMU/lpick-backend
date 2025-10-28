@@ -1,9 +1,11 @@
 package com.notfound.lpickbackend.community.command.application.controller;
 
+import com.notfound.lpickbackend.common.elasticsearch.service.DataSyncService;
 import com.notfound.lpickbackend.common.exception.SuccessCode;
 import com.notfound.lpickbackend.community.command.application.dto.ArticleCreateRequest;
 import com.notfound.lpickbackend.community.command.application.dto.ArticleUpdateRequest;
 import com.notfound.lpickbackend.community.command.application.service.ArticleCommandService;
+import com.notfound.lpickbackend.community.command.domain.Article;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class ArticleCommandController {
 
     private final ArticleCommandService articleCommandService;
+    private final DataSyncService dataSyncService;
 
     @PostMapping
     @Operation(summary = "커뮤니티 게시글 생성", description = "커뮤니티 게시글을 새로 생성하는 기능")
@@ -24,7 +27,9 @@ public class ArticleCommandController {
             @RequestBody ArticleCreateRequest articleCreateRequest
             ){
 
-        articleCommandService.createArticle(articleCreateRequest);
+        Article article = articleCommandService.createArticle(articleCreateRequest);
+
+        dataSyncService.syncArticle(article);
 
         return ResponseEntity.ok(SuccessCode.ARTICLE_CREATE_SUCCESS);
     }

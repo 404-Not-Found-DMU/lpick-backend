@@ -5,6 +5,8 @@ import com.notfound.lpickbackend.common.elasticsearch.document.AlbumDocument;
 import com.notfound.lpickbackend.common.elasticsearch.document.ArtistDocument;
 import com.notfound.lpickbackend.common.elasticsearch.document.GearDocument;
 import com.notfound.lpickbackend.servicedata.query.dto.SearchResult;
+import com.notfound.lpickbackend.wiki.query.repository.WikiPageQueryRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,23 +27,31 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UnifiedSearchService {
 
     private final ElasticsearchOperations elasticsearchOperations;
+    private final WikiPageQueryRepository wikiPageQueryRepository;
 
     // 검색 대상 인덱스 목록
     private static final String[] ALL_INDICES = new String[]{
-            "albums", "artists", "gears"
+            "wikipages", "articles"
     };
 
-    public UnifiedSearchService(ElasticsearchOperations elasticsearchOperations) {
-        this.elasticsearchOperations = elasticsearchOperations;
+    public List<SearchResult> integratedSearch(String keyword, Pageable pageable) {
+
+        return search(keyword, pageable, ALL_INDICES);
     }
 
-    public List<SearchResult> integratedSearch(String keyword, Pageable pageable) {
+    public List<SearchResult> searchByType(String keyword, Pageable pageable, String[] indices) {
+
+        return search(keyword, pageable, indices);
+    }
+
+    private List<SearchResult> search(String keyword, Pageable pageable, String[] INDICES) {
         NativeQuery searchQuery = new NativeQueryBuilder()
                 .withQuery(q -> q.multiMatch(m -> m
-                        .fields("name", "modelName")
+                        .fields("name", "modelName", "title")
                         .query(keyword)
                         .fuzziness("AUTO")
                         .analyzer("korean_analyzer")
@@ -56,7 +66,10 @@ public class UnifiedSearchService {
                 IndexCoordinates.of(ALL_INDICES) // ✅ 인덱스 여기서 지정
         );
 
+        log.warn(searchHits.toString());
+
         List<SearchResult> results = new ArrayList<>();
+
         for (SearchHit<?> hit : searchHits.getSearchHits()) {
             results.add(mapToSearchResult(hit));
         }
@@ -95,6 +108,7 @@ public class UnifiedSearchService {
     private SearchResult mapToSearchResult(SearchHit<?> hit) {
         String index = hit.getIndex();
         String id = hit.getId(); // Elasticsearch의 Document ID (@Id 필드 값)
+        String wikiId = "";
 
         // getContent()는 Map<String, Object> 형태의 원시 데이터를 반환합니다.
         // Map으로 안전하게 형 변환합니다.
@@ -115,10 +129,20 @@ public class UnifiedSearchService {
             documentType = GearDocument.DOCUMENT_TYPE;
             // Gear는 modelName으로 검색이 이루어지므로 modelName을 주요 이름으로 사용
             nameValue = (String) sourceMap.get("modelName");
+        } else if (index.equals("articles")) {
+            documentType = ArtistDocument.DOCUMENT_TYPE;
+            // Gear는 modelName으로 검색이 이루어지므로 modelName을 주요 이름으로 사용
+            nameValue = (String) sourceMap.get("title");
+        } else if (index.equals("wikipages")) {
+            documentType = (String) sourceMap.get("wikiClass");
+            // Gear는 modelName으로 검색이 이루어지므로 modelName을 주요 이름으로 사용
+            nameValue = (String) sourceMap.get("title");
         } else {
-            documentType = "Unknown";
+            documentType = "OTHER";
             nameValue = "[Unknown Content]";
         }
+
+
 
         return SearchResult.builder()
                 .id(id)

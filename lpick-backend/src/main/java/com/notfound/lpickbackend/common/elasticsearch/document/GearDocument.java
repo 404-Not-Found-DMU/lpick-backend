@@ -16,7 +16,7 @@ import org.springframework.data.elasticsearch.annotations.*;
 public class GearDocument {
 
     // 통합 검색을 위한 타입 상수 정의
-    public static final String DOCUMENT_TYPE = "Gear";
+    public static final String DOCUMENT_TYPE = "GEAR";
 
     // Gear 엔티티에는 ID 필드가 없으므로, @Id로 사용할 필드 (예: name + modelName 조합 또는 내부 ID)가 필요합니다.
     // JPA 엔티티를 보니 BaseEntity를 상속받았는데, ID를 추정하기 어려워 name을 @Id로 사용하겠습니다.
