@@ -4,6 +4,7 @@ import com.notfound.lpickbackend.common.elasticsearch.document.AlbumDocument;
 import com.notfound.lpickbackend.servicedata.command.application.domain.Album;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 
@@ -19,6 +20,8 @@ public class AlbumSearchResultDTO {
     private String releaseCountry;
     private String label;
     private String lpti;
+    @Setter
+    private String imageUrl;
 
     // Document를 DTO로 변환하는 정적 팩토리 메서드
     public static AlbumSearchResultDTO from(AlbumDocument document) {
@@ -43,4 +46,5 @@ public class AlbumSearchResultDTO {
                 .lpti(album.getLpti())
                 .build();
     }
+
 }

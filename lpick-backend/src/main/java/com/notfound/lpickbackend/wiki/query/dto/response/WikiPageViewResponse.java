@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.wiki.query.dto.response;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiPageClass;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -12,7 +13,7 @@ import java.time.Instant;
 @EqualsAndHashCode
 public class WikiPageViewResponse {
     @Builder
-    public WikiPageViewResponse(String wikiId, String title, String content, Instant modifiedAt, String bookmarkId, WikiPageClass wikiPageClass) {
+    public WikiPageViewResponse(String wikiId, String title, JsonNode content, Instant modifiedAt, String bookmarkId, WikiPageClass wikiPageClass) {
         this.wikiId = wikiId;
         this.title = title;
         this.content = content;
@@ -24,7 +25,7 @@ public class WikiPageViewResponse {
     private String wikiId;
     private String wikiPageClass;
     private String title;
-    private String content;
+    private JsonNode content;
     private Instant modifiedAt;
     private String bookmarkId; // bookmark가 되어있지 않으면 null로 반환
 }

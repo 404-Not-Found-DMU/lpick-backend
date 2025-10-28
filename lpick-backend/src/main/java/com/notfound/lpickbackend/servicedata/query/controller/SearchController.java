@@ -5,6 +5,7 @@ import com.notfound.lpickbackend.common.exception.SuccessCode;
 import com.notfound.lpickbackend.servicedata.query.dto.AlbumSearchResultDTO;
 import com.notfound.lpickbackend.servicedata.query.dto.SearchResult;
 import com.notfound.lpickbackend.servicedata.query.service.AlbumQueryService;
+import com.notfound.lpickbackend.servicedata.query.service.DiscogsApiService;
 import com.notfound.lpickbackend.servicedata.query.service.UnifiedSearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,6 +28,7 @@ public class SearchController {
     private final AlbumQueryService albumQueryService;
     private final DataSyncService dataSyncService; // 테스트/운영을 위한 동기화 엔드포인트
     private final UnifiedSearchService unifiedSearchService;
+    private final DiscogsApiService discogsApiService;
 
     /**
      * 전체 앨범 데이터 동기화 (초기 셋업용)
@@ -118,6 +120,12 @@ public class SearchController {
     @Operation(summary = "앨범 추천", description = "LPTI기반으로 앨범을 추천합니다.")
     public ResponseEntity<List<AlbumSearchResultDTO>> getRecommendAlbums() {
 
-        return ResponseEntity.ok(albumQueryService.recommendRandomAlbums());
+        List<AlbumSearchResultDTO> results = albumQueryService.recommendRandomAlbums();
+
+        for(AlbumSearchResultDTO result : results) {
+            result.setImageUrl(discogsApiService.getPrimaryImageUrl(result.getAlbumId()));
+        }
+
+        return ResponseEntity.ok(results);
     }
 }

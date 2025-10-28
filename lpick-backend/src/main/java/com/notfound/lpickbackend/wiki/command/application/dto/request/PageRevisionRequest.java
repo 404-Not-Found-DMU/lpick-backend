@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.wiki.command.application.dto.request;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,5 +13,5 @@ import lombok.NoArgsConstructor;
 @Getter
 public class PageRevisionRequest {
     @NotEmpty
-    private String content;
+    private JsonNode content;
 }

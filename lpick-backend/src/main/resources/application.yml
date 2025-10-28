@@ -1,4 +1,7 @@
 spring:
+  profiles:
+    # push할땐 꼭 prod로
+    active: ${profile.active}
   config:
     import:
       - optional:file:/app/API-KEY.yml
@@ -54,6 +57,8 @@ token:
 logging:
   level:
     org.springframework.security.web.DefaultSecurityFilterChain: debug
+    org.springframework.messaging: DEBUG # 웹소켓 메시지 검증용
+    org.springframework.web.socket: DEBUG # 웹소켓 연결 검증용
 
 # swagger 설정
 springdoc:
@@ -72,6 +77,7 @@ springdoc:
     oauth2-redirect-url: ${swagger.oauth2-redirect-url} # swagger에서 사용되는 redirect-url
     persistAuthorization: true  # Swagger UI 페이지 새로고침해도 인증정보 유지
 
+
 management:
   endpoints:
     web:
@@ -84,3 +90,6 @@ management:
   health:
     elasticsearch:
       enabled: false
+
+discogs:
+  token: ${discogs.token}
