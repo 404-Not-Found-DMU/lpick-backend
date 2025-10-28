@@ -79,8 +79,8 @@ public class UnifiedSearchService {
 
     public List<SearchResult> autocompleteSuggestions(String prefix, int size) {
         NativeQuery searchQuery = new NativeQueryBuilder()
-                .withQuery(q -> q.match(m -> m
-                        .field("name")
+                .withQuery(q -> q.multiMatch(m -> m
+                        .fields("name", "title", "modelName")
                         .query(prefix)
                         .operator(Operator.And)
                 ))
