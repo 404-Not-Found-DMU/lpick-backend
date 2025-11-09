@@ -19,6 +19,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @RestController
@@ -57,6 +59,14 @@ public class WikiPageQueryController {
     @Operation(summary = "최근 수정 위키 조회", description = "최근 수정 된 10개의 위키 조회 기능")
     public ResponseEntity<List<WikiPageTitleResponse>> getRecentlyModifiedWikiPageList(
     ) {
+//        ZoneId SEOUL = ZoneId.of("Asia/Seoul");
+//
+//// 보기/계산은 서울 시간대
+//        ZonedDateTime seoulNow = ZonedDateTime.now(SEOUL);
+//
+//// 저장/전송은 Instant(UTC)
+//        Instant seoulInstant = seoulNow.toInstant();
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(wikiDomainQueryService.getRecentlyModifiedWikiPageList(10, Instant.now()));
     }
