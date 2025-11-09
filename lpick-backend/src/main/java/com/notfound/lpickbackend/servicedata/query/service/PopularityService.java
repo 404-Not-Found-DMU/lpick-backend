@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.wiki.query.service;
+package com.notfound.lpickbackend.servicedata.query.service;
 
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;

@@ -5,7 +5,7 @@ import com.notfound.lpickbackend.wiki.command.application.domain.WikiPageClass;
 import com.notfound.lpickbackend.wiki.query.dto.response.PopularItemResponse;
 import com.notfound.lpickbackend.wiki.query.dto.response.WikiPageTitleResponse;
 import com.notfound.lpickbackend.wiki.query.dto.response.WikiPageViewResponse;
-import com.notfound.lpickbackend.wiki.query.service.PopularityService;
+import com.notfound.lpickbackend.servicedata.query.service.PopularityService;
 import com.notfound.lpickbackend.wiki.query.service.WikiDomainQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -65,7 +65,7 @@ public class WikiPageQueryController {
             summary = "인기 위키 항목 조회",
             description = "최근 1시간 조회 로그를 기준으로 인기 항목을 리턴합니다."
     )
-    @GetMapping("/popular")
+    @GetMapping("/popular/wiki")
     public ResponseEntity<List<PopularItemResponse>> getPopularWikis(
             @Parameter(description = "항목 타입", required = true, example = "ALBUM")
             @RequestParam WikiPageClass type,
