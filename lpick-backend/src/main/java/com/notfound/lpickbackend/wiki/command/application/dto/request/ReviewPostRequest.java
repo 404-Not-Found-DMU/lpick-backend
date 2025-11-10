@@ -1,9 +1,6 @@
 package com.notfound.lpickbackend.wiki.command.application.dto.request;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 
 import java.time.Instant;
@@ -18,7 +15,4 @@ public class ReviewPostRequest {
     @Max(5)
     @Positive
     private float starScore;
-
-    @NotBlank
-    private Instant createdAt;
 }

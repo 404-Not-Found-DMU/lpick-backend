@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.wiki.query.controller;
 
+import com.notfound.lpickbackend.security.details.OAuth2UserDetails;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
 import com.notfound.lpickbackend.userinfo.query.service.UserInfoQueryService;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,9 +41,10 @@ public class WikiBookmarkQueryController {
                     regexp = "^(artist|gear|album|other)$", // 문자열 시작과 끝 명확히 들어오도록 설계
                     message = "class는 artist, gear, album, other 중 하나여야합니다."
             )
-            String targetClass
+            String targetClass,
+            @AuthenticationPrincipal OAuth2UserDetails userDetail
     ) {
-        Page<WikiPageBookmarkListResponse> bookmarkList = wikiBookmarkQueryService.getWikiBookmarkListByOauthId(PageRequest.of(page, size), targetClass);
+        Page<WikiPageBookmarkListResponse> bookmarkList = wikiBookmarkQueryService.getWikiBookmarkListByOauthId(PageRequest.of(page, size), userDetail.getUsername(), targetClass);
 
         return ResponseEntity.ok().body(bookmarkList);
     }
@@ -51,11 +54,11 @@ public class WikiBookmarkQueryController {
     @Operation(summary = "북마크 여부 확인", description = "특정 위키에 대한 북마크 여부 확인")
     public ResponseEntity<WikiBookmarkResponse> checkWikiBookmarkStatus(
             @PathVariable("wikiId") String wikiId,
-            @RequestParam("dummyUserId") String userId
+            @AuthenticationPrincipal OAuth2UserDetails userDetail
     ) {
 
 
-        UserInfo userInfo = userInfoQueryService.getUserInfoById(userId);
+        UserInfo userInfo = userInfoQueryService.getUserInfoById(userDetail.getUsername());
 
         WikiBookmarkResponse bookmarkResponse = wikiBookmarkQueryService.findByWikiIdAndOauthId(wikiId, userInfo.getOauthId());
 

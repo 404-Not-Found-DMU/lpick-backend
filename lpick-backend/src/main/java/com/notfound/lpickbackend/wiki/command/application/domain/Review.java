@@ -4,6 +4,9 @@ import com.notfound.lpickbackend.userinfo.command.application.domain.entity.User
 import com.notfound.lpickbackend.wiki.command.application.dto.request.ReviewPostRequest;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 
@@ -12,6 +15,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @Getter
 @Setter
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "review")
 public class Review {
@@ -25,6 +29,7 @@ public class Review {
     @Column(name = "content", nullable = false, length = Integer.MAX_VALUE)
     private String content;
 
+    @CreatedDate
     @Column(name="created_at", nullable = false)
     private Instant createdAt;
 

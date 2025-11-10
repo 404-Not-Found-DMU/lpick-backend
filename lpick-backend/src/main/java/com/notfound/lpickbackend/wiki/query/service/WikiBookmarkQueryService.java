@@ -37,14 +37,14 @@ public class WikiBookmarkQueryService {
                 .build();
     }
 
-    public Page<WikiPageBookmarkListResponse> getWikiBookmarkListByOauthId(Pageable pageable, @Nullable String targetClass) {
+    public Page<WikiPageBookmarkListResponse> getWikiBookmarkListByOauthId(Pageable pageable, String userId, @Nullable String targetClass) {
 
         Page<WikiBookmark> wikiBookmarkList;
 
         if(targetClass == null || targetClass.isBlank()) // targetClass 조건 비어있거나 없으면 사용 X. QueryDSL 추가시 추후 통합예정
-            wikiBookmarkList = wikiBookmarkQueryRepository.findAllByOauth_OauthId(UserInfoUtil.getOAuthId(), pageable);
+            wikiBookmarkList = wikiBookmarkQueryRepository.findAllByOauth_OauthId(userId, pageable);
         else
-            wikiBookmarkList = wikiBookmarkQueryRepository.findAllByOauth_OauthIdAndWiki_WikiClass(UserInfoUtil.getOAuthId(), WikiPageClass.valueOf(targetClass.toUpperCase()), pageable);
+            wikiBookmarkList = wikiBookmarkQueryRepository.findAllByOauth_OauthIdAndWiki_WikiClass(userId, WikiPageClass.valueOf(targetClass.toUpperCase()), pageable);
 
 
         return wikiBookmarkList.map(bookmark -> {
