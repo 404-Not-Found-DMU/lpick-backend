@@ -19,11 +19,11 @@ import java.util.List;
 public class PageRevisionQueryService {
     private final PageRevisionQueryRepository pageRevisionQueryRepository;
 
-    public PageRevisionResponse getPageRevisionResponse(String wikiId, String version) {
+    public PageRevisionResponse getPageRevisionResponse(String wikiId, String revisionId) {
 
         return this.toResponseDTO(
                 pageRevisionQueryRepository
-                .findByWiki_WikiIdAndRevisionNumber(wikiId, version)
+                .findByWiki_WikiIdAndRevisionId(wikiId, revisionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_REVISION))
         );
     }
@@ -74,6 +74,7 @@ public class PageRevisionQueryService {
     private PageRevisionResponse toResponseDTO(PageRevision entity) {
         return PageRevisionResponse.builder()
                 .revisionId(entity.getRevisionId())
+                .revisionNumber(entity.getRevisionNumber())
                 .content(entity.getContent())
                 .createdAt(entity.getCreatedAt())
                 .createWho(UserIdNamePairResponse.builder()

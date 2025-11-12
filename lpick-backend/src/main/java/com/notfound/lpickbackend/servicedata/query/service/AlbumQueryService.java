@@ -50,17 +50,24 @@ public class AlbumQueryService {
 
     public List<AlbumSearchResultDTO> recommendRandomAlbums() {
 
-        UserInfo userInfo = getUserInfo();
-
         List<Album> albums = new ArrayList<>();
 
-        if(userInfo.getLpti() != null) {
-            albums = albumQueryRepository.findRandom5ByLpti(userInfo.getLpti());
-        } else {
+        try {
+            UserInfo userInfo = getUserInfo();
+
+            if(userInfo.getLpti() != null && !userInfo.getLpti().isEmpty()) {
+                albums = albumQueryRepository.findRandom5ByLpti(userInfo.getLpti());
+            } else {
+                albums = albumQueryRepository.findTop5ByReleaseDateIsNotNullOrderByReleaseDateDesc();
+            }
+
+            return albums.stream().map(AlbumSearchResultDTO::from).toList();
+        } catch (Exception e) {
             albums = albumQueryRepository.findTop5ByReleaseDateIsNotNullOrderByReleaseDateDesc();
+
+            return albums.stream().map(AlbumSearchResultDTO::from).toList();
         }
 
-        return albums.stream().map(AlbumSearchResultDTO::from).toList();
     }
 
     /**

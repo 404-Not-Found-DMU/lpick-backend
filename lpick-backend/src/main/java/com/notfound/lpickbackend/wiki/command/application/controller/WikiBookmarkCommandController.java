@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.wiki.command.application.controller;
 
+import com.notfound.lpickbackend.security.details.OAuth2UserDetails;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -34,9 +36,9 @@ public class WikiBookmarkCommandController {
     @Operation(summary = "위키 북마크 추가", description = "위키 페이지 북마크 추가 기능")
     public ResponseEntity<SuccessCode> subscribeWikiBookmark(
             @PathVariable("wikiId") String wikiId,
-            @RequestParam("dummyUserId") String userId
+            @AuthenticationPrincipal OAuth2UserDetails userDetail
     ) {
-        UserInfo userInfo = userInfoQueryService.getUserInfoById(userId); // security 기반 코드와 병합 시 수정 예정
+        UserInfo userInfo = userInfoQueryService.getUserInfoById(userDetail.getUsername()); // security 기반 코드와 병합 시 수정 예정
 
         // 해당 요청은 프론트 상태를 기반으로 POST 또는 DELETE를 받아옴.
         // 프론트 상태 업데이트 되지 않은 상태로 중복 요청 들어올 수 있으므로
@@ -62,9 +64,9 @@ public class WikiBookmarkCommandController {
     @Operation(summary = "위키 북마크 해제", description = "특정 위키에 대한 북마크 해제 기능")
     public ResponseEntity<SuccessCode> unsubscribeWikiBookmark(
             @PathVariable("bookmarkId") String bookmarkId,
-            @RequestParam("dummyUserId") String userId
+            @AuthenticationPrincipal OAuth2UserDetails userDetail
     ) {
-        UserInfo userInfo = userInfoQueryService.getUserInfoById(userId); // security 기반 코드와 병합 시 수정 예정
+        UserInfo userInfo = userInfoQueryService.getUserInfoById(userDetail.getUsername()); // security 기반 코드와 병합 시 수정 예정
 
         // 해당 요청은 프론트 상태를 기반으로 POST 또는 DELETE를 받아옴.
         // 프론트 상태 업데이트 되지 않은 상태로 중복 요청 들어올 수 있으므로
