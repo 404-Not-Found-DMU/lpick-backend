@@ -39,6 +39,7 @@ public class Debate {
     @Column(name = "debate_name", nullable = false, length = 50)
     private String debateName;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "debate_subject", nullable = false, length = 15)
     private DebateSubject debateSubject;
 
@@ -51,7 +52,7 @@ public class Debate {
     private WikiPage wiki;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "revision", nullable = false)
+    @JoinColumn(name = "revision_id", nullable = false)
     private PageRevision pageRevision;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

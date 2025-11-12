@@ -51,14 +51,14 @@ public class PageRevisionQueryController {
                 .body(pageRevisionList);
     }
 
-    @GetMapping("/wiki/{wikiId}/revision/{version}")
+    @GetMapping("/wiki/{wikiId}/revision/{revisionId}")
     @Operation(summary = "위키 버전 조회", description = "위키의 특정 버전 조회 기능")
     public ResponseEntity<PageRevisionResponse> getPageRevision(
             @PathVariable("wikiId") String wikiId,
-            @PathVariable("version") String version
+            @PathVariable("revisionId") String revisionId
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(pageRevisionQueryService.getPageRevisionResponse(wikiId, version));
+                .body(pageRevisionQueryService.getPageRevisionResponse(wikiId, revisionId));
     }
 
     // 일시 비활성화

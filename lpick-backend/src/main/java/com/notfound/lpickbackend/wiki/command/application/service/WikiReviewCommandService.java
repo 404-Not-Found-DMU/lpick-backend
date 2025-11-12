@@ -25,31 +25,34 @@ public class WikiReviewCommandService {
     @Transactional
     public void createNewReview(ReviewPostRequest req, String wikiId, UserInfo userInfo) {
 
-        try {
-            WikiPage wikiPage = wikiPageQueryService.getWikiPageById(wikiId);
 
-            wikiReviewCommandRepository.save(Review.builder()
-                    .reviewId(null)
-                    .star(req.getStarScore())
-                    .content(req.getContent())
-                    .oauth(userInfo)
-                    .wiki(wikiPage).build()
-            );
-        } catch(Exception e) {
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
+        WikiPage wikiPage = wikiPageQueryService.getWikiPageById(wikiId);
+
+        wikiReviewCommandRepository.save(Review.builder()
+                .reviewId(null)
+                .star(req.getStarScore())
+                .content(req.getContent())
+                .oauth(userInfo)
+                .wiki(wikiPage).build()
+        );
+
+        throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+
     }
 
-    public void updateReview(String reviewId, ReviewPostRequest req) {
-        try {
-            Review review = wikiReviewQueryService.findById(reviewId);
+    public void updateReview(String reviewId, String userId, ReviewPostRequest req) {
 
-            review.updateReview(req);
+        Review review = wikiReviewQueryService.findById(reviewId);
 
-            wikiReviewCommandRepository.save(review);
-        } catch(Exception e) {
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        // 본인 것 맞는지 검증 추가
+        if (!wikiReviewCommandRepository.isEqualUser(userId, reviewId)) {
+            throw new CustomException(ErrorCode.CAN_NOT_MODIFY_OTHER_USER_CONTENT);
         }
+
+        review.updateReview(req);
+
+        wikiReviewCommandRepository.save(review);
+
 
     }
 
