@@ -41,7 +41,7 @@ spring:
       ddl-auto: none
   data:
     redis:
-      host: 127.0.0.1 #${redis.name}
+      host: ${redis.name}
       port: 6379
   cookie:
     secure: ${cookie.secure}
