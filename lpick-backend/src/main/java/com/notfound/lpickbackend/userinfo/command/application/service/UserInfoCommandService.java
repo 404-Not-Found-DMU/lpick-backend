@@ -1,5 +1,7 @@
 package com.notfound.lpickbackend.userinfo.command.application.service;
 
+import com.notfound.lpickbackend.common._aop.point.EarnPoint;
+import com.notfound.lpickbackend.common._event.point.ActivityType;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.common.redis.RedisService;
@@ -48,6 +50,12 @@ public class UserInfoCommandService extends DefaultOAuth2UserService {
         this.s3Uploader = s3Uploader;
     }
 
+
+    @EarnPoint(
+            activity = ActivityType.WRITE_COMMENT, // 본 어노테이션이 설정된 메소드의 커밋이 완전히 종료된 후 동작
+            userId = "#auth?.name ?: #userDetail.oauthId", // 메서드 파라미터 이름 사용(컴파일 옵션 -parameters 필요)
+            sourceId = "#result ?: null"        // #result == 본 어노테이션이 붙은 메소드의 리턴값 의미. 단, 모든 구현 사항이 리턴값을 가지지 못할 수 있다.
+    )
     public void logout(LogoutRequestDTO logoutRequestDTO) {
 
         // Token 무효화
@@ -118,13 +126,13 @@ public class UserInfoCommandService extends DefaultOAuth2UserService {
 
             imageUrl = s3Uploader.upload(profileImage, "USER-INFO");
 
-            UserInfo user =getUserInfo(oAuthId);
+            UserInfo user = getUserInfo(oAuthId);
 
             user.registration(userInfo, imageUrl);
 
         } catch (Exception e) {
             // 보상 삭제
-            if(!imageUrl.isEmpty()) {
+            if (!imageUrl.isEmpty()) {
                 s3Uploader.deleteByUrl(imageUrl);
             }
 
