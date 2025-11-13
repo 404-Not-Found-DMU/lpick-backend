@@ -1,16 +1,20 @@
 package com.notfound.lpickbackend.wiki.command.application.service;
 
+import com.notfound.lpickbackend.common.exception.CustomException;
+import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiBookmark;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
 import com.notfound.lpickbackend.wiki.command.repository.WikiBookmarkCommandRepository;
 import com.notfound.lpickbackend.wiki.query.service.WikiPageQueryService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class WikiBookmarkCommandService {
     private final WikiPageQueryService wikiPageQueryService;
 
@@ -30,8 +34,17 @@ public class WikiBookmarkCommandService {
         wikiBookmarkCommandRepository.deleteByWiki_wikiIdAndOauth_oauthId(wikiId, userInfo.getOauthId());
     }
 
-    public void deleteWikiBookmarkById(String bookmarkId) {
-        wikiBookmarkCommandRepository.deleteById(bookmarkId);
+    @Transactional
+    public void deleteWikiBookmarkById(String bookmarkId, String oauthId) {
+
+        log.info(oauthId);
+        log.info(bookmarkId);
+
+        WikiBookmark targetBookmark = wikiBookmarkCommandRepository
+                .findByWikiBookmarkIdAndOauth_OauthId(bookmarkId, oauthId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_BOOKMARK));
+
+        wikiBookmarkCommandRepository.delete(targetBookmark);
     }
 
     public void deleteAllBookmarkDataByWiki_WikiId(String wikiId) {
