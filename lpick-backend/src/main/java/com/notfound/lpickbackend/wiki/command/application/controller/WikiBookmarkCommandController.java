@@ -40,12 +40,8 @@ public class WikiBookmarkCommandController {
     ) {
         UserInfo userInfo = userInfoQueryService.getUserInfoById(userDetail.getUsername()); // security 기반 코드와 병합 시 수정 예정
 
-        // 해당 요청은 프론트 상태를 기반으로 POST 또는 DELETE를 받아옴.
-        // 프론트 상태 업데이트 되지 않은 상태로 중복 요청 들어올 수 있으므로
-        // 이를 Service 단에서 별도로 체크하여 중복 요청은 무시할 수 있도록 구현하기.
         if(wikiBookmarkQueryService.existsByWiki_WikiIdAndOauth_oauthId(wikiId, userInfo.getOauthId())) {
-            // 204 Not Content로 구현해 단순히 넘기기 Vs 409 Conflict로 구현해 프론트측에 에러 명시처리해 GET 통한 업데이트 유도 
-            throw new CustomException(ErrorCode.DO_NOT_KEEP_UP_THIS_ERROR_WHEN_MERGE);
+            throw new CustomException(ErrorCode.ALREADY_HAS_BOOKMARK);
         }
 
         wikiBookmarkCommandService.createNewWikiBookmark(wikiId, userInfo);
@@ -66,17 +62,8 @@ public class WikiBookmarkCommandController {
             @PathVariable("bookmarkId") String bookmarkId,
             @AuthenticationPrincipal OAuth2UserDetails userDetail
     ) {
-        UserInfo userInfo = userInfoQueryService.getUserInfoById(userDetail.getUsername()); // security 기반 코드와 병합 시 수정 예정
 
-        // 해당 요청은 프론트 상태를 기반으로 POST 또는 DELETE를 받아옴.
-        // 프론트 상태 업데이트 되지 않은 상태로 중복 요청 들어올 수 있으므로
-        // 이를 Service 단에서 별도로 체크하여 중복 요청은 무시할 수 있도록 구현하기.
-        if(wikiBookmarkQueryService.existsById(bookmarkId)) {
-            // 204 No Content로 구현해 단순히 넘기기 Vs 404 Not Found로 구현해 프론트 측에 에러 명시처리로 GET 통한 업데이트 유도
-            throw new CustomException(ErrorCode.NOT_FOUND_WIKI_BOOKMARK);
-        }
-
-        wikiBookmarkCommandService.deleteWikiBookmarkById(bookmarkId);
+        wikiBookmarkCommandService.deleteWikiBookmarkById(bookmarkId, userDetail.getUsername());
 
         return ResponseEntity.ok(SuccessCode.SUCCESS);
     }
