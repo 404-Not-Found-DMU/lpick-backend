@@ -51,8 +51,9 @@ public enum ErrorCode {
     AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "인증 실패"),
 
     // 403 에러
-    AUTHORIZATION_FAILED(HttpStatus.FORBIDDEN, "인가 실패"),
     // 403에러인데 다양한 리소스에서 같이 사용해도 괜찮을것같습니다.
+    CAN_NOT_MODIFY_OTHER_USER_CONTENT(HttpStatus.FORBIDDEN, "타 사용자의 리소스를 수정할 수 없습니다."),
+    AUTHORIZATION_FAILED(HttpStatus.FORBIDDEN, "인가 실패"),
     FORBIDDEN_RESOURCE_ACCESS(HttpStatus.FORBIDDEN, "해당 리소스에 접근 권한이 없습니다."),
 
     // 404 에러

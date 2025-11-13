@@ -48,7 +48,7 @@ public class DebateChatCommandService {
                 .content(savedChatMessage.getContent())
                 .isBlind(savedChatMessage.isBlind())
                 .createdAt(savedChatMessage.getCreatedAt())
-                .isAnswerTo(parentChat.getDscId())
+                .isAnswerTo(parentChat != null ? parentChat.getDscId() : null)
                 .build();
     }
 

@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.wiki.command.application.controller;
 
+import com.notfound.lpickbackend.security.details.OAuth2UserDetails;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -33,12 +35,12 @@ public class WikiReviewCommandController {
     //@PreAuthorize("hasRole('TIER_SILVER')") // 임시 설정
     public ResponseEntity<SuccessCode> writeReview(
             @PathVariable("wikiId") String wikiId,
-            @RequestParam("userId") String userId,
+            @AuthenticationPrincipal OAuth2UserDetails userDetail,
             @RequestBody @Valid ReviewPostRequest req
     ) {
-        UserInfo userInfo = userInfoQueryService.getUserInfoById(userId); // security 추가후 리팩
+        UserInfo userInfo = userInfoQueryService.getUserInfoById(userDetail.getUsername()); // security 추가후 리팩
 
-        if(wikiReviewQueryService.isAlreadyExsisttWikiReview(wikiId, userId))
+        if(wikiReviewQueryService.isAlreadyExsisttWikiReview(wikiId, userInfo.getOauthId()))
             throw new CustomException(ErrorCode.ALREADY_HAS_REVIEW_IN_WIKIPAGE);
 
         wikiReviewCommandService.createNewReview(req, wikiId, userInfo);
@@ -51,9 +53,10 @@ public class WikiReviewCommandController {
     //@PreAuthorize("hasRole('TIER_SILVER')") // 임시 설정
     public ResponseEntity<SuccessCode> updateReview(
             @PathVariable("reviewId") String reviewId,
+            @AuthenticationPrincipal OAuth2UserDetails userDetail,
             @RequestBody @Valid ReviewPostRequest req
     ) {
-        wikiReviewCommandService.updateReview(reviewId,req);
+        wikiReviewCommandService.updateReview(reviewId,userDetail.getUsername(),req);
 
         return ResponseEntity.ok(SuccessCode.NO_CONTENT);
     }
@@ -63,9 +66,9 @@ public class WikiReviewCommandController {
     //@PreAuthorize("hasRole('TIER_SILVER')") // 임시 설정
     public ResponseEntity<SuccessCode> deleteReview(
             @PathVariable("reviewId") String reviewId,
-            @RequestParam("userId") String userId
+            @AuthenticationPrincipal OAuth2UserDetails userDetail
     ) {
-        UserInfo userInfo = userInfoQueryService.getUserInfoById(userId);
+        UserInfo userInfo = userInfoQueryService.getUserInfoById(userDetail.getUsername());
 
         wikiReviewCommandService.deleteById(reviewId);
 

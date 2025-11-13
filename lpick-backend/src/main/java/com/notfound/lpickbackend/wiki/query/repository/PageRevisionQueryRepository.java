@@ -17,6 +17,8 @@ public interface PageRevisionQueryRepository extends JpaRepository<PageRevision,
 
     Optional<PageRevision> findByWiki_WikiIdAndRevisionNumber(String wikiId, String revisionNumber);
 
+    Optional<PageRevision> findByWiki_WikiIdAndRevisionId(String wikiId, String revisionId);
+
     Page<PageRevision> findAllByWiki_WikiId(String wikiId, Pageable pageable);
 
     Optional<PageRevision> findByWiki_WikiId(String wikiId);
