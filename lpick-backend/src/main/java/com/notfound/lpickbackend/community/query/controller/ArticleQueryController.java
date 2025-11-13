@@ -2,6 +2,7 @@ package com.notfound.lpickbackend.community.query.controller;
 
 import com.notfound.lpickbackend.community.query.dto.ArticleDetailResponse;
 import com.notfound.lpickbackend.community.query.dto.ArticleListResponse;
+import com.notfound.lpickbackend.community.query.dto.PopularArticleResponse;
 import com.notfound.lpickbackend.community.query.service.ArticleQueryService;
 import com.notfound.lpickbackend.servicedata.query.service.PopularityService;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiPageClass;
@@ -81,11 +82,12 @@ public class ArticleQueryController {
             description = "최근 1시간 조회 로그를 기준으로 인기 게시글을 리턴합니다. id는 ArticleId를 의미합니다."
     )
     @GetMapping("/public/community/popular/article")
-    public ResponseEntity<List<PopularItemResponse>> getPopularArticles(
+    public ResponseEntity<List<PopularArticleResponse>> getPopularArticles(
             @Parameter(description = "가져올 개수", example = "5")
-            @RequestParam(defaultValue = "5") int size
+            @RequestParam(defaultValue = "4") int size
     ) {
-        List<PopularItemResponse> result = popularityService.getPopularWikis("ARTICLE", size);
-        return ResponseEntity.ok(result);
+        Pageable pageable = PageRequest.of(0, size);
+
+        return ResponseEntity.ok(popularityService.getPopularArticles(size));
     }
 }
