@@ -17,8 +17,6 @@ import com.notfound.lpickbackend.wiki.query.dto.response.PopularItemResponse;
 import com.notfound.lpickbackend.wiki.query.repository.WikiPageQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregation;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;

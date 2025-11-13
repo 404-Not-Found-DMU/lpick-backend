@@ -75,7 +75,7 @@ public class WikiPageQueryController {
             summary = "인기 위키 항목 조회",
             description = "최근 1시간 조회 로그를 기준으로 인기 항목을 리턴합니다."
     )
-    @GetMapping("/popular/wiki")
+    @GetMapping("/public/popular/wiki")
     public ResponseEntity<List<PopularItemResponse>> getPopularWikis(
             @Parameter(description = "항목 타입", required = true, example = "ALBUM")
             @RequestParam WikiPageClass type,
