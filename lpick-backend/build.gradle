@@ -89,6 +89,10 @@ dependencies {
 
     // webclient
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // 정제된 db 데이터 기입 위한 csv 참조 목적 라이브러리
+    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-csv"
+
 }
 
 def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile

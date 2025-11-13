@@ -5,13 +5,18 @@ import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.common.exception.SuccessCode;
 import com.notfound.lpickbackend.servicedata.command.application.domain.dto.TempGearRequest;
 import com.notfound.lpickbackend.servicedata.command.application.service.GearCommandService;
+import com.notfound.lpickbackend.servicedata.command.application.service.GearDefaultSettingService;
+import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -21,6 +26,25 @@ import org.springframework.web.multipart.MultipartFile;
 public class GearCommandController {
 
     private final GearCommandService gearCommandService;
+    private final GearDefaultSettingService gearDefaultSettingService;
+
+    // 옵션 A: 전처리된 FLAT CSV 업로드
+    /** 전처리된 FLAT CSV 업로드 (meta.specs = 표시 라벨 → 값) */
+    @PostMapping(value = "/public/flat-csv", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Map<String, Object>> importFlatCsv(
+            @RequestPart("file") MultipartFile csv,
+            @RequestParam(defaultValue = "false") boolean dryRun,
+            @RequestParam GearClass gearClass
+            ) throws Exception {
+        var r = gearDefaultSettingService.importFlatCsv(csv, dryRun, gearClass);
+        return ResponseEntity.ok(Map.of(
+                "inserted", r.inserted(),
+                "updated",  r.updated(),
+                "skipped",  r.skipped(),
+                "total",    r.total(),
+                "dryRun",   r.dryRun()
+        ));
+    }
 
     @PostMapping("/gear/temp-gear")
     @Operation(summary = "임시 음향기기 추가", description = "사용자가 자신의 음향기기가 본 서비스의 DB에 없어 등록하지 못할경우 사용.")
