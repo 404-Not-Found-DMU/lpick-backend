@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.servicedata.query.service;
 
+import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
 import co.elastic.clients.elasticsearch._types.aggregations.StringTermsAggregate;
@@ -46,24 +47,47 @@ public class PopularityService {
     private static final String VIEW_LOG_INDEX = "lpick-views-*";
     private static final String WIKI_AGG_NAME = "popular_wikis_agg";
     private static final String ARTICLE_AGG_NAME = "popular_articles_agg";
+    private static final List<String> ALL_TYPES = List.of("ALBUM", "ARTIST", "GEAR");
 
     public List<PopularItemResponse> getPopularWikis(String type, int size) {
 
-        Query esQuery = Query.of(q -> q
-                .bool(b -> b
-                        .filter(f -> f.term(t -> t
-                                .field("type.keyword")
-                                .value(type)
-                        ))
-                        .filter(f -> f.range(r -> r
-                                .untyped(u -> u
-                                        .field("@timestamp")
-                                        .gte(JsonData.of("now-24h"))
-                                        .lt(JsonData.of("now"))
-                                )
-                        ))
-                )
-        );
+        Query esQuery;
+
+        if(type.equals("ALL")) {
+            esQuery = Query.of(q -> q
+                    .bool(b -> b
+                            .filter(f -> f.terms(t -> t
+                                    .field("type.keyword")
+                                    .terms(v -> v.value(ALL_TYPES.stream()
+                                            .map(FieldValue::of)
+                                            .toList()))
+                            ))
+                            .filter(f -> f.range(r -> r
+                                    .untyped(u -> u
+                                            .field("@timestamp")
+                                            .gte(JsonData.of("now-24h"))
+                                            .lt(JsonData.of("now"))
+                                    )
+                            ))
+                    )
+            );
+        } else {
+            esQuery = Query.of(q -> q
+                    .bool(b -> b
+                            .filter(f -> f.term(t -> t
+                                    .field("type.keyword")
+                                    .value(type)
+                            ))
+                            .filter(f -> f.range(r -> r
+                                    .untyped(u -> u
+                                            .field("@timestamp")
+                                            .gte(JsonData.of("now-24h"))
+                                            .lt(JsonData.of("now"))
+                                    )
+                            ))
+                    )
+            );
+        }
 
         // 2) 집계: AggregateOrder 빌더 사용
         Aggregation esAggregation = Aggregation.of(a -> a
@@ -104,11 +128,13 @@ public class PopularityService {
         Aggregate aggregate = aggList.getFirst().aggregation().getAggregate();
 
         StringTermsAggregate popularItemsAgg = aggregate.sterms();
+
         List<StringTermsBucket> buckets = popularItemsAgg.buckets().array();
-        log.warn("buckets : {}", buckets);
+
         if (buckets.isEmpty()) {
             return Collections.emptyList();
         }
+
         // 6) String ID 그대로 추출
         List<String> ids = buckets.stream()
                 .map(b -> b.key().stringValue())

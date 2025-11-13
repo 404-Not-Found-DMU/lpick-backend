@@ -244,6 +244,28 @@ create table if not exists ballot (
                                       ballot_value  varchar(10) not null
 );
 
+create table if not exists question (
+                                      id        varchar(40) primary key,
+    oauth_id      varchar(40) not null,
+    title         varchar(100) not null,
+    content  TEXT not null
+    );
+
+create table if not exists answer (
+                                      id        varchar(40) primary key,
+    title         varchar(100) null,
+    question_id varchar(40) not null,
+    content  TEXT not null
+    );
+
+create table if not exists notice (
+                                      id        varchar(40) primary key,
+    author      varchar(40) not null,
+    title         varchar(100) not null,
+    content  varchar(10) not null
+    );
+
+
 -- ==============================================================
 -- 2) PK 제약조건: DROP IF EXISTS … CASCADE 후 ADD
 -- ==============================================================
@@ -674,6 +696,13 @@ ALTER TABLE ballot
 ALTER TABLE ballot
     ADD CONSTRAINT fk_ballot_oauth
         FOREIGN KEY (oauth_id) REFERENCES user_info(oauth_id) ON DELETE CASCADE;
+
+-- FK: ballot.oauth_id -> user_info(oauth_id)
+ALTER TABLE answer
+DROP CONSTRAINT IF EXISTS fk_answer CASCADE;
+ALTER TABLE answer
+    ADD CONSTRAINT fk_answer
+        FOREIGN KEY (question_id) REFERENCES answer(id) ON DELETE CASCADE;
 
 -- UNIQUE (dt_id, oauth_id)
 ALTER TABLE ballot

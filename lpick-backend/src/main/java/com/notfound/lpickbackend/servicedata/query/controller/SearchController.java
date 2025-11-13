@@ -92,6 +92,7 @@ public class SearchController {
         // AlbumQueryService에서 구현한 통합 검색 메서드를 호출합니다.
         return ResponseEntity.ok(unifiedSearchService.searchByType(keyword, pageable, new String[]{"gears"}));
     }
+
     @GetMapping("/search/artist")
     @Operation(summary = "아티스트 검색", description = "아티스트 검색 기능입니다.")
     public ResponseEntity<List<SearchResult>> searchArtistByKeyword(
