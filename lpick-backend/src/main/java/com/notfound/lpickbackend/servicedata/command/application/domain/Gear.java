@@ -1,6 +1,7 @@
 package com.notfound.lpickbackend.servicedata.command.application.domain;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.notfound.lpickbackend.AUTO_ENTITIES.TOOL.IdPrefixUtil;
 import com.notfound.lpickbackend.common._super.BaseEntity;
 import com.notfound.lpickbackend.servicedata.command.application.domain.dto.TempGearRequest;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
@@ -11,6 +12,8 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 import org.hibernate.type.SqlTypes;
 
+import java.util.UUID;
+
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,7 +21,17 @@ import org.hibernate.type.SqlTypes;
 @Setter
 @Entity
 @Table(name = "gear")
-public class Gear extends BaseEntity {
+public class Gear {
+    @Id
+    @Column(name = "id", nullable = false, length = 40)
+    private String gearId;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.gearId == null) {
+            this.gearId = IdPrefixUtil.get(this.getClass().getSimpleName()) + "_" + UUID.randomUUID();
+        }
+    }
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;

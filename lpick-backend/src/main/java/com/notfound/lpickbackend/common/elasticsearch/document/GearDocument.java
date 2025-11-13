@@ -18,12 +18,15 @@ public class GearDocument {
     // 통합 검색을 위한 타입 상수 정의
     public static final String DOCUMENT_TYPE = "GEAR";
 
-    // Gear 엔티티에는 ID 필드가 없으므로, @Id로 사용할 필드 (예: name + modelName 조합 또는 내부 ID)가 필요합니다.
-    // JPA 엔티티를 보니 BaseEntity를 상속받았는데, ID를 추정하기 어려워 name을 @Id로 사용하겠습니다.
-    // **실제 Gear 엔티티의 @Id 필드를 사용하도록 수정해야 합니다.**
+
+    // BaseEntity를 제거하고 다음과 같이 gearId 추가하였음.
+    // 이제 Gear는 상속과 관계없이 자체적인 Id를 소유함.
     @Id
     @Field(type = FieldType.Keyword)
-    private String name; // 임시 ID (실제 @Id 필드로 변경 필요)
+    private String gearId;
+
+    @Field(type = FieldType.Keyword)
+    private String name;
 
     @Field(
             type = FieldType.Text,
@@ -36,7 +39,7 @@ public class GearDocument {
     private String brand;
 
     @Field(type = FieldType.Keyword)
-    private String eqClass; // GearClass의 ID나 이름을 저장한다고 가정
+    private String eqClass; // GearClass 이름을 저장 - TURNTABLE, SPEAKER, HEADPHONE
 
     @Field(type = FieldType.Keyword)
     private String wikiId;
@@ -44,6 +47,7 @@ public class GearDocument {
     public static GearDocument from(Gear gear) {
         // Gear 엔티티에 getGearId()가 없으므로 name을 ID로 사용했습니다. 실제 ID 필드로 수정하세요.
         return GearDocument.builder()
+                .gearId(gear.getGearId())
                 .name(gear.getName())
                 .modelName(gear.getModelName())
                 .brand(gear.getBrand())

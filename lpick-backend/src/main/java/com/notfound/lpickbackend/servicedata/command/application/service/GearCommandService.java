@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class GearCommandService extends BaseCommandService<Gear, String> {
+public class GearCommandService {
 
     private final GearCommandRepository gearCommandRepository;
 
@@ -26,21 +26,20 @@ public class GearCommandService extends BaseCommandService<Gear, String> {
 
     private final S3Uploader s3Uploader;
 
-    @Override
+
     public Gear saveEntity(Gear entity) {
-        return super.saveEntity(entity);
+        return gearCommandRepository.save(entity);
     }
 
     // 관리자만 사용가능하게 추후 수정
-    @Override
     public void deleteById(String id) {
-        super.deleteById(id);
+        gearCommandRepository.deleteById(id);
     }
 
     @Transactional
     public void saveTempGear(TempGearRequest request) {
         Gear gear = Gear.builder()
-                .id(null)
+                .gearId(null)
                 .name(null) // name이 필드 제거 여부 결정 필요? 모델명 말고 다른걸 name이라고 부를만한 정보가 있는가?
                 .modelName(request.getModelName())
                 .brand(request.getBrand())
@@ -75,10 +74,5 @@ public class GearCommandService extends BaseCommandService<Gear, String> {
 
         saveEntity(targetTempGear);
 
-    }
-
-    @Override
-    protected JpaRepository<Gear, String> getRepository() {
-        return gearCommandRepository;
     }
 }

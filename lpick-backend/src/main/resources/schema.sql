@@ -213,7 +213,9 @@ CREATE TABLE IF NOT EXISTS gear (
                                     brand	varchar(50)		NULL,
                                     is_temp  boolean NOT NULL DEFAULT FALSE,
                                     eq_class	varchar(50)		NOT NULL,
-                                    wiki_id	varchar(40)		NULL
+                                    wiki_id	varchar(40)		NULL,
+                                    img         varchar(512)    NULL,
+                                    meta        jsonb           NULL
 );
 
 CREATE TABLE IF NOT EXISTS report (

@@ -13,5 +13,5 @@ public interface WikiBookmarkCommandRepository extends JpaRepository<WikiBookmar
 
     void deleteByWiki_wikiIdAndOauth_oauthId(String wikiId, String oauthId);
 
-    Optional<WikiBookmark> findByWikiBookmarkIdAndOauth_OauthId(String bookmarkId, String oauthId);
+    Optional<WikiBookmark> findByWiki_WikiIdAndOauth_OauthId(String wikiId, String oauthId);
 }
