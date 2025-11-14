@@ -1,8 +1,11 @@
 package com.notfound.lpickbackend.support.query.service;
 
 
+import com.notfound.lpickbackend.common.exception.CustomException;
+import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.common.util.Specs;
 import com.notfound.lpickbackend.support.command.domain.Question;
+import com.notfound.lpickbackend.support.query.dto.QuestionAndAnswerDetailResponse;
 import com.notfound.lpickbackend.support.query.dto.QuestionAndAnswerListResponse;
 import com.notfound.lpickbackend.support.query.repository.QuestionQueryRepository;
 import com.notfound.lpickbackend.support.query.util.QuestionSpec;
@@ -40,5 +43,14 @@ public class QuestionQueryService {
         page.forEach(p -> p.setNo(counter.getAndDecrement()));
 
         return page;
+    }
+
+    public QuestionAndAnswerDetailResponse readQuestionDetail(String questionId) {
+
+        Question question = questionQueryRepository.findById(questionId).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND_QUESTION)
+        );
+
+        return new QuestionAndAnswerDetailResponse(question);
     }
 }

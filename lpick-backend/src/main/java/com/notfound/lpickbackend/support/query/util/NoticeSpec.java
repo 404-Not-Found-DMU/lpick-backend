@@ -1,13 +1,16 @@
 package com.notfound.lpickbackend.support.query.util;
 
-import com.notfound.lpickbackend.support.command.domain.Question;
+import com.notfound.lpickbackend.support.command.domain.Notice;
 import org.springframework.data.jpa.domain.Specification;
 
-public class QuestionSpec {
+public class NoticeSpec {
 
-    public static Specification<Question> keywordLike(String keyword) {
+    public static Specification<Notice> keywordLike(String keyword) {
+
         if (keyword == null) return null;
+
         String kw = keyword.trim();
+
         if (kw.isEmpty()) return null;
 
         // LIKE 와일드카드('%','_')가 키워드에 들어오면 이스케이프
