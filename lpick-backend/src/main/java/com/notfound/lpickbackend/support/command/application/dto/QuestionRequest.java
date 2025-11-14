@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class QuestionCreateRequest {
+public class QuestionRequest {
 
     private String title;
     private String content;

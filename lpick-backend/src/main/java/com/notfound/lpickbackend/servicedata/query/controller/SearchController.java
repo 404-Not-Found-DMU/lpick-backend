@@ -36,11 +36,9 @@ public class SearchController {
     @PostMapping("/sync")
     @Operation(summary = "DB <-> ElasticSearch 싱크 api", description = "db와 elasticsearch의 데이터를 맞추기 위한 api입니다.")
     public ResponseEntity<SuccessCode> syncAll() {
-        dataSyncService.syncAllAlbums();
-        dataSyncService.syncAllArtists();
-        dataSyncService.syncAllGears();
-        dataSyncService.syncAllArticles();
-        dataSyncService.syncAllWikiPage();
+
+        dataSyncService.recreateAndSyncAll();;
+
         return ResponseEntity.ok(SuccessCode.SUCCESS);
     }
 

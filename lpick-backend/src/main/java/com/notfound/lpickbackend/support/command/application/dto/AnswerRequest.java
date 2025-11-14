@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class NoticeCreateRequest {
+public class AnswerRequest {
 
     String author;
     String title;
