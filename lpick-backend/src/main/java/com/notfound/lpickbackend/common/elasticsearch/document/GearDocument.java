@@ -1,6 +1,7 @@
 package com.notfound.lpickbackend.common.elasticsearch.document;
 
 import com.notfound.lpickbackend.servicedata.command.application.domain.Gear;
+import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -25,21 +26,32 @@ public class GearDocument {
     @Field(type = FieldType.Keyword)
     private String gearId;
 
-    @Field(type = FieldType.Keyword)
+    @Field(
+            type = FieldType.Text,
+            analyzer = "autocomplete_analyzer",
+            searchAnalyzer = "autocomplete_analyzer"
+    )
     private String name;
 
     @Field(
             type = FieldType.Text,
             analyzer = "autocomplete_analyzer",
-            searchAnalyzer = "korean_analyzer"
+            searchAnalyzer = "autocomplete_analyzer"
     )
     private String modelName; // 기어 검색 시 주요 대상
 
-    @Field(type = FieldType.Keyword)
+    @Field(
+            type = FieldType.Text,
+            analyzer = "autocomplete_analyzer",
+            searchAnalyzer = "autocomplete_analyzer"
+    )
     private String brand;
 
     @Field(type = FieldType.Keyword)
-    private String eqClass; // GearClass 이름을 저장 - TURNTABLE, SPEAKER, HEADPHONE
+    private String img;
+
+    @Field(type = FieldType.Keyword)
+    private GearClass eqClass; // GearClass 이름을 저장 - TURNTABLE, SPEAKER, HEADPHONE
 
     @Field(type = FieldType.Keyword)
     private String wikiId;
@@ -51,7 +63,7 @@ public class GearDocument {
                 .name(gear.getName())
                 .modelName(gear.getModelName())
                 .brand(gear.getBrand())
-                .eqClass(gear.getEqClass() != null ? gear.getEqClass().getClassName() : null) // GearClass 이름을 저장한다고 가정
+                .eqClass(gear.getEqClass() != null ? gear.getEqClass().toEnum() : null) // GearClass 이름을 저장한다고 가정
                 .wikiId(gear.getWiki() != null ? gear.getWiki().getWikiId() : null)
                 .build();
     }

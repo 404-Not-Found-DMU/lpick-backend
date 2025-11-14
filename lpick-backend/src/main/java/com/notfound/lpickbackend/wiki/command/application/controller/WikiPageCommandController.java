@@ -7,7 +7,6 @@ import com.notfound.lpickbackend.wiki.command.application.dto.request.WikiPageCr
 import com.notfound.lpickbackend.wiki.command.application.dto.request.WikiStatusRequest;
 import com.notfound.lpickbackend.wiki.command.application.service.WikiDomainCommandService;
 import com.notfound.lpickbackend.wiki.command.application.service.WikiPageCommandService;
-import com.notfound.lpickbackend.wiki.revision_domain.WikiSchema;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

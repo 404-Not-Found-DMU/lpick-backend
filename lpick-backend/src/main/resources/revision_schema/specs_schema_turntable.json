@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "Drive Type": {
+      "type": "string"
+    },
+    "Motor": {
+      "type": "string"
+    },
+    "Platter": {
+      "type": "string"
+    },
+    "Wow And Flutter": {
+      "type": "string"
+    },
+    "Rumble": {
+      "type": "string"
+    },
+    "Signal To Noise Ratio": {
+      "type": "string"
+    },
+    "Speed": {
+      "type": "string"
+    },
+    "Speed Variance": {
+      "type": "string"
+    },
+    "Pitch Control": {
+      "type": "string"
+    },
+    "Tonearm Type": {
+      "type": "string"
+    },
+    "Cartridge Type": {
+      "type": "string"
+    },
+    "Tracking Force Range": {
+      "type": "string"
+    },
+    "Dimensions": {
+      "type": "string"
+    },
+    "Weight": {
+      "type": "string"
+    },
+    "Power Consumption": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "Drive Type",
+    "Motor",
+    "Platter",
+    "Wow And Flutter",
+    "Rumble",
+    "Signal To Noise Ratio",
+    "Speed",
+    "Speed Variance",
+    "Pitch Control",
+    "Tonearm Type",
+    "Cartridge Type",
+    "Tracking Force Range",
+    "Dimensions",
+    "Weight",
+    "Power Consumption"
+  ],
+  "additionalProperties": true
+}

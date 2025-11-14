@@ -14,6 +14,8 @@ import com.notfound.lpickbackend.wiki.query.repository.WikiPageQueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.IndexOperations;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,34 @@ public class DataSyncService { // AlbumSyncService에서 이름 변경
     private final GearDocumentRepository gearDocumentRepository;
     private final ArticleDocumentRepository articleDocumentRepository;
     private final WikiPageDocumentRepository wikiPageDocumentRepository;
+
+    private final ElasticsearchOperations operations;
+
+    /** Document 클래스에 설정 된 Setting, Mapping을 적용한다. */
+    private void recreateIndex(Class<?> docClass) {
+        IndexOperations io = operations.indexOps(docClass);
+        if (io.exists()) io.delete();
+        io.create();                             // @Setting 적용
+        io.putMapping(io.createMapping(docClass)); // @Mapping 적용
+    }
+
+    public void recreateAllIndices() {
+        recreateIndex(AlbumDocument.class);
+        recreateIndex(ArtistDocument.class);
+        recreateIndex(GearDocument.class);
+        recreateIndex(ArticleDocument.class);
+        recreateIndex(WikiPageDocument.class);
+    }
+
+    /** 초기화 + 전체 싱크 한 번에 */
+    public void recreateAndSyncAll() {
+        recreateAllIndices();        // 1) 인덱스/매핑 먼저
+        syncAllAlbums();             // 2) 그 다음 색인
+        syncAllArtists();
+        syncAllGears();
+        syncAllArticles();
+        syncAllWikiPage();
+    }
 
     @Transactional(readOnly = true)
     protected <T, D> void syncAllData(

@@ -9,7 +9,7 @@ import com.notfound.lpickbackend.wiki.command.repository.PageRevisionCommandRepo
 import com.notfound.lpickbackend.wiki.query.dto.response.PageRevisionResponse;
 import com.notfound.lpickbackend.wiki.query.service.PageRevisionQueryService;
 import com.notfound.lpickbackend.wiki.query.service.WikiPageQueryService;
-import com.notfound.lpickbackend.wiki.revision_domain.WikiSchema;
+import com.notfound.lpickbackend.common.json_schema_draft.WikiSchema;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

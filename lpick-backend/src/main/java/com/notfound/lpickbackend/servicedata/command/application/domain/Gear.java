@@ -45,7 +45,7 @@ public class Gear {
     @Column(name = "is_temp", nullable = false)
     private boolean isTemp;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "eq_class", nullable = false)
     private GearClass eqClass;
 

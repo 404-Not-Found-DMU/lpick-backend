@@ -1,4 +1,4 @@
-package com.notfound.lpickbackend.wiki.revision_domain;
+package com.notfound.lpickbackend.common.json_schema_draft;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.networknt.schema.JsonSchema;

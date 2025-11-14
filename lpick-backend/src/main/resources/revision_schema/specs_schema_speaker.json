@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "Frequency Response": {
+      "type": "string"
+    },
+    "Impedance": {
+      "type": "string"
+    },
+    "Sensitivity": {
+      "type": "string"
+    },
+    "Driver Configuration": {
+      "type": "string"
+    },
+    "Tweeter Size": {
+      "type": "string"
+    },
+    "Woofer Size": {
+      "type": "string"
+    },
+    "Power Handling": {
+      "type": "string"
+    },
+    "Crossover Frequency": {
+      "type": "string"
+    },
+    "Enclosure Type": {
+      "type": "string"
+    },
+    "Cabinet Material": {
+      "type": "string"
+    },
+    "Dimensions": {
+      "type": "string"
+    },
+    "Weight": {
+      "type": "string"
+    },
+    "Inputs": {
+      "type": "string"
+    },
+    "Mounting Options": {
+      "type": "string"
+    },
+    "Recommended Amp Power": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "Frequency Response",
+    "Impedance",
+    "Sensitivity",
+    "Driver Configuration",
+    "Tweeter Size",
+    "Woofer Size",
+    "Power Handling",
+    "Crossover Frequency",
+    "Enclosure Type",
+    "Cabinet Material",
+    "Dimensions",
+    "Weight",
+    "Inputs",
+    "Mounting Options",
+    "Recommended Amp Power"
+  ],
+  "additionalProperties": true
+}
