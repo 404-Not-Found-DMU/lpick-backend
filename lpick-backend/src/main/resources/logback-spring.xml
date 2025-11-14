@@ -7,7 +7,7 @@
     </springProfile>
 
     <springProfile name="dev">
-        <property name="LOG_PATH" value="C:/logs/lpick"/>
+        <property name="LOG_PATH" value="./logs/lpick"/>
     </springProfile>
 
     <appender name="VIEW_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">

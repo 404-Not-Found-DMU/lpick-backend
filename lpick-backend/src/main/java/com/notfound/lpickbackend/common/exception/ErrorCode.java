@@ -53,7 +53,7 @@ public enum ErrorCode {
     // 403에러인데 다양한 리소스에서 같이 사용해도 괜찮을것같습니다.
     CAN_NOT_MODIFY_OTHER_USER_CONTENT(HttpStatus.FORBIDDEN, "타 사용자의 리소스를 수정할 수 없습니다."),
     AUTHORIZATION_FAILED(HttpStatus.FORBIDDEN, "인가 실패"),
-    FORBIDDEN_RESOURCE_ACCESS(HttpStatus.FORBIDDEN, "해당 리소스에 접근 권한이 없습니다."),
+    FORBIDDEN_RESOURCE_ACCESS(HttpStatus.FORBIDDEN, "해당 리소스에 접근 권한이 없습니다. 수정/삭제가 불가능 합니다."),
 
     // 404 에러
     NOT_FOUND_REVISION(HttpStatus.NOT_FOUND, "버전 정보를 찾을 수 없습니다."),
@@ -78,10 +78,12 @@ public enum ErrorCode {
     NOT_FOUND_USER_GEAR(HttpStatus.NOT_FOUND, "사용자는 해당 음향기기를 지니고 있지 않습니다."),
     NOT_FOUND_GEAR(HttpStatus.NOT_FOUND, "음향기기 정보를 찾을 수 없습니다."),
     NOT_FOUND_GEAR_CLASS(HttpStatus.NOT_FOUND, "해당 타입의 음향기기 종류를 찾을 수 없습니다."),
-
+    NOT_FOUND_NOTICE(HttpStatus.NOT_FOUND, "공지사항 정보를 찾을 수 없습니다."),
+    NOT_FOUND_QUESTION(HttpStatus.NOT_FOUND, "문의사항 정보를 찾을 수 없습니다."),
+    NOT_FOUND_ANSWER(HttpStatus.NOT_FOUND, "답변 정보를 찾을 수 없습니다."),
 
     // 처리 방법에 논의가 필요한 에러 코드 임시할당용,
-    DO_NOT_KEEP_UP_THIS_ERROR_WHEN_MERGE(HttpStatus.I_AM_A_TEAPOT, "이 에러 코드는 실제 사용 목적이 아닙니다.");
+    DO_NOT_KEEP_UP_THIS_ERROR_WHEN_MERGE(HttpStatus.I_AM_A_TEAPOT, "이 에러 코드는 실제 사용 목적이 아닙니다."), ;
 
     private final HttpStatus httpStatus;
     private final String message;

@@ -12,14 +12,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/community/comment")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 @Tag(name = "커뮤니티 댓글 조회 컨트롤러", description = "댓글 조회, 내 댓글 조회 기능")
 public class CommentQueryController {
 
     private final CommentQueryService commentQueryService;
 
-    @GetMapping("/{articleId}")
+    @GetMapping("/public/community/comment/{articleId}")
     @Operation(summary = "댓글 목록 조회", description = "특정 게시글의 댓글 목록을 조회합니다.")
     public ResponseEntity<Page<ParentsCommentResponse>> getComments(
             @RequestParam(value = "page", defaultValue = "1") int page,
@@ -32,7 +32,7 @@ public class CommentQueryController {
         return ResponseEntity.ok(commentQueryService.readCommentList(articleId, pageable));
     }
 
-    @GetMapping("/parents/like")
+    @GetMapping("/community/comment/parents/like")
     @Operation(summary = "좋아요 댓글 조회", description = "내가 좋아요 누른 댓글 목록을 조회합니다.")
     public ResponseEntity<Page<ParentsCommentResponse>> getLikedParentsComments(
             @RequestParam(value = "page", defaultValue = "1") int page,
@@ -43,7 +43,7 @@ public class CommentQueryController {
         return ResponseEntity.ok(commentQueryService.readLikedParentsCommentList(pageable));
     }
 
-    @GetMapping("/child/like")
+    @GetMapping("/community/child/like")
     @Operation(summary = "좋아요 답글 조회", description = "내가 좋아요 누른 답글 목록을 조회합니다.")
     public ResponseEntity<Page<ParentsCommentResponse>> getLikedChildComments(
             @RequestParam(value = "page", defaultValue = "1") int page,

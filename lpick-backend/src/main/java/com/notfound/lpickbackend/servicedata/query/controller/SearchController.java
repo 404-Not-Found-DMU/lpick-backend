@@ -36,11 +36,9 @@ public class SearchController {
     @PostMapping("/sync")
     @Operation(summary = "DB <-> ElasticSearch 싱크 api", description = "db와 elasticsearch의 데이터를 맞추기 위한 api입니다.")
     public ResponseEntity<SuccessCode> syncAll() {
-        dataSyncService.syncAllAlbums();
-        dataSyncService.syncAllArtists();
-        dataSyncService.syncAllGears();
-        dataSyncService.syncAllArticles();
-        dataSyncService.syncAllWikiPage();
+
+        dataSyncService.recreateAndSyncAll();;
+
         return ResponseEntity.ok(SuccessCode.SUCCESS);
     }
 
@@ -92,6 +90,7 @@ public class SearchController {
         // AlbumQueryService에서 구현한 통합 검색 메서드를 호출합니다.
         return ResponseEntity.ok(unifiedSearchService.searchByType(keyword, pageable, new String[]{"gears"}));
     }
+
     @GetMapping("/search/artist")
     @Operation(summary = "아티스트 검색", description = "아티스트 검색 기능입니다.")
     public ResponseEntity<List<SearchResult>> searchArtistByKeyword(

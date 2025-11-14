@@ -43,8 +43,13 @@ public class ArticleQueryService {
         if(dto == null) {
             throw new CustomException(ErrorCode.NOT_FOUND_ARTICLE);
         }
+        String oAuthId = "";
+        try {
+            oAuthId = UserInfoUtil.getOAuthId();
+        } catch (CustomException e) {
+            oAuthId = "";
+        }
 
-        String oAuthId = UserInfoUtil.getOAuthId();
 
         if(oAuthId.isEmpty()) { // 로그인 한 유저가 없을 경우
             dto.setLiked(false);

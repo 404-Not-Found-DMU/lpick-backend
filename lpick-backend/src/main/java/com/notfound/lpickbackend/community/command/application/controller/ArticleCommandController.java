@@ -54,6 +54,8 @@ public class ArticleCommandController {
 
         articleCommandService.deleteArticle(articleId);
 
+        dataSyncService.deleteArticle(articleId);
+
         return ResponseEntity.ok(SuccessCode.ARTICLE_DELETE_SUCCESS);
     }
 }
