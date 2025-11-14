@@ -12,7 +12,7 @@ import org.springframework.data.elasticsearch.annotations.*;
 @Builder
 @Document(indexName = "gears")
 @Mapping(mappingPath = "elasticsearch/gear-mapping.json")
-@Setting(settingPath = "elasticsearch/document-settings.json")
+@Setting(settingPath = "elasticsearch/documents-settings-by-gear.json")
 @ToString
 public class GearDocument {
 

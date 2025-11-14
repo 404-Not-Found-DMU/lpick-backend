@@ -8,6 +8,7 @@ import com.notfound.lpickbackend.servicedata.query.dto.GearSearchResultDTO;
 import com.notfound.lpickbackend.servicedata.query.dto.SearchResult;
 import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass;
 import com.notfound.lpickbackend.wiki.query.repository.WikiPageQueryRepository;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -81,53 +82,37 @@ public class UnifiedSearchService {
     // Gear 검색 내 정확도 높이기 위해 별도로 분리.
     // 기존 내역은 wiki, gear, article 등의 각각의 엔티티에만 존재하는 field에 대해 전부 score 계산을 해 정확도가 일부 떨어진다... 라는 말이 있네요.
     // 순수하게 gear만 검색할 예정이니 다음과 같이 구현.
-    public List<GearSearchResultDTO> searchGears(String keyword,
-                                                 Pageable pageable,
-                                                 GearClass eqClass) {
+    public List<GearSearchResultDTO> searchGears(String keyword, Pageable pageable, GearClass eqClass) {
+        String kw = keyword == null ? "" : keyword.trim().toLowerCase(Locale.ROOT);
 
-        NativeQueryBuilder builder = new NativeQueryBuilder();
+        NativeQueryBuilder b = new NativeQueryBuilder().withQuery(q -> q.bool(bb -> {
+            // 접두만 허용 (중간 포함 금지)
+            bb.should(s -> s.prefix(p -> p.field("name.lower").value(kw)));
+            bb.should(s -> s.prefix(p -> p.field("modelName.lower").value(kw)));
+            bb.should(s -> s.prefix(p -> p.field("brand.lower").value(kw)));
+            bb.minimumShouldMatch("1");
 
-        // text(자동 완성 등) 겸 keyword(완벽 매칭) 멀티매치가 가능한 modelName, brand만 사용하여 검색 수행한다!
+            // eqClass 정확 일치 필터
+            if (eqClass != null) {
+                bb.filter(f -> f.term(t -> t.field("eqClass").value(eqClass.name())));
+                // 혼재 의심되면 .field("eqClass.keyword") 로 강제 가능
+            }
+            return bb;
+        }));
 
-        // eqClass 필터가 없는 경우: 그냥 multi_match만
-        if (eqClass == null) {
-            builder.withQuery(q -> q.multiMatch(m -> m
-                    .fields("modelName", "brand", "name")
-                    .query(keyword)
-                    .fuzziness("AUTO")
-            ));
-        } else {
-            builder.withQuery(q -> q.bool(b -> b
-                    .must(m -> m.multiMatch(mm -> mm
-                            .fields("modelName", "brand", "name")
-                            .query(keyword)
-                    ))
-                    .filter(f -> f.term(t -> t
-                            .field("eqClass")       // GearDocument.eqClass
-                            .value(eqClass.name())
-                    ))
-            ));
-        }
-
-        NativeQuery searchQuery = builder
+        NativeQuery query = b
                 .withPageable(pageable)
-                .withSort(Sort.by(Sort.Direction.DESC, "_score"))
+                .withSort(Sort.by(Sort.Order.desc("_score"), Sort.Order.asc("modelName.keyword")))
                 .build();
 
-        SearchHits<GearDocument> searchHits = elasticsearchOperations.search(
-                searchQuery,
-                GearDocument.class,
-                IndexCoordinates.of("gears")
+        SearchHits<GearDocument> hits = elasticsearchOperations.search(
+                query, GearDocument.class, IndexCoordinates.of("gears")
         );
 
-        log.debug("Gear search hits: {}", searchHits);
-
         List<GearSearchResultDTO> results = new ArrayList<>();
-
-        for (SearchHit<GearDocument> hit : searchHits) {
-            results.add(this.mapGearDocumentToResult(hit));
+        for (SearchHit<GearDocument> hit : hits) {
+            results.add(mapGearDocumentToResult(hit));
         }
-
         return results;
     }
 
@@ -156,48 +141,26 @@ public class UnifiedSearchService {
     }
 
     /** gear 자동완성 */
-    public List<GearSearchResultDTO> autocompleteGears(String prefix,
-                                                       GearClass eqClass,
-                                                       int size) {
+    public List<GearSearchResultDTO> autocompleteGears(String prefix, @Nullable GearClass eqClass, int size) {
+        String kw = prefix == null ? "" : prefix.trim().toLowerCase(Locale.ROOT);
 
-        NativeQueryBuilder builder = new NativeQueryBuilder();
-
-        if (eqClass == null) {
-            builder.withQuery(q -> q.multiMatch(m -> m
-                    .fields("modelName", "brand", "name")
-                    .query(prefix)
-                    .operator(Operator.And)
-            ));
-        } else {
-
-            builder.withQuery(q -> q.bool(b -> b
-                    .must(m -> m.multiMatch(mm -> mm
-                            .fields("modelName", "brand", "name")
-                            .query(prefix)
-                            .operator(Operator.And)
-                    ))
-                    .filter(f -> f.term(t -> t
-                            .field("eqClass")
-                            .value(eqClass.name())
-                    ))
-            ));
-        }
-
-        NativeQuery searchQuery = builder
+        NativeQuery q = new NativeQueryBuilder()
+                .withQuery(x -> x.bool(b -> {
+                    b.should(s -> s.prefix(p -> p.field("name.lower").value(kw)));
+                    b.should(s -> s.prefix(p -> p.field("modelName.lower").value(kw)));
+                    b.should(s -> s.prefix(p -> p.field("brand.lower").value(kw)));
+                    b.minimumShouldMatch("1");
+                    if (eqClass != null) {
+                        b.filter(f -> f.term(t -> t.field("eqClass").value(eqClass.name())));
+                    }
+                    return b;
+                }))
                 .withMaxResults(size)
+                .withSort(Sort.by(Sort.Order.asc("modelName.keyword")))
                 .build();
 
-        SearchHits<GearDocument> searchHits = elasticsearchOperations.search(
-                searchQuery,
-                GearDocument.class,
-                IndexCoordinates.of("gears")
-        );
-
-        log.debug("Gear autocomplete hits: {}", searchHits);
-
-        return searchHits.getSearchHits().stream()
-                .map(this::mapGearDocumentToResult)
-                .collect(Collectors.toList());
+        SearchHits<GearDocument> hits = elasticsearchOperations.search(q, GearDocument.class, IndexCoordinates.of("gears"));
+        return hits.getSearchHits().stream().map(this::mapGearDocumentToResult).toList();
     }
 
 
@@ -251,7 +214,7 @@ public class UnifiedSearchService {
                 .build();
     }
 
-    // --- Gear 전용 매핑 메서드 ---
+    // --- documentType = Gear 전용 매핑 메서드 ---
 
     private GearSearchResultDTO mapGearDocumentToResult(SearchHit<GearDocument> hit) {
         GearDocument doc = hit.getContent();
