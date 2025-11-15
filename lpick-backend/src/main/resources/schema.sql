@@ -246,11 +246,43 @@ create table if not exists ballot (
                                       ballot_value  varchar(10) not null
 );
 
+
 CREATE TABLE IF NOT EXISTS wiki_like (
                                            wiki_like_id	varchar(40)		NOT NULL,
                                            oauth_id	varchar(40)		NOT NULL,
                                            wiki_id	varchar(40)		NOT NULL
 );
+
+create table if not exists question (
+                                      id        varchar(40) primary key,
+    oauth_id      varchar(40) not null,
+    title         varchar(100) not null,
+    content  TEXT not null,
+    is_answered boolean NOT NULL DEFAULT FALSE,
+    created_at	timestamp		NOT NULL,
+    modified_at	timestamp		NULL
+    );
+
+create table if not exists answer (
+                                      id        varchar(40) primary key,
+    title         varchar(100) null,
+    question_id varchar(40) not null,
+    author varchar(40) not null,
+    content  TEXT not null,
+    created_at	timestamp		NOT NULL,
+    modified_at	timestamp		NULL
+    );
+
+create table if not exists notice (
+                                      id        varchar(40) primary key,
+    author      varchar(40) not null,
+    title         varchar(100) not null,
+    content  TEXT not null,
+    created_at	timestamp		NOT NULL,
+    modified_at	timestamp		NULL
+    );
+
+
 
 -- ==============================================================
 -- 2) PK 제약조건: DROP IF EXISTS … CASCADE 후 ADD
@@ -686,6 +718,20 @@ ALTER TABLE ballot
     DROP CONSTRAINT IF EXISTS fk_ballot_oauth CASCADE;
 ALTER TABLE ballot
     ADD CONSTRAINT fk_ballot_oauth
+        FOREIGN KEY (oauth_id) REFERENCES user_info(oauth_id) ON DELETE CASCADE;
+
+-- FK: ballot.oauth_id -> user_info(oauth_id)
+ALTER TABLE answer
+DROP CONSTRAINT IF EXISTS fk_answer CASCADE;
+ALTER TABLE answer
+    ADD CONSTRAINT fk_answer
+        FOREIGN KEY (question_id) REFERENCES question(id) ON DELETE CASCADE;
+
+-- FK: ballot.oauth_id -> user_info(oauth_id)
+ALTER TABLE question
+DROP CONSTRAINT IF EXISTS fk_question CASCADE;
+ALTER TABLE question
+    ADD CONSTRAINT fk_question
         FOREIGN KEY (oauth_id) REFERENCES user_info(oauth_id) ON DELETE CASCADE;
 
 -- UNIQUE (dt_id, oauth_id)

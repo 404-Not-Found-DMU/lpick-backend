@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ArticleQueryRepository extends JpaRepository<Article, String> {
 
@@ -39,6 +41,28 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
     GROUP BY a.articleId, a.title, a.oauth
     """)
     Page<ArticleListResponse> findAllWithLikeAndCommentAndBookmarkCount(Pageable pageable);
+
+    @Query("""
+    SELECT new com.notfound.lpickbackend.community.query.dto.ArticleListResponse(
+        a.articleId,
+        a.title,
+        a.createdAt,
+        a.modifiedAt,
+        COUNT(DISTINCT l),
+        COUNT(DISTINCT c),
+        COUNT(DISTINCT b),
+        a.oauth.oauthId,
+        a.oauth.nickname
+    )
+    FROM Article a
+    LEFT JOIN ArticleLike l ON l.article = a
+    LEFT JOIN Comment c ON c.article = a
+    LEFT JOIN ArticleBookmark b ON b.article = a
+    WHERE a.isDel = com.notfound.lpickbackend.community.command.domain.ArticleStatus.N
+    AND a.articleId in :articleIds
+    GROUP BY a.articleId, a.title, a.oauth
+    """)
+    List<ArticleListResponse> findAllWithLikeAndCommentAndBookmarkCountInIds(@Param(value = "articleIds") List<String> articleIds);
 
     @Query("""
     SELECT new com.notfound.lpickbackend.community.query.dto.ArticleListResponse(

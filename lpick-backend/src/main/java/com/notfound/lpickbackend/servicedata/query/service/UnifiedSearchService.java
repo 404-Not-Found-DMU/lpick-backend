@@ -48,7 +48,7 @@ public class UnifiedSearchService {
         return search(keyword, pageable, indices);
     }
 
-    private List<SearchResult> search(String keyword, Pageable pageable, String[] INDICES) {
+    private List<SearchResult> search(String keyword, Pageable pageable, String[] indices) {
         NativeQuery searchQuery = new NativeQueryBuilder()
                 .withQuery(q -> q.multiMatch(m -> m
                         .fields("name", "modelName", "title")
@@ -63,7 +63,7 @@ public class UnifiedSearchService {
         SearchHits<?> searchHits = elasticsearchOperations.search(
                 searchQuery,
                 Map.class,
-                IndexCoordinates.of(INDICES) // ✅ 인덱스 여기서 지정
+                IndexCoordinates.of(indices) // ✅ 인덱스 여기서 지정
         );
 
         log.warn(searchHits.toString());

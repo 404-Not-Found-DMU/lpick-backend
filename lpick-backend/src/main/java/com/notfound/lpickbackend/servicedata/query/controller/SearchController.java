@@ -50,12 +50,8 @@ public class SearchController {
         // Document 클래스 = ORM 엔티티
         // 현재 흐름은 “schema.sql도 안 돌리고, ORM도 안 쓰고, DB가 들어온 데이터 보고 컬럼 타입을 추정해서 테이블 만든” 상황과 같다.
 
-        dataSyncService.recreateAndSyncAll();
-//        dataSyncService.syncAllAlbums();
-//        dataSyncService.syncAllArtists();
-//        dataSyncService.syncAllGears();
-//        dataSyncService.syncAllArticles();
-//        dataSyncService.syncAllWikiPage();
+        dataSyncService.recreateAndSyncAll();;
+
         return ResponseEntity.ok(SuccessCode.SUCCESS);
     }
 
@@ -123,6 +119,7 @@ public class SearchController {
                 unifiedSearchService.searchGears(keyword, pageable, eqClass);
         return ResponseEntity.ok(results);
     }
+
     @GetMapping("/search/artist")
     @Operation(summary = "아티스트 검색", description = "아티스트 검색 기능입니다.")
     public ResponseEntity<List<SearchResult>> searchArtistByKeyword(
