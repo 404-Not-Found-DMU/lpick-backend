@@ -5,6 +5,7 @@ import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserGear;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserSetting;
+import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass;
 import com.notfound.lpickbackend.userinfo.query.dto.response.usergear.GearInfoResponse;
 import com.notfound.lpickbackend.userinfo.query.dto.response.usergear.UserGearCollectionResponse;
 import com.notfound.lpickbackend.userinfo.query.repository.UserGearQueryRepository;
@@ -37,8 +38,9 @@ public class UserGearQueryService {
     }
 
 
+    /** 마이페이지 - 각 기어 표기. favoirte가 없으면 제일 마지막에 선택한 기기, favorite가 있으면 해당 기기를 favorite */
     public UserGearCollectionResponse getUserOwnedGear(String oAuthId) {
-        List<GearInfoResponse> list = userGearQueryRepository.findAllGearCollectionByUserId(oAuthId);
+        List<GearInfoResponse> list = userGearQueryRepository.findAllGearCollectionByUserId_V1(oAuthId);
 
         GearInfoResponse speaker   = null;
         GearInfoResponse headphone = null;
@@ -78,5 +80,14 @@ public class UserGearQueryService {
     @Transactional(readOnly = true)
     public long countUserGearFavoriteByClassName(String oAuthId, String className) {
         return userGearQueryRepository.countFavoritesByOauthIdAndClassName(oAuthId, className);
+    }
+
+    public UserGear findByIdAndOAuth_OAuthId(String userGearId, String oauthId) {
+        return userGearQueryRepository.findByUserGearIdAndOauth_OauthId(userGearId, oauthId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_GEAR));
+    }
+
+    public List<GearInfoResponse> getUserOwnedGearListByGearClass(String oauthId, GearClass gearClass) {
+        return userGearQueryRepository.findAllUserGearListByUserIdAndGearClass_V1(oauthId, gearClass.name());
     }
 }

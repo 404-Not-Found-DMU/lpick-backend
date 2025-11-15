@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class UserGearPostRequest {
     @NotEmpty
-    private String GearId;
+    private String gearId;
 
     @NotEmpty
     @Pattern(

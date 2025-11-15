@@ -33,9 +33,11 @@ public enum ErrorCode {
     ALREADY_HAS_REVIEW_IN_WIKIPAGE(HttpStatus.BAD_REQUEST, "이미 리뷰를 작성했습니다."),
     ALREADY_HAS_BOOKMARK(HttpStatus.BAD_REQUEST, "이미 추가되어있는 북마크입니다."),
     INVALID_PAGE_REQUEST(HttpStatus.BAD_REQUEST,"page 옵션이 올바르지 않습니다. 음수 등을 작성할 수 없습니다." ),
-    ALREADY_FULL_FAVORITE_ALBUM(HttpStatus.BAD_REQUEST, "favorite 리스트가 가득 찼습니다. 더이상 favorite로 지정할 수 없습니다."),
-    ALREADY_FULL_FAVORITE_GEAR(HttpStatus.BAD_REQUEST, "favorite 리스트가 가득 찼습니다. 더이상 favorite로 지정할 수 없습니다."),
+    ALREADY_FULL_FAVORITE_ALBUM(HttpStatus.BAD_REQUEST, "favorite album 리스트가 가득 찼습니다. 더이상 favorite로 지정할 수 없습니다."),
+    ALREADY_FULL_FAVORITE_GEAR(HttpStatus.BAD_REQUEST, "favorite gear 리스트가 가득 찼습니다. 더이상 favorite로 지정할 수 없습니다."),
     IS_NOT_TEMP_GEAR(HttpStatus.BAD_REQUEST, "허가하려는 Gear는 Temp 상태가 아닙니다."),
+    USER_GEAR_ILLEGAL_ENUM_VALUE_DETECTED(HttpStatus.BAD_REQUEST, "설정하려는 gear는 해당 gearClass에 속하지 않습니다."),
+    ALREADY_HAS_USER_GEAR(HttpStatus.BAD_REQUEST, "이미 사용자 소유 기기로 등록되어있습니다."),
 
     CAN_NOT_OPEN_DEBATE_AGAIN(HttpStatus.BAD_REQUEST, "토론을 재시작할 수는 없습니다."),
     ALREADY_BALLOT_IN_DEBATE(HttpStatus.BAD_REQUEST, "해당 토론에 이미 투표했습니다!"),
@@ -45,6 +47,8 @@ public enum ErrorCode {
     USER_REGISTRATION_FAIL(HttpStatus.BAD_REQUEST, "회원가입에 실패했습니다. 입력정보를 확인해주세요"),
     ALREADY_HAS_PARENTS_REQUEST(HttpStatus.BAD_REQUEST,"대댓글에 대댓글을 추가로 작성할 수 없습니다." ),
     ALREADY_HAS_LIKE(HttpStatus.BAD_REQUEST, "이미 좋아요 처리 된 리소스입니다."),
+
+    IMAGE_UPLOAD_FAILED(HttpStatus.BAD_REQUEST, "이미지 등록 실패"),
     
     // 401 에러
     AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "인증 실패"),
@@ -58,6 +62,8 @@ public enum ErrorCode {
     // 404 에러
     NOT_FOUND_REVISION(HttpStatus.NOT_FOUND, "버전 정보를 찾을 수 없습니다."),
     NOT_FOUND_WIKI(HttpStatus.NOT_FOUND, "위키 정보를 찾을 수 없습니다."),
+    NOT_FOUND_WIKI_LIKE(HttpStatus.NOT_FOUND, "위키 좋아요를 찾을 수 없습니다."),
+
 
     NOT_FOUND_WIKI_BOOKMARK(HttpStatus.NOT_FOUND, "북마크 정보를 찾을 수 없습니다."),
     NOT_FOUND_REVIEW(HttpStatus.NOT_FOUND, "리뷰 정보를 찾을 수 없습니다."),

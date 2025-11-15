@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.servicedata.command.application.controller;
 
+import com.notfound.lpickbackend.common.dto.IdResponse;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.common.exception.SuccessCode;
@@ -28,9 +29,9 @@ public class GearCommandController {
     private final GearCommandService gearCommandService;
     private final GearDefaultSettingService gearDefaultSettingService;
 
-    // 옵션 A: 전처리된 FLAT CSV 업로드
     /** 전처리된 FLAT CSV 업로드 (meta.specs = 표시 라벨 → 값) */
     @PostMapping(value = "/public/flat-csv", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "!!DB 기입용!!", description = "[개발자] 지정된 csv 받아 로컬/배포 db에 gear 초기데이터 기입 목적. 클라이언트 연동대상 XXX")
     public ResponseEntity<Map<String, Object>> importFlatCsv(
             @RequestPart("file") MultipartFile csv,
             @RequestParam(defaultValue = "false") boolean dryRun,
@@ -46,15 +47,17 @@ public class GearCommandController {
         ));
     }
 
-    @PostMapping("/gear/temp-gear")
-    @Operation(summary = "임시 음향기기 추가", description = "사용자가 자신의 음향기기가 본 서비스의 DB에 없어 등록하지 못할경우 사용.")
-    public ResponseEntity<SuccessCode> createTempGear(
-            @RequestBody @Valid TempGearRequest req,
-            @RequestPart("image")MultipartFile images
+    @PostMapping(
+            value = "/gear/temp-gear",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    @Operation(summary = "임시 음향기기 추가", description = "[사용자] 사용자가 자신의 음향기기가 본 서비스의 DB에 없어 등록하지 못할경우 사용.")
+    public ResponseEntity<IdResponse> createTempGear(
+            @RequestPart @Valid TempGearRequest req,
+            @RequestPart(value = "image", required = false)MultipartFile image
             ) {
-        gearCommandService.saveTempGear(req);
 
-        return ResponseEntity.ok(SuccessCode.CREATE_SUCCESS);
+        return ResponseEntity.ok(gearCommandService.saveTempGear(req,image));
     }
 
     @PatchMapping("/gear/{gear-id}/update-info")

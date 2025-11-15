@@ -246,6 +246,12 @@ create table if not exists ballot (
                                       ballot_value  varchar(10) not null
 );
 
+CREATE TABLE IF NOT EXISTS wiki_like (
+                                           wiki_like_id	varchar(40)		NOT NULL,
+                                           oauth_id	varchar(40)		NOT NULL,
+                                           wiki_id	varchar(40)		NOT NULL
+);
+
 -- ==============================================================
 -- 2) PK 제약조건: DROP IF EXISTS … CASCADE 후 ADD
 -- ==============================================================
@@ -399,6 +405,11 @@ ALTER TABLE community_image
     DROP CONSTRAINT IF EXISTS PK_COMMUNITY_IMAGE CASCADE;
 ALTER TABLE community_image
     ADD CONSTRAINT PK_COMMUNITY_IMAGE PRIMARY KEY (id);
+
+ALTER TABLE wiki_like
+    DROP CONSTRAINT IF EXISTS PK_WIKI_LIKE CASCADE;
+ALTER TABLE wiki_like
+    ADD CONSTRAINT PK_WIKI_LIKE PRIMARY KEY (wiki_like_id);
 
 
 -- ==============================================================
@@ -690,3 +701,15 @@ ALTER TABLE ballot
 ALTER TABLE ballot
     ADD CONSTRAINT ck_ballot_value
         CHECK (ballot_value IN ('AGREE','DISAGREE','ABSTAIN'));
+
+ALTER TABLE wiki_like
+    DROP CONSTRAINT IF EXISTS FK_user_info_TO_wiki_like_1 CASCADE;
+ALTER TABLE wiki_like
+    ADD CONSTRAINT FK_user_info_TO_wiki_like_1
+        FOREIGN KEY (oauth_id) REFERENCES user_info (oauth_id);
+
+ALTER TABLE wiki_like
+    DROP CONSTRAINT IF EXISTS FK_wiki_TO_wiki_like_1 CASCADE;
+ALTER TABLE wiki_like
+    ADD CONSTRAINT FK_wiki_TO_wiki_like_1
+        FOREIGN KEY (wiki_id) REFERENCES wiki_page(wiki_id);

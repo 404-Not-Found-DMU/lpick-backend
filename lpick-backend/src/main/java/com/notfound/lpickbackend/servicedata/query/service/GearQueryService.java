@@ -15,15 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GearQueryService {
     private final GearQueryRepository gearQueryRepository;
-
     
-    // 이 사이에 개발자가 추가하는 메소드가 오게끔 하기
-    
-    public Gear findById(String id) {
-        return gearQueryRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_GEAR));
-    }
 
-    public List<Gear> findAll() {
-        return gearQueryRepository.findAll();
-    }
+
 }

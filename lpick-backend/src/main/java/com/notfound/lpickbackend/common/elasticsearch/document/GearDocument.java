@@ -65,6 +65,7 @@ public class GearDocument {
                 .brand(gear.getBrand())
                 .eqClass(gear.getEqClass() != null ? gear.getEqClass().toEnum() : null) // GearClass 이름을 저장한다고 가정
                 .wikiId(gear.getWiki() != null ? gear.getWiki().getWikiId() : null)
+                .img(gear.getImg())
                 .build();
     }
 }
