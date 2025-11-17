@@ -65,7 +65,7 @@ public class PopularityService {
                             .filter(f -> f.range(r -> r
                                     .untyped(u -> u
                                             .field("@timestamp")
-                                            .gte(JsonData.of("now-48"))
+                                            .gte(JsonData.of("now-48h"))
                                             .lt(JsonData.of("now"))
                                     )
                             ))
@@ -81,7 +81,7 @@ public class PopularityService {
                             .filter(f -> f.range(r -> r
                                     .untyped(u -> u
                                             .field("@timestamp")
-                                            .gte(JsonData.of("now-48"))
+                                            .gte(JsonData.of("now-48h"))
                                             .lt(JsonData.of("now"))
                                     )
                             ))
