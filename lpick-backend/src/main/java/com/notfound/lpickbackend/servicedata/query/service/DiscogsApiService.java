@@ -14,7 +14,7 @@ public class DiscogsApiService {
     public String getPrimaryImageUrl(String masterId) {
         try {
             JsonNode response = discogsWebClient.get()
-                    .uri("/masters/{id}", masterId)
+                    .uri("/releases/{id}", masterId)
                     .retrieve() // 요청 실행
                     .bodyToMono(JsonNode.class) // 응답을 JsonNode로 받음
                     .block(); // (동기식으로 대기. 비동기로 처리할 수도 있습니다.)
