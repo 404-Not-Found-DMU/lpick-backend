@@ -95,3 +95,16 @@ management:
 
 discogs:
   token: ${discogs.token}
+
+app:
+  file-upload:
+    expert-request:
+      allowed-extensions:
+        - pdf
+        - jpg
+        - jpeg
+        - png
+        - hwp
+        - doc
+        - docx
+      max-size: 200MB

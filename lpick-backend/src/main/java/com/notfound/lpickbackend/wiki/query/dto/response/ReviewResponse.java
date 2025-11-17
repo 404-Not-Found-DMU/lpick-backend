@@ -9,6 +9,8 @@ import java.time.Instant;
 @Builder
 public class ReviewResponse {
     private String reviewId;
+    private String userId;
+    private String userNickName;
     private float starScore;
     private String content;
     private Instant createdAt;

@@ -53,7 +53,7 @@ public class S3Uploader {
 
     // 받아온 파일을 변환한 후 s3에 실제로 업로드 해주는 로직
     public String upload(MultipartFile multipartFile, String dir) throws IOException {
-        String origin = multipartFile.getOriginalFilename();
+        String origin = multipartFile.getOriginalFilename().replaceAll("\\s", "_"); // 공백을 언더바로 치환하여 변경
         String key    = String.format("%s/%s_%s", dir, UUID.randomUUID(), origin);
 
         ObjectMetadata meta = new ObjectMetadata();
@@ -83,5 +83,10 @@ public class S3Uploader {
         amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, key));
     }
 
+    public void deleteByUrlToKey(String fileUrl) {
+        String key = fileUrl.substring(fileUrl.indexOf("/ExpertRequest/") + 1); // "ExpertRequest/..." 부분만 추출
+
+        amazonS3Client.deleteObject(bucket, key);
+    }
 
 }

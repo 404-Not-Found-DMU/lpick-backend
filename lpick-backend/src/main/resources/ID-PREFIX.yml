@@ -27,6 +27,8 @@ WikiPage : WP
 CommunityImage : CIM
 ServiceDataImage : DIM
 Ballot : BLT
+WikiLike : WPL
 Notice : NT
 Question : Q
 Answer : A
+ExpertRequest : EPR

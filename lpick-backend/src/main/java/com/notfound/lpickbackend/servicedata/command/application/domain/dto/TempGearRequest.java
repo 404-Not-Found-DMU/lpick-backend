@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.servicedata.command.application.domain.dto;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -22,4 +23,6 @@ public class TempGearRequest {
     private String gearClass;
 
     private String brand; // 브랜드는 미상일 수 있음
+
+    private JsonNode specJson;
 }

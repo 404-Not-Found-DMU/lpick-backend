@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserGearCommandRepository extends JpaRepository<UserGear, String> {
+    boolean existsByEq_GearIdAndOauth_OauthId(String gearId, String oAuthId);
 }

@@ -13,7 +13,7 @@ import com.notfound.lpickbackend.wiki.query.service.PageRevisionQueryService;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.WikiPageCreateRequestDTO;
 import com.notfound.lpickbackend.wiki.query.service.WikiPageQueryService;
-import com.notfound.lpickbackend.wiki.revision_domain.WikiSchema;
+import com.notfound.lpickbackend.common.json_schema_draft.WikiSchema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

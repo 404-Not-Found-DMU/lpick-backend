@@ -4,12 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.notfound.lpickbackend.common.elasticsearch.service.DataSyncService;
 import com.notfound.lpickbackend.common.exception.SuccessCode;
 import com.notfound.lpickbackend.servicedata.query.dto.AlbumSearchResultDTO;
+import com.notfound.lpickbackend.servicedata.query.dto.GearSearchResultDTO;
 import com.notfound.lpickbackend.servicedata.query.dto.ImageSearchResponse;
 import com.notfound.lpickbackend.servicedata.query.dto.SearchResult;
 import com.notfound.lpickbackend.servicedata.query.dto.SearchResultWithImage;
 import com.notfound.lpickbackend.servicedata.query.service.AlbumQueryService;
 import com.notfound.lpickbackend.servicedata.query.service.DiscogsApiService;
 import com.notfound.lpickbackend.servicedata.query.service.UnifiedSearchService;
+import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass;
 import com.notfound.lpickbackend.wiki.query.service.WikiPageQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,9 +27,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -51,6 +55,15 @@ public class SearchController {
     @Operation(summary = "DB <-> ElasticSearch 싱크 api", description = "db와 elasticsearch의 데이터를 맞추기 위한 api입니다.")
     public ResponseEntity<SuccessCode> syncAll() {
 
+        // 김경환 수정
+        // 기존의 sync 구현 방식은 인덱스 양식(mapping-json)을 참조하지 않고, 인덱스를 구현해야할 데이터를 불러온 뒤 각 타입별로 es가 '추론'하여 인덱스 구조를 구현중인 심각한 문제가있었습니다.
+        // 이를 해결하기 위해 아래와 같이 수정합니다.
+
+        // GPT 요약 첨부 :
+        // mapping JSON = DB의 스키마(DDL, schema.sql)
+        // Document 클래스 = ORM 엔티티
+        // 현재 흐름은 “schema.sql도 안 돌리고, ORM도 안 쓰고, DB가 들어온 데이터 보고 컬럼 타입을 추정해서 테이블 만든” 상황과 같다.
+
         dataSyncService.recreateAndSyncAll();;
 
         return ResponseEntity.ok(SuccessCode.SUCCESS);
@@ -65,6 +78,19 @@ public class SearchController {
         List<SearchResult> suggestions = unifiedSearchService.autocompleteSuggestions(keyword, size);
         log.warn("suggestions: {}", suggestions);
         return ResponseEntity.ok(suggestions);
+    }
+
+    @GetMapping("/autocomplete/gear")
+    @Operation(summary = "장비 검색 자동완성 목록 api", description = "장비 검색어 자동완성 기능입니다. eqClass로 타입을 한정할 수 있습니다.")
+    public ResponseEntity<List<GearSearchResultDTO>> autocompleteGear(
+            @RequestParam("keyword") String keyword,
+            @RequestParam(value = "eqClass", required = false)
+            GearClass eqClass,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
+        List<GearSearchResultDTO> results =
+                unifiedSearchService.autocompleteGears(keyword, eqClass, size);
+        return ResponseEntity.ok(results);
     }
 
     /**
@@ -94,15 +120,18 @@ public class SearchController {
     }
 
     @GetMapping("/search/gear")
-    @Operation(summary = "장비 검색", description = "장비검색 기능입니다.")
-    public ResponseEntity<List<SearchResult>> searchGearByKeyword(
+    @Operation(summary = "장비 검색", description = "장비검색 기능입니다. eqClass로 타입을 한정할 수 있습니다.")
+    public ResponseEntity<List<GearSearchResultDTO>> searchGearByKeyword(
             @RequestParam("keyword") String keyword,
+            @RequestParam(value = "eqClass", required = false)
+            GearClass eqClass, // TURNTABLE / SPEAKER / HEADPHONE 등
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        // AlbumQueryService에서 구현한 통합 검색 메서드를 호출합니다.
-        return ResponseEntity.ok(unifiedSearchService.searchByType(keyword, pageable, new String[]{"gears"}));
+        List<GearSearchResultDTO> results =
+                unifiedSearchService.searchGears(keyword, pageable, eqClass);
+        return ResponseEntity.ok(results);
     }
 
     @GetMapping("/search/artist")
@@ -140,6 +169,25 @@ public class SearchController {
         }
 
         return ResponseEntity.ok(results);
+    }
+
+
+    /**
+     * 모든 인덱스 삭제 엔드포인트
+     * 예) DELETE /admin/es/indices
+     * 예) DELETE /admin/es/indices?includeSystem=true  -> 시스템 인덱스까지 다 삭제
+     */
+    @DeleteMapping("/indices")
+    public ResponseEntity<Map<String, Object>> deleteAllIndices(
+            @RequestParam(name = "includeSystem", defaultValue = "false") boolean includeSystem
+    ) {
+        List<String> deleted = unifiedSearchService.deleteAllIndices(includeSystem);
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("deleted", deleted);
+        body.put("count", deleted.size());
+
+        return ResponseEntity.ok(body);
     }
 
     @PostMapping(
@@ -220,5 +268,4 @@ public class SearchController {
 
         return ResponseEntity.ok(imageUrl);
     }
-
 }

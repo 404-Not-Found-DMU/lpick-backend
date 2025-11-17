@@ -3,24 +3,25 @@ package com.notfound.lpickbackend.servicedata.query.service;
 import co.elastic.clients.elasticsearch._types.query_dsl.Operator;
 import com.notfound.lpickbackend.common.elasticsearch.document.AlbumDocument;
 import com.notfound.lpickbackend.common.elasticsearch.document.ArtistDocument;
+import com.notfound.lpickbackend.common.elasticsearch.document.ExpertRequestDocument;
 import com.notfound.lpickbackend.common.elasticsearch.document.GearDocument;
+import com.notfound.lpickbackend.servicedata.query.dto.GearSearchResultDTO;
 import com.notfound.lpickbackend.servicedata.query.dto.SearchResult;
+import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.ExpertRequestStatus;
+import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass;
+import com.notfound.lpickbackend.userinfo.query.dto.response.ExpertAdvancementAdminResponse;
 import com.notfound.lpickbackend.wiki.query.repository.WikiPageQueryRepository;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHit;
-import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.*;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -76,6 +77,109 @@ public class UnifiedSearchService {
         return results;
     }
 
+    /**
+     * eqClass(TURNTABLE, SPEAKER, HEADPHONE 등)로 필터링된 Gear 검색.
+     */
+    // Gear 검색 내 정확도 높이기 위해 별도로 분리.
+    // 기존 내역은 wiki, gear, article 등의 각각의 엔티티에만 존재하는 field에 대해 전부 score 계산을 해 정확도가 일부 떨어진다... 라는 말이 있네요.
+    // 순수하게 gear만 검색할 예정이니 다음과 같이 구현.
+    public List<GearSearchResultDTO> searchGears(String keyword, Pageable pageable, GearClass eqClass) {
+        String kw = keyword == null ? "" : keyword.trim().toLowerCase(Locale.ROOT);
+
+        NativeQueryBuilder b = new NativeQueryBuilder().withQuery(q -> q.bool(bb -> {
+            // 접두만 허용 (중간 포함 금지)
+            bb.should(s -> s.prefix(p -> p.field("name.lower").value(kw)));
+            bb.should(s -> s.prefix(p -> p.field("modelName.lower").value(kw)));
+            bb.should(s -> s.prefix(p -> p.field("brand.lower").value(kw)));
+            bb.minimumShouldMatch("1");
+
+            // eqClass 정확 일치 필터
+            if (eqClass != null) {
+                bb.filter(f -> f.term(t -> t.field("eqClass").value(eqClass.name())));
+                // 혼재 의심되면 .field("eqClass.keyword") 로 강제 가능
+            }
+            return bb;
+        }));
+
+        NativeQuery query = b
+                .withPageable(pageable)
+                .withSort(Sort.by(Sort.Order.desc("_score"), Sort.Order.asc("modelName.keyword")))
+                .build();
+
+        SearchHits<GearDocument> hits = elasticsearchOperations.search(
+                query, GearDocument.class, IndexCoordinates.of("gears")
+        );
+
+        List<GearSearchResultDTO> results = new ArrayList<>();
+        for (SearchHit<GearDocument> hit : hits) {
+            results.add(mapGearDocumentToResult(hit));
+        }
+        return results;
+    }
+
+    /**
+     * 순수 관리자 사용 목적.
+     * ExpertRequest 검색
+     */
+    public Page<ExpertAdvancementAdminResponse> searchExpertRequests(
+            String keyword,
+            Pageable pageable,
+            ExpertRequestStatus status
+    ) {
+        String kw = (keyword == null) ? "" : keyword.trim().toLowerCase(Locale.ROOT);
+
+        // 1) 쿼리 빌더 생성
+        NativeQueryBuilder b = new NativeQueryBuilder();
+
+        // 2) 키워드 유무에 따라 bool 쿼리 분기
+        if (kw.isBlank()) {
+            // 키워드가 없으면 전체 조회 (+옵션 status 필터)
+            b.withQuery(q -> q.bool(bb -> {
+                if (status != null) {
+                    bb.filter(f -> f.term(t -> t.field("expertRequestStatus.keyword").value(status.name())));
+                } else {
+                    bb.must(m -> m.matchAll(ma -> ma));
+                }
+                return bb;
+            }));
+        } else {
+            // 키워드가 있으면 prefix 검색
+            b.withQuery(q -> q.bool(bb -> {
+                bb.should(s -> s.prefix(p -> p.field("name").value(kw)));
+                bb.should(s -> s.prefix(p -> p.field("email").value(kw)));
+                bb.should(s -> s.prefix(p -> p.field("musicGenresKo").value(kw)));
+                bb.minimumShouldMatch("1");
+
+                if (status != null) {
+                    bb.filter(f -> f.term(t -> t.field("expertRequestStatus.keyword").value(status.name())));
+                }
+                return bb;
+            }));
+        }
+
+        // 3) Pageable + 정렬 붙이고 쿼리 빌드
+        NativeQuery query = b
+                .withPageable(pageable)
+                .withSort(Sort.by(Sort.Order.desc("_score"), Sort.Order.desc("createdAt")))
+                .build();
+
+        // 4) 검색 실행
+        SearchHits<ExpertRequestDocument> hits = elasticsearchOperations.search(
+                query,
+                ExpertRequestDocument.class,
+                IndexCoordinates.of("expert_request")
+        );
+        
+        // 5. 결과 확인 및 Page로 매핑
+        List<ExpertAdvancementAdminResponse> content = hits.getSearchHits().stream()
+                .map(this::mapExpertRequestDocumentToResult)
+                .toList();
+
+        long totalHits = hits.getTotalHits();
+
+        return new PageImpl<>(content, pageable, totalHits);
+    }
+
 
     public List<SearchResult> autocompleteSuggestions(String prefix, int size) {
         NativeQuery searchQuery = new NativeQueryBuilder()
@@ -98,6 +202,29 @@ public class UnifiedSearchService {
         return searchHits.getSearchHits().stream()
                 .map(this::mapToSearchResult)
                 .collect(Collectors.toList());
+    }
+
+    /** gear 자동완성 */
+    public List<GearSearchResultDTO> autocompleteGears(String prefix, @Nullable GearClass eqClass, int size) {
+        String kw = prefix == null ? "" : prefix.trim().toLowerCase(Locale.ROOT);
+
+        NativeQuery q = new NativeQueryBuilder()
+                .withQuery(x -> x.bool(b -> {
+                    b.should(s -> s.prefix(p -> p.field("name.lower").value(kw)));
+                    b.should(s -> s.prefix(p -> p.field("modelName.lower").value(kw)));
+                    b.should(s -> s.prefix(p -> p.field("brand.lower").value(kw)));
+                    b.minimumShouldMatch("1");
+                    if (eqClass != null) {
+                        b.filter(f -> f.term(t -> t.field("eqClass").value(eqClass.name())));
+                    }
+                    return b;
+                }))
+                .withMaxResults(size)
+                .withSort(Sort.by(Sort.Order.asc("modelName.keyword")))
+                .build();
+
+        SearchHits<GearDocument> hits = elasticsearchOperations.search(q, GearDocument.class, IndexCoordinates.of("gears"));
+        return hits.getSearchHits().stream().map(this::mapGearDocumentToResult).toList();
     }
 
 
@@ -149,5 +276,75 @@ public class UnifiedSearchService {
                 .name(nameValue)
                 .documentType(documentType)
                 .build();
+    }
+
+    // --- documentType = Gear 전용 매핑 메서드 ---
+
+    private GearSearchResultDTO mapGearDocumentToResult(SearchHit<GearDocument> hit) {
+        GearDocument doc = hit.getContent();
+
+        return GearSearchResultDTO.builder()
+                .gearId(doc.getGearId())           // pk
+                .modelName(doc.getModelName())     // 모델명
+                .brand(doc.getBrand())             // 브랜드
+                .name(doc.getName())               // 명칭(브랜드 + 모델명 등)
+                .img(doc.getImg())       // 이미지 (없다면 null)
+                .eqClass(doc.getEqClass())
+                .build();
+    }
+
+    // --- documentType = expert-request 전용 매핑 메서드 ---
+
+    private ExpertAdvancementAdminResponse mapExpertRequestDocumentToResult(SearchHit<ExpertRequestDocument> hit) {
+        ExpertRequestDocument doc = hit.getContent();
+
+        return ExpertAdvancementAdminResponse.builder()
+                .requestId(doc.getExpertRequestId())
+                .userName(doc.getName())
+                .userEmail(doc.getEmail())
+                .genre(doc.getMusicGenre())
+                .createdAt(doc.getCreatedAt())
+                .status(ExpertRequestStatus.valueOf(doc.getExpertRequestStatus()))
+                .build();
+    }
+
+
+
+    public List<String> deleteAllIndices(boolean includeSystem) {
+
+        // "*" 를 묶어서 정보만 가져온다 (GET 계열이라 destructive_requires_name 영향 없음)
+        IndexOperations wildcardOps =
+                elasticsearchOperations.indexOps(IndexCoordinates.of("*"));
+
+        List<IndexInformation> indexInfos = wildcardOps.getInformation();
+        List<String> deleted = new ArrayList<>();
+
+        for (IndexInformation info : indexInfos) {
+            String indexName = info.getName();
+
+            // 기본값: 시스템 인덱스(.kibana, .security 등)는 보호
+            if (!includeSystem && indexName.startsWith(".")) {
+                log.info("Skip system index: {}", indexName);
+                continue;
+            }
+
+            IndexOperations indexOps =
+                    elasticsearchOperations.indexOps(IndexCoordinates.of(indexName));
+
+            if (!indexOps.exists()) {
+                continue;
+            }
+
+            boolean ok = indexOps.delete();   // 명시적 인덱스 이름으로 삭제 → wildcard 제한에 안걸림
+
+            if (ok) {
+                deleted.add(indexName);
+                log.info("Deleted index: {}", indexName);
+            } else {
+                log.warn("Failed to delete index: {}", indexName);
+            }
+        }
+
+        return deleted;
     }
 }

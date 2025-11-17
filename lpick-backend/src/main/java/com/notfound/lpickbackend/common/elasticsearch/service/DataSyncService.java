@@ -10,6 +10,7 @@ import com.notfound.lpickbackend.servicedata.command.application.domain.Gear;
 import com.notfound.lpickbackend.servicedata.query.repository.AlbumQueryRepository;
 import com.notfound.lpickbackend.servicedata.query.repository.ArtistQueryRepository;
 import com.notfound.lpickbackend.servicedata.query.repository.GearQueryRepository;
+import com.notfound.lpickbackend.userinfo.command.application.domain.entity.ExpertRequest;
 import com.notfound.lpickbackend.wiki.query.repository.WikiPageQueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -42,6 +43,7 @@ public class DataSyncService { // AlbumSyncService에서 이름 변경
     private final GearDocumentRepository gearDocumentRepository;
     private final ArticleDocumentRepository articleDocumentRepository;
     private final WikiPageDocumentRepository wikiPageDocumentRepository;
+    private final ExpertRequestDocumentRepository expertRequestDocumentRepository;
 
     private final ElasticsearchOperations operations;
 
@@ -188,6 +190,21 @@ public class DataSyncService { // AlbumSyncService에서 이름 변경
 
     public void deleteArticle(String articleId) {
         articleDocumentRepository.deleteById(articleId);
+    }
+
+    /**
+     * 기어가 저장/수정될 때 Elasticsearch에 반영합니다.
+     */
+    public void syncExpertRequest(ExpertRequest expertRequest) {
+        ExpertRequestDocument document = ExpertRequestDocument.from(expertRequest);
+        expertRequestDocumentRepository.save(document);
+    }
+
+    /**
+     * 기어가 삭제될 때 Elasticsearch에서도 제거합니다.
+     */
+    public void deleteExpertRequest(String expertRequestId) {
+        expertRequestDocumentRepository.deleteById(expertRequestId);
     }
 }
 

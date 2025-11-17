@@ -35,13 +35,10 @@ public class WikiBookmarkCommandService {
     }
 
     @Transactional
-    public void deleteWikiBookmarkById(String bookmarkId, String oauthId) {
-
-        log.info(oauthId);
-        log.info(bookmarkId);
+    public void deleteWikiBookmarkById(String wikiId, String oauthId) {
 
         WikiBookmark targetBookmark = wikiBookmarkCommandRepository
-                .findByWikiBookmarkIdAndOauth_OauthId(bookmarkId, oauthId)
+                .findByWiki_WikiIdAndOauth_OauthId(wikiId, oauthId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_BOOKMARK));
 
         wikiBookmarkCommandRepository.delete(targetBookmark);

@@ -72,11 +72,11 @@ INSERT INTO auth(auth_id, name) VALUES
 
 -- UserAlbum 기입 (oauth_id = '1' 사용)
 INSERT INTO user_album(user_album_id, record_file, is_favorite, album_id, oauth_id, created_at) VALUES
-    ('user_album_1', 'my_record_file.mp3', true, 'album-1', '1', now());
+    ('user_album_1', 'my_record_file.mp3', true, 'album-1', '1', '2025-06-05 00:21:12');
 INSERT INTO user_album(user_album_id, record_file, is_favorite, album_id, oauth_id, created_at) VALUES
-    ('user_album_2', 'my_fav_song.wav', true, 'album-3', '1', now());
+    ('user_album_2', 'my_fav_song.wav', true, 'album-3', '1', '2025-06-05 00:21:12');
 INSERT INTO user_album(user_album_id, record_file, is_favorite, album_id, oauth_id, created_at) VALUES
-    ('user_album_3', null, false, 'album-4', '1', now());
+    ('user_album_3', null, false, 'album-4', '1', '2025-06-05 00:21:12');
 
 
 

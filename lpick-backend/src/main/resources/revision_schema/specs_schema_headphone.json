@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "Frequency Response": {
+      "type": "string"
+    },
+    "Impedance": {
+      "type": "string"
+    },
+    "Sensitivity": {
+      "type": "string"
+    },
+    "Driver Size": {
+      "type": "string"
+    },
+    "Driver Type": {
+      "type": "string"
+    },
+    "THD": {
+      "type": "string"
+    },
+    "Max Input Power": {
+      "type": "string"
+    },
+    "Weight": {
+      "type": "string"
+    },
+    "Cable Length": {
+      "type": "string"
+    },
+    "Connector": {
+      "type": "string"
+    },
+    "Noise Cancelling": {
+      "type": "string"
+    },
+    "Bluetooth Version": {
+      "type": "string"
+    },
+    "Battery Life": {
+      "type": "string"
+    },
+    "Charging Time": {
+      "type": "string"
+    },
+    "Water Resistance": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "Frequency Response",
+    "Impedance",
+    "Sensitivity",
+    "Driver Size",
+    "Driver Type",
+    "THD",
+    "Max Input Power",
+    "Weight",
+    "Cable Length",
+    "Connector",
+    "Noise Cancelling",
+    "Bluetooth Version",
+    "Battery Life",
+    "Charging Time",
+    "Water Resistance"
+  ],
+  "additionalProperties": true
+}

@@ -59,7 +59,7 @@ public class WikiPageDocument {
         // Artist, Album, Gear 엔티티의 ID getter 메서드명으로 변경해야 합니다.
         String artistId = (artist != null) ? artist.getArtistId() : null; // 예: artist.getArtistId()
         String albumId = (album != null) ? album.getAlbumId() : null; // 예: album.getAlbumId()
-        String gearId = (gear != null) ? gear.getId() : null; // 예: gear.getGearId()
+        String gearId = (gear != null) ? gear.getGearId() : null; // 예: gear.getGearId()
 
         return WikiPageDocument.builder()
                 .wikiId(wikiPage.getWikiId())

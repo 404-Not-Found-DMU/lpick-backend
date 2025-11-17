@@ -52,18 +52,15 @@ public class WikiBookmarkCommandController {
     // wikiBookmark는 Update 할일 없는 대상이므로 제외.
 
 
-    // 1. bookmarkId를 반드시 client가 지녀야하는가?
-    // -> 지니지 않는 경우 대리키의 의미 없어짐.
-    // -> 지니는 경우 클라이언트 업데이트 부담 + url의 wikiId 굳이 필요?(특정 위키에 대한 북마크 해제함을 확인하기위한 검증 체계 추가 가능)
-    // 2. wikiId로 반드시 검증해야하는가?
-    @DeleteMapping("/wiki-bookmark/{bookmarkId}")
+
+    @DeleteMapping("/wiki/{wikiId}/book-mark")
     @Operation(summary = "위키 북마크 해제", description = "특정 위키에 대한 북마크 해제 기능")
     public ResponseEntity<SuccessCode> unsubscribeWikiBookmark(
-            @PathVariable("bookmarkId") String bookmarkId,
+            @PathVariable("wikiId") String wikiId,
             @AuthenticationPrincipal OAuth2UserDetails userDetail
     ) {
 
-        wikiBookmarkCommandService.deleteWikiBookmarkById(bookmarkId, userDetail.getUsername());
+        wikiBookmarkCommandService.deleteWikiBookmarkById(wikiId, userDetail.getUsername());
 
         return ResponseEntity.ok(SuccessCode.SUCCESS);
     }

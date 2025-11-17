@@ -33,9 +33,12 @@ public enum ErrorCode {
     ALREADY_HAS_REVIEW_IN_WIKIPAGE(HttpStatus.BAD_REQUEST, "이미 리뷰를 작성했습니다."),
     ALREADY_HAS_BOOKMARK(HttpStatus.BAD_REQUEST, "이미 추가되어있는 북마크입니다."),
     INVALID_PAGE_REQUEST(HttpStatus.BAD_REQUEST,"page 옵션이 올바르지 않습니다. 음수 등을 작성할 수 없습니다." ),
-    ALREADY_FULL_FAVORITE_ALBUM(HttpStatus.BAD_REQUEST, "favorite 리스트가 가득 찼습니다. 더이상 favorite로 지정할 수 없습니다."),
-    ALREADY_FULL_FAVORITE_GEAR(HttpStatus.BAD_REQUEST, "favorite 리스트가 가득 찼습니다. 더이상 favorite로 지정할 수 없습니다."),
+    ALREADY_FULL_FAVORITE_ALBUM(HttpStatus.BAD_REQUEST, "favorite album 리스트가 가득 찼습니다. 더이상 favorite로 지정할 수 없습니다."),
+    ALREADY_FULL_FAVORITE_GEAR(HttpStatus.BAD_REQUEST, "favorite gear 리스트가 가득 찼습니다. 더이상 favorite로 지정할 수 없습니다."),
     IS_NOT_TEMP_GEAR(HttpStatus.BAD_REQUEST, "허가하려는 Gear는 Temp 상태가 아닙니다."),
+    USER_GEAR_ILLEGAL_ENUM_VALUE_DETECTED(HttpStatus.BAD_REQUEST, "설정하려는 gear는 해당 gearClass에 속하지 않습니다."),
+    ALREADY_HAS_USER_GEAR(HttpStatus.BAD_REQUEST, "이미 사용자 소유 기기로 등록되어있습니다."),
+    CAN_NOT_EXPERT_ADVANCEMENT_REQUEST_AGAIN(HttpStatus.BAD_REQUEST, "이미 전문가 승급 신청을 수행한 인원입니다."),
 
     CAN_NOT_OPEN_DEBATE_AGAIN(HttpStatus.BAD_REQUEST, "토론을 재시작할 수는 없습니다."),
     ALREADY_BALLOT_IN_DEBATE(HttpStatus.BAD_REQUEST, "해당 토론에 이미 투표했습니다!"),
@@ -45,6 +48,11 @@ public enum ErrorCode {
     USER_REGISTRATION_FAIL(HttpStatus.BAD_REQUEST, "회원가입에 실패했습니다. 입력정보를 확인해주세요"),
     ALREADY_HAS_PARENTS_REQUEST(HttpStatus.BAD_REQUEST,"대댓글에 대댓글을 추가로 작성할 수 없습니다." ),
     ALREADY_HAS_LIKE(HttpStatus.BAD_REQUEST, "이미 좋아요 처리 된 리소스입니다."),
+
+    IMAGE_UPLOAD_FAILED(HttpStatus.BAD_REQUEST, "이미지 등록 실패"),
+    UNSUPPORTED_FILE_TYPE(HttpStatus.BAD_REQUEST, "이미지 등록 실패"),
+    FILE_TOO_LARGE(HttpStatus.BAD_REQUEST, "이미지 등록 실패"),
+    EXPERT_REQUEST_GENRE_SIZE_MUST_ONE_OR_TWO(HttpStatus.BAD_REQUEST, "전문가 등급 신청은 반드시 장르를 1개 또는 2개 선정해야함"),
     
     // 401 에러
     AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "인증 실패"),
@@ -58,6 +66,8 @@ public enum ErrorCode {
     // 404 에러
     NOT_FOUND_REVISION(HttpStatus.NOT_FOUND, "버전 정보를 찾을 수 없습니다."),
     NOT_FOUND_WIKI(HttpStatus.NOT_FOUND, "위키 정보를 찾을 수 없습니다."),
+    NOT_FOUND_WIKI_LIKE(HttpStatus.NOT_FOUND, "위키 좋아요를 찾을 수 없습니다."),
+
 
     NOT_FOUND_WIKI_BOOKMARK(HttpStatus.NOT_FOUND, "북마크 정보를 찾을 수 없습니다."),
     NOT_FOUND_REVIEW(HttpStatus.NOT_FOUND, "리뷰 정보를 찾을 수 없습니다."),
@@ -76,6 +86,7 @@ public enum ErrorCode {
     NOT_FOUND_DEBATE_CHAT(HttpStatus.NOT_FOUND, "토론 댓글 정보를 찾을 수 없습니다."),
 
     NOT_FOUND_USER_GEAR(HttpStatus.NOT_FOUND, "사용자는 해당 음향기기를 지니고 있지 않습니다."),
+    NOT_FOUND_EXPERT_REQUEST(HttpStatus.NOT_FOUND, "전문가 등업 요청 내역을 찾을 수 없습니다."),
     NOT_FOUND_GEAR(HttpStatus.NOT_FOUND, "음향기기 정보를 찾을 수 없습니다."),
     NOT_FOUND_GEAR_CLASS(HttpStatus.NOT_FOUND, "해당 타입의 음향기기 종류를 찾을 수 없습니다."),
     NOT_FOUND_NOTICE(HttpStatus.NOT_FOUND, "공지사항 정보를 찾을 수 없습니다."),
@@ -83,7 +94,8 @@ public enum ErrorCode {
     NOT_FOUND_ANSWER(HttpStatus.NOT_FOUND, "답변 정보를 찾을 수 없습니다."),
 
     // 처리 방법에 논의가 필요한 에러 코드 임시할당용,
-    DO_NOT_KEEP_UP_THIS_ERROR_WHEN_MERGE(HttpStatus.I_AM_A_TEAPOT, "이 에러 코드는 실제 사용 목적이 아닙니다."), ;
+    DO_NOT_KEEP_UP_THIS_ERROR_WHEN_MERGE(HttpStatus.I_AM_A_TEAPOT, "이 에러 코드는 실제 사용 목적이 아닙니다.");
+
 
     private final HttpStatus httpStatus;
     private final String message;
