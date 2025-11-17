@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.community.query.service;
 
+import com.notfound.lpickbackend.community.query.dto.CommentListResponse;
 import com.notfound.lpickbackend.community.query.dto.ParentsCommentResponse;
 import com.notfound.lpickbackend.community.query.repository.CommentQueryRepository;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
@@ -41,5 +42,10 @@ public class CommentQueryService {
 
     public int countCommentByOauthId(String oauthId) {
         return commentQueryRepository.countByOauth_OauthId(oauthId);
+    }
+
+    public Page<CommentListResponse> readMyCommentList(String oauthId, Pageable pageable) {
+
+        return commentQueryRepository.findOwnedCommentListByOauthId(oauthId, pageable);
     }
 }
