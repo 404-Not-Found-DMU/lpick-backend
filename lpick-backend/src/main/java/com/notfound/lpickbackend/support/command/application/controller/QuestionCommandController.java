@@ -17,7 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/question")
-@Tag(name = "문의사항 답변 컨트롤러", description = "문의사항 답변 생성/수정/삭제 컨트롤러")
+@Tag(name = "문의사항 컨트롤러", description = "문의사항 생성/수정/삭제 컨트롤러")
 public class QuestionCommandController {
 
      private final QuestionCommandService questionCommandService;
