@@ -32,5 +32,5 @@ public class ArticleListResponse {
 
     private String author;
 
-    private long viewCount;
+    private Long viewCount;
 }

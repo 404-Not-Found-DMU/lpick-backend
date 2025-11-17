@@ -12,11 +12,11 @@ from psycopg2.extras import execute_values
 # DB 접속 정보
 # ----------------------------
 DB = dict(
-    host="localhost",
+    host="",
     port=5432,
     dbname="lpick",
     user="postgres",
-    password="root",
+    password="",
 )
 
 XML_PATH = "discogs_20251001_releases.xml.gz"

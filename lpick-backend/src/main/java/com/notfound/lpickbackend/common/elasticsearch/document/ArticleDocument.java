@@ -63,6 +63,8 @@ public class ArticleDocument {
     )
     private String authorNickname; // UserInfo의 닉네임 (가정)
 
+    private Long viewCount;
+
     // JPA 엔티티를 Document로 변환하는 헬퍼 메서드
     public static ArticleDocument from(Article article) {
         UserInfo author = article.getOauth();
@@ -87,6 +89,7 @@ public class ArticleDocument {
                 .articleBadge(article.getArticleBadge().name()) // Enum -> String
                 .authorId(authorId)
                 .authorNickname(authorNickname)
+                .viewCount(article.getViewCount())
                 .build();
     }
 }
