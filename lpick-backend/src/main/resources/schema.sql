@@ -827,3 +827,39 @@ ALTER TABLE expert_request
 ALTER TABLE expert_request
     ADD CONSTRAINT ck_expert_request_status
         CHECK (status IN ('PENDING', 'APPROVED', 'REJECTED'));
+
+-- album ↔ wiki_page 조인용
+CREATE INDEX IF NOT EXISTS idx_album_wiki_id
+    ON album (wiki_id);
+
+-- artist ↔ wiki_page 조인용
+CREATE INDEX IF NOT EXISTS idx_artist_wiki_id
+    ON artist (wiki_id);
+
+-- gear ↔ wiki_page 조인용
+CREATE INDEX IF NOT EXISTS idx_gear_wiki_id
+    ON gear (wiki_id);
+
+-- 앨범 이름 검색
+CREATE INDEX IF NOT EXISTS idx_album_name
+    ON album (name);
+
+-- 아티스트 이름 검색
+CREATE INDEX IF NOT EXISTS idx_artist_name
+    ON artist (name);
+
+-- 기어 이름 검색
+CREATE INDEX IF NOT EXISTS idx_gear_name
+    ON gear (name);
+
+-- 정확/전방 검색만이면
+CREATE INDEX IF NOT EXISTS idx_wiki_page_title
+    ON wiki_page (title);
+
+-- wiki_id + 최신순 조회 최적화
+CREATE INDEX IF NOT EXISTS idx_page_revision_wiki_created_at
+    ON page_revision (wiki_id, created_at DESC);
+
+-- 사용자 ID
+CREATE INDEX IF NOT EXISTS idx_page_revision_oauth_id
+    ON page_revision (oauth_id);
