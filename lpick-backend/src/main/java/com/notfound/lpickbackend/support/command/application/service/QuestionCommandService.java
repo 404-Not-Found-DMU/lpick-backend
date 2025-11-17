@@ -4,7 +4,9 @@ import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
 import com.notfound.lpickbackend.support.command.application.dto.QuestionRequest;
+import com.notfound.lpickbackend.support.command.domain.Answer;
 import com.notfound.lpickbackend.support.command.domain.Question;
+import com.notfound.lpickbackend.support.command.repository.AnswerCommandRepository;
 import com.notfound.lpickbackend.support.command.repository.QuestionCommandRepository;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
 import com.notfound.lpickbackend.userinfo.command.repository.UserInfoCommandRepository;
@@ -18,6 +20,7 @@ public class QuestionCommandService {
 
     private final QuestionCommandRepository questionCommandRepository;
     private final UserInfoCommandRepository userInfoCommandRepository;
+    private final AnswerCommandRepository answerCommandRepository;
 
     @Transactional
     public String createQuestion(QuestionRequest questionRequest) {
@@ -55,6 +58,10 @@ public class QuestionCommandService {
         if(!oauthId.equals(question.getOauth().getOauthId())) {
             throw new CustomException(ErrorCode.FORBIDDEN_RESOURCE_ACCESS);
         }
+
+        Answer answer = question.getAnswer();
+
+        answerCommandRepository.delete(answer);
 
         questionCommandRepository.delete(question);
     }
