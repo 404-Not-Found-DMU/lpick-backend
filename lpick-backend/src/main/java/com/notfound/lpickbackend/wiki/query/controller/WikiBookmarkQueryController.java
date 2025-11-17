@@ -13,6 +13,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -34,7 +35,7 @@ public class WikiBookmarkQueryController {
     @GetMapping("/wiki/book-mark-list")
     @Operation(summary = "북마크 목록 조회", description = "사용자의 북마크 목록을 조회하는 기능")
     public ResponseEntity<Page<WikiPageBookmarkListResponse>> getWikiBookmarkList(
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(name = "class", required = false) // 필수가 아니도록 명시
             @Pattern(
@@ -44,7 +45,10 @@ public class WikiBookmarkQueryController {
             String targetClass,
             @AuthenticationPrincipal OAuth2UserDetails userDetail
     ) {
-        Page<WikiPageBookmarkListResponse> bookmarkList = wikiBookmarkQueryService.getWikiBookmarkListByOauthId(PageRequest.of(page, size), userDetail.getUsername(), targetClass);
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        Page<WikiPageBookmarkListResponse> bookmarkList =
+                wikiBookmarkQueryService.getWikiBookmarkListByOauthId(pageable, userDetail.getUsername(), targetClass);
 
         return ResponseEntity.ok().body(bookmarkList);
     }
@@ -56,8 +60,6 @@ public class WikiBookmarkQueryController {
             @PathVariable("wikiId") String wikiId,
             @AuthenticationPrincipal OAuth2UserDetails userDetail
     ) {
-
-
         UserInfo userInfo = userInfoQueryService.getUserInfoById(userDetail.getUsername());
 
         WikiBookmarkResponse bookmarkResponse = wikiBookmarkQueryService.findByWikiIdAndOauthId(wikiId, userInfo.getOauthId());

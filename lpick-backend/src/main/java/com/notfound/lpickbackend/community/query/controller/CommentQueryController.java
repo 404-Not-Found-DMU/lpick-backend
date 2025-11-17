@@ -1,7 +1,11 @@
 package com.notfound.lpickbackend.community.query.controller;
 
+import com.notfound.lpickbackend.community.query.dto.ArticleListResponse;
+import com.notfound.lpickbackend.community.query.dto.CommentListResponse;
 import com.notfound.lpickbackend.community.query.dto.ParentsCommentResponse;
 import com.notfound.lpickbackend.community.query.service.CommentQueryService;
+import com.notfound.lpickbackend.security.details.OAuth2UserDetails;
+import com.notfound.lpickbackend.servicedata.query.inherenceEnum.CommentListFilter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -52,6 +57,21 @@ public class CommentQueryController {
         Pageable pageable = PageRequest.of(page - 1, size);
 
         return ResponseEntity.ok(commentQueryService.readLikedChildCommentList(pageable));
+    }
+
+
+    @GetMapping("/community/comment/me")
+    @Operation(summary = "내 댓글 조회", description = "내가 작성한 댓글을 페이지 단위로 조회하는 기능")
+    public ResponseEntity<Page<CommentListResponse>> readMyArticleList(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @AuthenticationPrincipal OAuth2UserDetails userDetail,
+            @RequestParam("filter") CommentListFilter filter
+            ) {
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        return ResponseEntity.ok(commentQueryService.readMyCommentList(userDetail.getUsername(), filter, pageable));
     }
 
 }
