@@ -65,7 +65,7 @@ public class PopularityService {
                             .filter(f -> f.range(r -> r
                                     .untyped(u -> u
                                             .field("@timestamp")
-                                            .gte(JsonData.of("now-24h"))
+                                            .gte(JsonData.of("now-48h"))
                                             .lt(JsonData.of("now"))
                                     )
                             ))
@@ -81,7 +81,7 @@ public class PopularityService {
                             .filter(f -> f.range(r -> r
                                     .untyped(u -> u
                                             .field("@timestamp")
-                                            .gte(JsonData.of("now-24h"))
+                                            .gte(JsonData.of("now-48h"))
                                             .lt(JsonData.of("now"))
                                     )
                             ))
@@ -166,9 +166,9 @@ public class PopularityService {
                         .filter(f -> f.range(r -> r
                                 .untyped(u -> u
                                         .field("@timestamp")
-                                        .gte(JsonData.of("now-24h/h"))
-                                        .lt(JsonData.of("now/h"))
-                                        .timeZone("Asia/Seoul") // 시간대 지정
+                                        .gte(JsonData.of("now-48h"))
+                                        .lt(JsonData.of("now"))
+//                                        .timeZone("Asia/Seoul") // 시간대 지정
                                 )
                         ))
                 )
