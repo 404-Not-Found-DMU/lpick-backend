@@ -26,6 +26,8 @@ public class AnswerCommandService {
 
         Answer answer = new Answer(answerRequest, question);
 
+        question.updateIsAnswered(true);
+
         answerCommandRepository.save(answer);
     }
 
