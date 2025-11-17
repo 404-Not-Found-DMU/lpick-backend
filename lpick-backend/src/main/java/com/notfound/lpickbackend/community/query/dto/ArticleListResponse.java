@@ -28,4 +28,6 @@ public class ArticleListResponse {
     private String oauthId;
 
     private String author;
+
+    private long viewCount;
 }

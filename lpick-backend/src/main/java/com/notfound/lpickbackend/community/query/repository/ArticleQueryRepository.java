@@ -31,7 +31,8 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
         COUNT(DISTINCT c),
         COUNT(DISTINCT b),
         a.oauth.oauthId,
-        a.oauth.nickname
+        a.oauth.nickname,
+        a.viewCount
     )
     FROM Article a
     LEFT JOIN ArticleLike l ON l.article = a
@@ -52,7 +53,31 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
         COUNT(DISTINCT c),
         COUNT(DISTINCT b),
         a.oauth.oauthId,
-        a.oauth.nickname
+        a.oauth.nickname,
+        a.viewCount
+    )
+    FROM Article a
+    LEFT JOIN ArticleLike l ON l.article = a
+    LEFT JOIN Comment c ON c.article = a
+    LEFT JOIN ArticleBookmark b ON b.article = a
+    WHERE a.isDel = com.notfound.lpickbackend.community.command.domain.ArticleStatus.N
+    GROUP BY a.articleId, a.title, a.oauth
+    ORDER BY COUNT(DISTINCT l) DESC
+    """)
+    Page<ArticleListResponse> findAllWithLikeAndCommentAndBookmarkCountOrderByLiked(Pageable pageable);
+
+    @Query("""
+    SELECT new com.notfound.lpickbackend.community.query.dto.ArticleListResponse(
+        a.articleId,
+        a.title,
+        a.createdAt,
+        a.modifiedAt,
+        COUNT(DISTINCT l),
+        COUNT(DISTINCT c),
+        COUNT(DISTINCT b),
+        a.oauth.oauthId,
+        a.oauth.nickname,
+        a.viewCount
     )
     FROM Article a
     LEFT JOIN ArticleLike l ON l.article = a
@@ -74,7 +99,8 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
         COUNT(DISTINCT c),
         COUNT(DISTINCT b),
         a.oauth.oauthId,
-        a.oauth.nickname
+        a.oauth.nickname,
+        a.viewCount
     )
     FROM Article a
     LEFT JOIN ArticleLike l ON l.article = a
@@ -96,7 +122,8 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
         COUNT(DISTINCT c),
         COUNT(DISTINCT b),
         a.oauth.oauthId,
-        a.oauth.nickname
+        a.oauth.nickname,
+        a.viewCount
     )
     FROM ArticleLike l
     JOIN l.article a
@@ -121,7 +148,8 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
         COUNT(DISTINCT c),
         COUNT(DISTINCT b),
         a.oauth.oauthId,
-        a.oauth.nickname
+        a.oauth.nickname,
+        a.viewCount
     )
     FROM Article a
     LEFT JOIN ArticleLike l ON l.article = a
