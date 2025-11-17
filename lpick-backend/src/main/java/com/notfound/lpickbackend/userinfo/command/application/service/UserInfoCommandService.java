@@ -9,10 +9,7 @@ import com.notfound.lpickbackend.common.s3.service.S3Uploader;
 import com.notfound.lpickbackend.security.util.JwtTokenProvider;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
-import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.LogoutRequestDTO;
-import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.TokenRefreshRequestDTO;
-import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.TokenResponseDTO;
-import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.UserRegistrationRequest;
+import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.*;
 import com.notfound.lpickbackend.userinfo.command.repository.UserInfoCommandRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -129,6 +126,35 @@ public class UserInfoCommandService extends DefaultOAuth2UserService {
             UserInfo user = getUserInfo(oAuthId);
 
             user.registration(userInfo, imageUrl);
+
+        } catch (Exception e) {
+            // 보상 삭제
+            if (!imageUrl.isEmpty()) {
+                s3Uploader.deleteByUrl(imageUrl);
+            }
+
+            throw new CustomException(ErrorCode.USER_REGISTRATION_FAIL);
+        }
+
+    }
+
+    @Transactional
+    public void userUpdate(String oAuthId, UserUpdateRequest userInfo, MultipartFile profileImage) {
+
+        String imageUrl = "";
+
+        try {
+
+            imageUrl = s3Uploader.upload(profileImage, "USER-INFO");
+
+            UserInfo user = getUserInfo(oAuthId);
+
+            // 보상삭제
+            if(!imageUrl.isEmpty()) {
+                s3Uploader.deleteByUrl(user.getProfile());
+            }
+
+            user.update(userInfo, imageUrl);
 
         } catch (Exception e) {
             // 보상 삭제

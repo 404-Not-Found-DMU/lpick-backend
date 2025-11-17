@@ -1,6 +1,7 @@
 package com.notfound.lpickbackend.userinfo.command.application.domain.entity;
 
 import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.UserRegistrationRequest;
+import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.UserUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,6 +59,17 @@ public class UserInfo {
     }
 
     public void registration(UserRegistrationRequest request, String profile) {
+        if(request.getAbout() == null || request.getAbout().isBlank()) {
+            this.about = "자기소개를 작성해주세요";
+        } else {
+            this.about = request.getAbout();
+        }
+        this.nickname = request.getNickname();
+        this.profile = profile;
+    }
+
+    // 회원가입이랑 똑같긴 한데 혹시 모를 유지보수를 대비해 분리
+    public void update(UserUpdateRequest request, String profile) {
         if(request.getAbout() == null || request.getAbout().isBlank()) {
             this.about = "자기소개를 작성해주세요";
         } else {

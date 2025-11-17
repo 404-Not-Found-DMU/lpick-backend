@@ -52,6 +52,21 @@ public class WikiPageQueryController {
                 .body(wikiPageViewResponse);
     }
 
+    @GetMapping("/public/wiki/random")
+    @Operation(summary = "랜덤 위키 이동", description = "무작위 위키 문서 이동 기능")
+    public ResponseEntity<WikiPageViewResponse> getRandomWikiPageView(
+            @AuthenticationPrincipal OAuth2UserDetails userDetail
+    ) {
+
+        WikiPageViewResponse wikiPageViewResponse = wikiDomainQueryService.getRandomWikiPageView(userDetail);
+
+        // 위키 상세 조회시 로그 생성
+        viewLog.info("{\"type\": \"{}\", \"id\": \"{}\"}", wikiPageViewResponse.getWikiPageClass(), wikiPageViewResponse.getWikiId());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(wikiPageViewResponse);
+    }
+
     // 최근에 수정된 문서 10개를 집계하여 제공.
     // requestparam 기반의 분류별 집계는 실제 분류 기준 설정 후 구현하기
     // ex. 분류가 단순히 앨범/기기/가수? 아니면 재즈/힙합/밴드 등으로 상세 구분?

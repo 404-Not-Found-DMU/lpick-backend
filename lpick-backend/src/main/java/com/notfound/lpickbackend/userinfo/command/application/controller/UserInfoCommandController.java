@@ -115,6 +115,24 @@ public class UserInfoCommandController {
     @Operation(summary = "최초 회원가입", description = "최초 로그인 시 자기소개와 프로필사진을 등록하는 기능")
     ResponseEntity<SuccessCode> userRegistration(
             @RequestPart(name = "userinfo") UserRegistrationRequest userInfo,
+            @RequestPart(name = "profileImage", required = false) MultipartFile profileImage
+    ) {
+
+        String oAuthId = UserInfoUtil.getOAuthId();
+
+        userCommandService.userRegistration(oAuthId, userInfo, profileImage);
+
+        return ResponseEntity.ok(SuccessCode.SUCCESS);
+    }
+
+    @PatchMapping(
+            value = "/authn",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Operation(summary = "최초 회원가입", description = "최초 로그인 시 자기소개와 프로필사진을 등록하는 기능")
+    ResponseEntity<SuccessCode> userUpdate(
+            @RequestPart(name = "userinfo") UserRegistrationRequest userInfo,
             @RequestPart(name = "profileImage") MultipartFile profileImage
     ) {
 

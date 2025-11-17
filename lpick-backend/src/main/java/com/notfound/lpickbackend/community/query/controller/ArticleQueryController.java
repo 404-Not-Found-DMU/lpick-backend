@@ -37,7 +37,7 @@ public class ArticleQueryController {
     public ResponseEntity<Page<ArticleListResponse>> readAllArticleList(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "sortKey") ArticleSortKey articleSortKey
+            @RequestParam(value = "sortKey", required = false) ArticleSortKey articleSortKey
             ){
 
         return ResponseEntity.ok(articleQueryService.readAllArticleList(page, size, articleSortKey));

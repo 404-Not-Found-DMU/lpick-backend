@@ -38,4 +38,8 @@ public interface WikiPageQueryRepository extends JpaRepository<WikiPage, String>
     @EntityGraph(attributePaths = {"album"})
     @Query("SELECT wp FROM WikiPage wp WHERE wp.album.albumId IN :albumIds")
     List<WikiPage> findWikiByAlbumIdsIn(@Param("albumIds") List<String> albumIds);
+
+    @Query(value = "SELECT * FROM wiki_page TABLESAMPLE SYSTEM (0.001) LIMIT 1",
+            nativeQuery = true)
+    WikiPage findRandomOne();
 }

@@ -70,4 +70,8 @@ public class WikiPageQueryService {
 
         return results;
     }
+
+    public WikiPage getRandomWikiPage() {
+        return wikiPageQueryRepository.findRandomOne();
+    }
 }
