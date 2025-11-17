@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,16 +17,19 @@ public class WikiReviewQueryService {
 
     private final WikiReviewQueryRepository wikiReviewQueryRepository;
 
+    @Transactional(readOnly = true)
     public Page<ReviewResponse> getReviewResponseListInWiki(Pageable pageable, String wikiId) {
 
         return wikiReviewQueryRepository.findAllByWiki_wikiId(wikiId, pageable)
                 .map(review -> {
                     return ReviewResponse.builder()
-                        .reviewId(review.getReviewId())
-                        .content(review.getContent())
-                        .starScore(review.getStar())
-                        .createdAt(review.getCreatedAt())
-                        .build();
+                            .userId(review.getOauth().getOauthId())
+                            .userNickName(review.getOauth().getNickname())
+                            .reviewId(review.getReviewId())
+                            .content(review.getContent())
+                            .starScore(review.getStar())
+                            .createdAt(review.getCreatedAt())
+                            .build();
                 });
 
     }
