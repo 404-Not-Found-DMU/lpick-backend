@@ -72,6 +72,7 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
     SELECT new com.notfound.lpickbackend.community.query.dto.ArticleListResponse(
         a.articleId,
         a.title,
+        a.articleType,
         a.createdAt,
         a.modifiedAt,
         COUNT(DISTINCT l),
