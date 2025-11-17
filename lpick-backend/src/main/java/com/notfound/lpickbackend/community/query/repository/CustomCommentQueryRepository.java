@@ -1,6 +1,8 @@
 package com.notfound.lpickbackend.community.query.repository;
 
+import com.notfound.lpickbackend.community.query.dto.CommentListResponse;
 import com.notfound.lpickbackend.community.query.dto.ParentsCommentResponse;
+import com.notfound.lpickbackend.servicedata.query.inherenceEnum.CommentListFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,6 +22,13 @@ public interface CustomCommentQueryRepository {
 
     Page<ParentsCommentResponse> findChildByOauthIdAndCommentLike(
             String oAuthId,
+            Pageable pageable
+    );
+
+    // 내가 쓴 댓글 목록 + 필터
+    Page<CommentListResponse> findCommentListByOauthIdWithFilter(
+            String oauthId,
+            CommentListFilter filter,
             Pageable pageable
     );
 }

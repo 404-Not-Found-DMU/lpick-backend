@@ -4,6 +4,7 @@ import com.notfound.lpickbackend.community.query.dto.CommentListResponse;
 import com.notfound.lpickbackend.community.query.dto.ParentsCommentResponse;
 import com.notfound.lpickbackend.community.query.repository.CommentQueryRepository;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
+import com.notfound.lpickbackend.servicedata.query.inherenceEnum.CommentListFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,8 +45,8 @@ public class CommentQueryService {
         return commentQueryRepository.countByOauth_OauthId(oauthId);
     }
 
-    public Page<CommentListResponse> readMyCommentList(String oauthId, Pageable pageable) {
+    public Page<CommentListResponse> readMyCommentList(String oauthId, CommentListFilter filter, Pageable pageable) {
 
-        return commentQueryRepository.findOwnedCommentListByOauthId(oauthId, pageable);
+        return commentQueryRepository.findCommentListByOauthIdWithFilter(oauthId, filter, pageable);
     }
 }

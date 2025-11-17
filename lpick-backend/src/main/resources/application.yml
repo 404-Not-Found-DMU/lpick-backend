@@ -34,11 +34,13 @@ spring:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
   jpa:
+#    show-sql: true
     properties:
       hibernate.jdbc.time_zone: UTC   # 또는 Asia/Seoul로 고정(권장은 UTC)
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: none
+#      format_sql: true
   data:
     redis:
       host: ${redis.name}
@@ -58,6 +60,8 @@ token:
 
 logging:
   level:
+#    org.hibernate.SQL: debug
+#    org.hibernate.type.descriptor.sql.BasicBinder: trace
     org.springframework.security.web.DefaultSecurityFilterChain: debug
     org.springframework.messaging: DEBUG # 웹소켓 메시지 검증용
     org.springframework.web.socket: DEBUG # 웹소켓 연결 검증용
