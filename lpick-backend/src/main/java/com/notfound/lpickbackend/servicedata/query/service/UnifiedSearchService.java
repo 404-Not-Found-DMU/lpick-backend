@@ -3,17 +3,18 @@ package com.notfound.lpickbackend.servicedata.query.service;
 import co.elastic.clients.elasticsearch._types.query_dsl.Operator;
 import com.notfound.lpickbackend.common.elasticsearch.document.AlbumDocument;
 import com.notfound.lpickbackend.common.elasticsearch.document.ArtistDocument;
+import com.notfound.lpickbackend.common.elasticsearch.document.ExpertRequestDocument;
 import com.notfound.lpickbackend.common.elasticsearch.document.GearDocument;
 import com.notfound.lpickbackend.servicedata.query.dto.GearSearchResultDTO;
 import com.notfound.lpickbackend.servicedata.query.dto.SearchResult;
+import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.ExpertRequestStatus;
 import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass;
+import com.notfound.lpickbackend.userinfo.query.dto.response.ExpertAdvancementAdminResponse;
 import com.notfound.lpickbackend.wiki.query.repository.WikiPageQueryRepository;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
 import org.springframework.data.elasticsearch.core.*;
@@ -114,6 +115,69 @@ public class UnifiedSearchService {
             results.add(mapGearDocumentToResult(hit));
         }
         return results;
+    }
+
+    /**
+     * 순수 관리자 사용 목적.
+     * ExpertRequest 검색
+     */
+    public Page<ExpertAdvancementAdminResponse> searchExpertRequests(
+            String keyword,
+            Pageable pageable,
+            ExpertRequestStatus status
+    ) {
+        String kw = (keyword == null) ? "" : keyword.trim().toLowerCase(Locale.ROOT);
+
+        // 1) 쿼리 빌더 생성
+        NativeQueryBuilder b = new NativeQueryBuilder();
+
+        // 2) 키워드 유무에 따라 bool 쿼리 분기
+        if (kw.isBlank()) {
+            // 키워드가 없으면 전체 조회 (+옵션 status 필터)
+            b.withQuery(q -> q.bool(bb -> {
+                if (status != null) {
+                    bb.filter(f -> f.term(t -> t.field("expertRequestStatus.keyword").value(status.name())));
+                } else {
+                    bb.must(m -> m.matchAll(ma -> ma));
+                }
+                return bb;
+            }));
+        } else {
+            // 키워드가 있으면 prefix 검색
+            b.withQuery(q -> q.bool(bb -> {
+                bb.should(s -> s.prefix(p -> p.field("name").value(kw)));
+                bb.should(s -> s.prefix(p -> p.field("email").value(kw)));
+                bb.should(s -> s.prefix(p -> p.field("musicGenresKo").value(kw)));
+                bb.minimumShouldMatch("1");
+
+                if (status != null) {
+                    bb.filter(f -> f.term(t -> t.field("expertRequestStatus.keyword").value(status.name())));
+                }
+                return bb;
+            }));
+        }
+
+        // 3) Pageable + 정렬 붙이고 쿼리 빌드
+        NativeQuery query = b
+                .withPageable(pageable)
+                .withSort(Sort.by(Sort.Order.desc("_score"), Sort.Order.desc("createdAt")))
+                .build();
+
+        // 4) 검색 실행
+        SearchHits<ExpertRequestDocument> hits = elasticsearchOperations.search(
+                query,
+                ExpertRequestDocument.class,
+                IndexCoordinates.of("expert_request")
+        );
+        
+        // 5. 결과 확인 및 Page로 매핑
+        List<ExpertAdvancementAdminResponse> content = hits.getSearchHits().stream()
+                .map(this::mapExpertRequestDocumentToResult)
+                .toList();
+
+        long totalHits = hits.getTotalHits();
+
+        return new PageImpl<>(content, pageable, totalHits);
     }
 
 
@@ -228,6 +292,22 @@ public class UnifiedSearchService {
                 .eqClass(doc.getEqClass())
                 .build();
     }
+
+    // --- documentType = expert-request 전용 매핑 메서드 ---
+
+    private ExpertAdvancementAdminResponse mapExpertRequestDocumentToResult(SearchHit<ExpertRequestDocument> hit) {
+        ExpertRequestDocument doc = hit.getContent();
+
+        return ExpertAdvancementAdminResponse.builder()
+                .requestId(doc.getExpertRequestId())
+                .userName(doc.getName())
+                .userEmail(doc.getEmail())
+                .genre(doc.getMusicGenre())
+                .createdAt(doc.getCreatedAt())
+                .status(ExpertRequestStatus.valueOf(doc.getExpertRequestStatus()))
+                .build();
+    }
+
 
 
     public List<String> deleteAllIndices(boolean includeSystem) {

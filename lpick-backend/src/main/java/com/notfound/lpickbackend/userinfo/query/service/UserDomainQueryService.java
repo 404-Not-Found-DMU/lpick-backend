@@ -6,6 +6,7 @@ import com.notfound.lpickbackend.community.query.service.CommentQueryService;
 import com.notfound.lpickbackend.debate.query.service.DebateChatQueryService;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserSetting;
 import com.notfound.lpickbackend.userinfo.query.dto.response.UserActivityResponse;
+import com.notfound.lpickbackend.userinfo.query.dto.response.UserProfileResponse;
 import com.notfound.lpickbackend.wiki.query.service.PageRevisionQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

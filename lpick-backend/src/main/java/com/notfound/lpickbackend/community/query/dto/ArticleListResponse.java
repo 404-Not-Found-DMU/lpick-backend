@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.community.query.dto;
 
+import com.notfound.lpickbackend.community.command.domain.ArticleType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,8 @@ public class ArticleListResponse {
     private String articleId;
 
     private String title;
+
+    private ArticleType articleType;
 
     private Instant createdAt;
 
