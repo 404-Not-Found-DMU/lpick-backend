@@ -12,6 +12,11 @@
         "type": "custom",
         "tokenizer": "standard",
         "filter": ["lowercase", "edge_ngram_filter"]
+      },
+      "korean_analyzer": {
+        "type": "custom",
+        "tokenizer": "standard",
+        "filter": ["lowercase"]
       }
     },
     "normalizer": {
