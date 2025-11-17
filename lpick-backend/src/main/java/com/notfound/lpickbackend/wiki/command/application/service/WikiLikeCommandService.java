@@ -21,7 +21,8 @@ public class WikiLikeCommandService {
 
     @Transactional
     public void createWikiLike(String wikiId, String oauthId) {
-
+        
+        // 이미 좋아요 처리된 경우 방지
         if(wikiLikeCommandRepository.existsByWiki_WikiIdAndOauth_OauthId(wikiId, oauthId))
             throw new CustomException(ErrorCode.ALREADY_HAS_LIKE);
 
