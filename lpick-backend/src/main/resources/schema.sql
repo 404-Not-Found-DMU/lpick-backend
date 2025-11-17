@@ -149,17 +149,18 @@ CREATE TABLE IF NOT EXISTS review_like
     review_id      varchar(40) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS article
-(
-    article_id    varchar(40) NOT NULL,
-    title         varchar(50) NOT NULL,
-    content       text        NOT NULL,
-    created_at    timestamp   NOT NULL,
-    modified_at   timestamp   NULL,
-    is_del        varchar(10) NOT NULL,
-    oauth_id      varchar(40) NOT NULL,
-    article_type  varchar(40) NOT NULL,
-    article_badge varchar(40) NOT NULL
+CREATE TABLE IF NOT EXISTS article (
+                                       article_id	varchar(40)		NOT NULL,
+                                       title	varchar(50)		NOT NULL,
+                                       content	text		NOT NULL,
+                                       created_at	timestamp		NOT NULL,
+                                       modified_at	timestamp		NULL,
+                                       is_del	varchar(10)		NOT NULL,
+                                       oauth_id	varchar(40)		NOT NULL,
+                                       article_type varchar(40) NOT NULL,
+                                       article_badge varchar(40) NOT NULL,
+                                       view_count bigint
+
 );
 
 CREATE TABLE IF NOT EXISTS comment_like

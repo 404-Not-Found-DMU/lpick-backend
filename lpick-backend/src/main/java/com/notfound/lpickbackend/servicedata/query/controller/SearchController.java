@@ -1,24 +1,35 @@
 package com.notfound.lpickbackend.servicedata.query.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.notfound.lpickbackend.common.elasticsearch.service.DataSyncService;
 import com.notfound.lpickbackend.common.exception.SuccessCode;
 import com.notfound.lpickbackend.servicedata.query.dto.AlbumSearchResultDTO;
 import com.notfound.lpickbackend.servicedata.query.dto.GearSearchResultDTO;
+import com.notfound.lpickbackend.servicedata.query.dto.ImageSearchResponse;
 import com.notfound.lpickbackend.servicedata.query.dto.SearchResult;
+import com.notfound.lpickbackend.servicedata.query.dto.SearchResultWithImage;
 import com.notfound.lpickbackend.servicedata.query.service.AlbumQueryService;
 import com.notfound.lpickbackend.servicedata.query.service.DiscogsApiService;
 import com.notfound.lpickbackend.servicedata.query.service.UnifiedSearchService;
 import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass;
+import com.notfound.lpickbackend.wiki.query.service.WikiPageQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
+import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +44,9 @@ public class SearchController {
     private final DataSyncService dataSyncService; // 테스트/운영을 위한 동기화 엔드포인트
     private final UnifiedSearchService unifiedSearchService;
     private final DiscogsApiService discogsApiService;
+    private final WikiPageQueryService wikiPageQueryService;
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * 전체 앨범 데이터 동기화 (초기 셋업용)
@@ -158,7 +172,6 @@ public class SearchController {
     }
 
 
-
     /**
      * 모든 인덱스 삭제 엔드포인트
      * 예) DELETE /admin/es/indices
@@ -175,5 +188,84 @@ public class SearchController {
         body.put("count", deleted.size());
 
         return ResponseEntity.ok(body);
+    }
+
+    @PostMapping(
+            value = "/search/album/image",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    @Operation(summary = "ai 이미지 검색", description = "이미지를 업로드하여 앨범을 검색합니다.")
+    public ResponseEntity<List<SearchResultWithImage>> searchByImage(
+            @RequestPart("file") MultipartFile file
+    ) throws IOException {
+
+        try {
+            // 1) FastAPI URL
+            String url = "https://ai.lpick.in/search/image?top_k=10";
+
+            // 2) multipart/form-data 헤더 설정
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+            // 3) MultipartFile → ByteArrayResource
+            ByteArrayResource fileResource = new ByteArrayResource(file.getBytes()) {
+                @Override
+                public String getFilename() {
+                    return file.getOriginalFilename();
+                }
+            };
+
+            // 4) multipart 바디 구성
+            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+
+            HttpHeaders fileHeaders = new HttpHeaders();
+            fileHeaders.setContentType(MediaType.parseMediaType(file.getContentType()));
+
+            HttpEntity<ByteArrayResource> filePart =
+                    new HttpEntity<>(fileResource, fileHeaders);
+
+            body.add("file", filePart); // FastAPI의 UploadFile 이름은 반드시 "file"
+
+            HttpEntity<MultiValueMap<String, Object>> requestEntity =
+                    new HttpEntity<>(body, headers);
+
+            // 5) FastAPI 호출
+            ResponseEntity<String> response =
+                    restTemplate.postForEntity(url, requestEntity, String.class);
+
+            // 6) JSON → DTO 변환
+            ImageSearchResponse result =
+                    objectMapper.readValue(response.getBody(), ImageSearchResponse.class);
+
+            // 7) 결과
+            List<SearchResultWithImage> responseList = wikiPageQueryService.findByImage(result);
+
+            // 8) 결과에 이미지 삽입
+            for(SearchResultWithImage r : responseList) {
+                r.setImageUrl(discogsApiService.getPrimaryImageUrl(r.getAlbumId()));
+            }
+
+            responseList.sort( // Similarity 순 정렬
+                    Comparator.comparingDouble(SearchResultWithImage::getSimilarity).reversed()
+            );
+
+            // 눈물
+            return ResponseEntity.ok(responseList);
+
+        } catch (Exception e) {
+            log.error("이미지 검색 호출 실패: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/discogs/test")
+    public ResponseEntity<String> testDiscogsApi(
+            @RequestParam String id
+    ) {
+        String imageUrl = discogsApiService.getPrimaryImageUrl(id);
+
+        log.warn(imageUrl);
+
+        return ResponseEntity.ok(imageUrl);
     }
 }

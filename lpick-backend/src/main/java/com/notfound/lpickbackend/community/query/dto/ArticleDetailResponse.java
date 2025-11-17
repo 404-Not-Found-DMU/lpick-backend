@@ -33,6 +33,8 @@ public class ArticleDetailResponse {
 
     private boolean bookmarked; // 조회 요청한 사람이 북마크 했는지
 
+    private long viewCount;
+
     // liked 와 bookmarked 를 제외한 생성자. service 로직에서 추가로 채울것.
     public ArticleDetailResponse(
             String articleId,
@@ -44,7 +46,8 @@ public class ArticleDetailResponse {
             Long commentCount,
             Long bookmarkCount,
             String oauthId,
-            String author
+            String author,
+            long viewCount
     ) {
         this.articleId = articleId;
         this.title = title;
@@ -56,5 +59,6 @@ public class ArticleDetailResponse {
         this.bookmarkCount = bookmarkCount;
         this.oauthId = oauthId;
         this.author = author;
+        this.viewCount = viewCount;
     }
 }

@@ -64,6 +64,26 @@ public class WikiDomainQueryService {
         }).toList();
     }
 
+    public WikiPageViewResponse getRandomWikiPageView(OAuth2UserDetails userDetail) {
+
+        WikiPage wikiPage = wikiPageQueryService.getRandomWikiPage();
+
+        PageRevision pageRevision = pageRevisionQueryService.findByPageRevision_revisionNumberAndWiki_wikiId(wikiPage.getCurrentRevision(), wikiPage.getWikiId());
+
+
+        // 로그인 시 - 소유 유무에 따라 Optional 형식 반환
+        // 비로그인 시  - 무조건 empty
+        Optional<WikiBookmark> bookmarkOptional =
+                userDetail != null ?
+                        wikiBookmarkQueryService.findByWiki_WikiIdAndOauth_oauthId(wikiPage.getWikiId(), userDetail.getUsername())
+                        : Optional.empty();
+
+        // 페이지 단위가 아닌, wiki 컴포넌트 기준으로 반환하도록 수정. 위키 리뷰 목록은 별도의 요청을 이미 소유하고있음.
+//        Page<ReviewResponse> reviewList = wikiReviewQueryService.getReviewResponseListInWiki(
+//                PageRequest.of(0, 10, Sort.by("createdAt").descending()), wikiId);
+        return this.toViewResponse(wikiPage, pageRevision, bookmarkOptional);
+    }
+
     private WikiPageViewResponse toViewResponse(WikiPage wikiEntity, PageRevision revisionEntity, Optional<WikiBookmark> bookmarkOptionalEntity) {
         return WikiPageViewResponse.builder()
                 .wikiId(wikiEntity.getWikiId())

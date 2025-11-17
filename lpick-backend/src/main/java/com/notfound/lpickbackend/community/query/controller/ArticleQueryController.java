@@ -4,6 +4,7 @@ import com.notfound.lpickbackend.community.query.dto.ArticleDetailResponse;
 import com.notfound.lpickbackend.community.query.dto.ArticleListResponse;
 import com.notfound.lpickbackend.community.query.dto.PopularArticleResponse;
 import com.notfound.lpickbackend.community.query.service.ArticleQueryService;
+import com.notfound.lpickbackend.community.query.util.ArticleSortKey;
 import com.notfound.lpickbackend.servicedata.query.service.PopularityService;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiPageClass;
 import com.notfound.lpickbackend.wiki.query.dto.response.PopularItemResponse;
@@ -35,12 +36,11 @@ public class ArticleQueryController {
     @Operation(summary = "모든 게시글 목록 조회", description = "모든 커뮤니티 게시글 목록을 페이지 단위로 조회하는 기능")
     public ResponseEntity<Page<ArticleListResponse>> readAllArticleList(
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size
-    ){
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "sortKey", required = false) ArticleSortKey articleSortKey
+            ){
 
-        Pageable pageable = PageRequest.of(page - 1, size);
-
-        return ResponseEntity.ok(articleQueryService.readAllArticleList(pageable));
+        return ResponseEntity.ok(articleQueryService.readAllArticleList(page, size, articleSortKey));
     }
 
     @GetMapping("/public/community/article/{articleId}")

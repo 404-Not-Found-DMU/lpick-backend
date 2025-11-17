@@ -21,7 +21,7 @@ public class WikiLikeQueryController {
 
 
     @GetMapping("/wiki/{wikiId}/like")
-    @Operation(summary = "위키 좋아요 추가", description = "특정 위키에 대한 로그인 사용자의 좋아요 추가")
+    @Operation(summary = "위키 좋아요 여부 확인", description = "어느 한 위키에 대한 로그인 사용자의 좋아요 여부 확인")
     public ResponseEntity<WikiLikeResponse> createWikiLike(
             @PathVariable("wikiId") String wikiId,
             @AuthenticationPrincipal OAuth2UserDetails userDetail
