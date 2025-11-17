@@ -40,6 +40,7 @@ public class ArticleCommandService {
                 .articleType(articleCreateRequest.getType())
                 .oauth(userInfo)
                 .isDel(ArticleStatus.N)
+                .viewCount(0)
                 .build();
 
         articleCommandRepository.save(newArticle);

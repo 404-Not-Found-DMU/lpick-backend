@@ -55,6 +55,9 @@ public class Article {
     @Column(name = "article_badge", nullable = false, length = 40)
     private ArticleBadge articleBadge;
 
+    @Column(name = "view_count", nullable = false)
+    private long viewCount;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "oauth_id", nullable = false)
     private UserInfo oauth;
@@ -84,5 +87,9 @@ public class Article {
     // 게시글의 삭제 여부 체크 메소드
     public boolean checkIsDel() {
         return isDel.equals(ArticleStatus.Y);
+    }
+
+    public void plusViewCount() {
+        this.viewCount++;
     }
 }

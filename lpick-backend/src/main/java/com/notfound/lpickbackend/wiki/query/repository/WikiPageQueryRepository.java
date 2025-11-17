@@ -1,11 +1,14 @@
 package com.notfound.lpickbackend.wiki.query.repository;
 
+import com.notfound.lpickbackend.servicedata.query.dto.SearchResultWithImage;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -31,4 +34,12 @@ public interface WikiPageQueryRepository extends JpaRepository<WikiPage, String>
      */
     @Query("SELECT wp.wikiId FROM WikiPage wp WHERE wp.gear.id = :gearId")
     Optional<String> findWikiIdByGearId(@Param("gearId") String gearId);
+
+    @EntityGraph(attributePaths = {"album"})
+    @Query("SELECT wp FROM WikiPage wp WHERE wp.album.albumId IN :albumIds")
+    List<WikiPage> findWikiByAlbumIdsIn(@Param("albumIds") List<String> albumIds);
+
+    @Query(value = "SELECT * FROM wiki_page TABLESAMPLE SYSTEM (0.001) LIMIT 1",
+            nativeQuery = true)
+    WikiPage findRandomOne();
 }

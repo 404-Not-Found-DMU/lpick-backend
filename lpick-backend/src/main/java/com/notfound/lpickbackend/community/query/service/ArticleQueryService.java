@@ -2,15 +2,19 @@ package com.notfound.lpickbackend.community.query.service;
 
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
+import com.notfound.lpickbackend.community.command.domain.Article;
 import com.notfound.lpickbackend.community.query.dto.ArticleDetailResponse;
 import com.notfound.lpickbackend.community.query.dto.ArticleListResponse;
 import com.notfound.lpickbackend.community.query.repository.ArticleBookmarkQueryRepository;
 import com.notfound.lpickbackend.community.query.repository.ArticleLikeQueryRepository;
 import com.notfound.lpickbackend.community.query.repository.ArticleQueryRepository;
+import com.notfound.lpickbackend.community.query.util.ArticleSortKey;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,18 +28,35 @@ public class ArticleQueryService {
 
     // 전체 게시글 목록 조회
     @Transactional(readOnly = true)
-    public Page<ArticleListResponse> readAllArticleList(Pageable pageable) {
+    public Page<ArticleListResponse> readAllArticleList(int page, int size, ArticleSortKey articleSortKey) {
+
+        Pageable pageable;
+
+        if(articleSortKey == null) {
+            articleSortKey = ArticleSortKey.LATEST;
+        }
+
+        switch (articleSortKey) {
+            case LATEST -> pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+            case VIEW_COUNT -> pageable =PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "viewCount"));
+            case null, default -> pageable = PageRequest.of(page - 1, size);
+        }
 
         // 페이지 요청이 잘못 된 경우 예외 처리
         if (checkPageable(pageable)) {
             throw new CustomException(ErrorCode.INVALID_PAGE_REQUEST);
         }
+
+        if(articleSortKey.equals(ArticleSortKey.LIKED)) {
+            return articleQueryRepository.findAllWithLikeAndCommentAndBookmarkCountOrderByLiked(pageable);
+        }
+
         // 조회했을 때 게시글이 존재하지 않는 경우는 예외처리 하지 않음.
         return articleQueryRepository.findAllWithLikeAndCommentAndBookmarkCount(pageable);
     }
 
     // 게시글 상세 조회
-    @Transactional(readOnly = true)
+    @Transactional
     public ArticleDetailResponse readArticleDetail(String articleId) {
 
         ArticleDetailResponse dto = articleQueryRepository.findByIdWithLikeAndCommentAndBookmarkCount(articleId);
@@ -50,6 +71,11 @@ public class ArticleQueryService {
             oAuthId = "";
         }
 
+        Article article = articleQueryRepository.findById(articleId).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND_ARTICLE)
+        );
+
+        article.plusViewCount();
 
         if(oAuthId.isEmpty()) { // 로그인 한 유저가 없을 경우
             dto.setLiked(false);
