@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS album
     release_country varchar(50)  NULL,
     label           text         NULL,
     lpti            varchar(20)  NULL,
-    wiki_id         varchar(40)  NULL
+    wiki_id         varchar(40)  NULL,
+    random_point     DOUBLE PRECISION DEFAULT random() NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS genre
@@ -834,7 +835,7 @@ CREATE INDEX IF NOT EXISTS idx_album_wiki_id
     ON album (wiki_id);
 
 CREATE INDEX IF NOT EXISTS idx_album_lpti
-    ON album (lpti);
+    ON album (lpti, random_point);
 
 -- artist ↔ wiki_page 조인용
 CREATE INDEX IF NOT EXISTS idx_artist_wiki_id
@@ -868,5 +869,11 @@ CREATE INDEX IF NOT EXISTS idx_page_revision_wiki_created_at
 CREATE INDEX IF NOT EXISTS idx_page_revision_oauth_id
     ON page_revision (oauth_id);
 
+CREATE INDEX IF NOT EXISTS idx_album_release_date
+    ON album (release_date);
+
 -- 전체 랜덤 조회를 위한 단일 인덱스
 CREATE INDEX idx_wiki_page_random ON wiki_page (random_point);
+
+CREATE INDEX IF NOT EXISTS idx_album_release_date
+    ON album (release_date);

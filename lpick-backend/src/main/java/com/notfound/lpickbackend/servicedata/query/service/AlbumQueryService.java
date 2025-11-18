@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -56,7 +57,9 @@ public class AlbumQueryService {
             UserInfo userInfo = getUserInfo();
 
             if(userInfo.getLpti() != null && !userInfo.getLpti().isEmpty()) {
-                albums = albumQueryRepository.findRandom5ByLpti(userInfo.getLpti());
+                double randomAnchor = ThreadLocalRandom.current().nextDouble();
+
+                albums = albumQueryRepository.findRandom5ByLpti(userInfo.getLpti(), randomAnchor, 5);
             } else {
                 albums = albumQueryRepository.findTop5ByReleaseDateIsNotNullOrderByReleaseDateDesc();
             }
