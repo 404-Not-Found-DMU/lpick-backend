@@ -57,4 +57,15 @@ public interface PageRevisionQueryRepository extends JpaRepository<PageRevision,
     Page<PageRevision> findLatestRevisionsForWikis(@Param("wikiIds") List<String> wikiIds, Pageable pageable);
 
     int countByUserInfo_OauthId(String oauthId);
+
+    @EntityGraph(attributePaths = {"wiki"})
+    @Query("""
+    SELECT pr
+    FROM PageRevision pr
+    JOIN pr.wiki w
+    WHERE w.wikiStatus = 'OPEN'
+      AND pr.revisionNumber = w.currentRevision
+    ORDER BY pr.createdAt DESC
+    """)
+    List<PageRevision> findLatestRevisionsByCurrentRevision(Pageable pageable);
 }
