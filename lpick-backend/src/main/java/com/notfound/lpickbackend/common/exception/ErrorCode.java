@@ -40,6 +40,8 @@ public enum ErrorCode {
     ALREADY_HAS_USER_GEAR(HttpStatus.BAD_REQUEST, "이미 사용자 소유 기기로 등록되어있습니다."),
     CAN_NOT_EXPERT_ADVANCEMENT_REQUEST_AGAIN(HttpStatus.BAD_REQUEST, "이미 전문가 승급 신청을 수행한 인원입니다."),
 
+    USER_UPDATE_FAIL(HttpStatus.BAD_REQUEST, "유저 정보 수정중 오류가 발생했습니다. 입력데이터를 확인해주세요"),
+
     CAN_NOT_OPEN_DEBATE_AGAIN(HttpStatus.BAD_REQUEST, "토론을 재시작할 수는 없습니다."),
     ALREADY_BALLOT_IN_DEBATE(HttpStatus.BAD_REQUEST, "해당 토론에 이미 투표했습니다!"),
     DEBATE_STATUS_IS_OPEN(HttpStatus.BAD_REQUEST, "아직 진행 중인 토론입니다.(투표 참여 및 확인 불가)"),
@@ -94,7 +96,7 @@ public enum ErrorCode {
     NOT_FOUND_ANSWER(HttpStatus.NOT_FOUND, "답변 정보를 찾을 수 없습니다."),
 
     // 처리 방법에 논의가 필요한 에러 코드 임시할당용,
-    DO_NOT_KEEP_UP_THIS_ERROR_WHEN_MERGE(HttpStatus.I_AM_A_TEAPOT, "이 에러 코드는 실제 사용 목적이 아닙니다.");
+    DO_NOT_KEEP_UP_THIS_ERROR_WHEN_MERGE(HttpStatus.I_AM_A_TEAPOT, "이 에러 코드는 실제 사용 목적이 아닙니다."),;
 
 
     private final HttpStatus httpStatus;

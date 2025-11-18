@@ -76,7 +76,9 @@ public class UserInfo {
             this.about = request.getAbout();
         }
         this.nickname = request.getNickname();
-        this.profile = profile;
+        if (profile != null) {
+            this.profile = profile;
+        }
     }
 
     public void deleteUserInfo() {
