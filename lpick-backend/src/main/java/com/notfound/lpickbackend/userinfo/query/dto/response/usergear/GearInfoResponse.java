@@ -1,6 +1,6 @@
 package com.notfound.lpickbackend.userinfo.query.dto.response.usergear;
 
-import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass;
+import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClassEnum;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,7 +12,7 @@ public class GearInfoResponse {
     private boolean isFavorite;
     private String modelName;
     private String brand;
-    private GearClass gearClass;
+    private GearClassEnum gearClass;
     private String img;
     private String wikiId;
     
@@ -23,7 +23,7 @@ public class GearInfoResponse {
         this.isFavorite = isFavorite;
         this.modelName = modelName;
         this.brand = brand;
-        this.gearClass = GearClass.valueOf(gearClass.toUpperCase());
+        this.gearClass = GearClassEnum.valueOf(gearClass.toUpperCase());
         this.img = img;
         this.wikiId = wikiId;
     }
@@ -31,7 +31,7 @@ public class GearInfoResponse {
     // AllArgsConstructor - 빌더 사용 목적
 
 
-    public GearInfoResponse(String id, String name, boolean isFavorite, String modelName, String brand, GearClass gearClass, String img, String wikiId) {
+    public GearInfoResponse(String id, String name, boolean isFavorite, String modelName, String brand, GearClassEnum gearClass, String img, String wikiId) {
         this.id = id;
         this.name = name;
         this.isFavorite = isFavorite;

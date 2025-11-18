@@ -8,7 +8,7 @@ import com.notfound.lpickbackend.common.elasticsearch.document.GearDocument;
 import com.notfound.lpickbackend.servicedata.query.dto.GearSearchResultDTO;
 import com.notfound.lpickbackend.servicedata.query.dto.SearchResult;
 import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.ExpertRequestStatus;
-import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass;
+import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClassEnum;
 import com.notfound.lpickbackend.userinfo.query.dto.response.ExpertAdvancementAdminResponse;
 import com.notfound.lpickbackend.wiki.query.repository.WikiPageQueryRepository;
 import jakarta.annotation.Nullable;
@@ -83,7 +83,7 @@ public class UnifiedSearchService {
     // Gear 검색 내 정확도 높이기 위해 별도로 분리.
     // 기존 내역은 wiki, gear, article 등의 각각의 엔티티에만 존재하는 field에 대해 전부 score 계산을 해 정확도가 일부 떨어진다... 라는 말이 있네요.
     // 순수하게 gear만 검색할 예정이니 다음과 같이 구현.
-    public List<GearSearchResultDTO> searchGears(String keyword, Pageable pageable, GearClass eqClass) {
+    public List<GearSearchResultDTO> searchGears(String keyword, Pageable pageable, GearClassEnum eqClass) {
         String kw = keyword == null ? "" : keyword.trim().toLowerCase(Locale.ROOT);
 
         NativeQueryBuilder b = new NativeQueryBuilder().withQuery(q -> q.bool(bb -> {
@@ -205,7 +205,7 @@ public class UnifiedSearchService {
     }
 
     /** gear 자동완성 */
-    public List<GearSearchResultDTO> autocompleteGears(String prefix, @Nullable GearClass eqClass, int size) {
+    public List<GearSearchResultDTO> autocompleteGears(String prefix, @Nullable GearClassEnum eqClass, int size) {
         String kw = prefix == null ? "" : prefix.trim().toLowerCase(Locale.ROOT);
 
         NativeQuery q = new NativeQueryBuilder()

@@ -1,8 +1,8 @@
 package com.notfound.lpickbackend.servicedata.command.application.domain;
 
-import com.notfound.lpickbackend.common._super.BaseEntity;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
+import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClassEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -25,9 +25,9 @@ public class GearClass {
     private String className;
 
 
-    public com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass toEnum() {
-        for (com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass classValue :
-        com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass.values()) {
+    public GearClassEnum toEnum() {
+        for (GearClassEnum classValue :
+        GearClassEnum.values()) {
             if(classValue.name().equals(this.className)) return classValue;
 
         }

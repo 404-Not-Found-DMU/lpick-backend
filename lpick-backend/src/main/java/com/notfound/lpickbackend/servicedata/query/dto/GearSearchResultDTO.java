@@ -1,6 +1,6 @@
 package com.notfound.lpickbackend.servicedata.query.dto;
 
-import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass;
+import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClassEnum;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,7 +9,7 @@ import lombok.Getter;
 public class GearSearchResultDTO {
 
     private String gearId;
-    private GearClass eqClass;
+    private GearClassEnum eqClass;
     private String modelName;
     private String brand;
     private String name;

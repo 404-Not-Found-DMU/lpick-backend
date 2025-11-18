@@ -53,23 +53,9 @@ public class PageRevisionQueryService {
      *
      * 추후 추가 필요사항 : wikiStatus가 OPEN인 revision들만 불러와야한다.
      */
-    public Page<PageRevision> getLatestRevisionPerWiki(Pageable pageable) {
-        // 1) 먼저 “각 위키 ID별로 최신 순서대로 페이지”를 뽑아 올 수 있는 Repository 메서드
-        Page<String> wikiIdPage =
-                pageRevisionQueryRepository.findWikiIdsOrderByLatestRevision(pageable);
-
-        // 2) 그 Page<String> 객체 안에는
-        //    - 콘텐츠: List<String> (wikiId 리스트; 이미 최신순으로 정렬되어 있음)
-
-        List<String> wikiIds = wikiIdPage.getContent();
-        if (wikiIds.isEmpty()) {
-            return Page.empty(pageable);
-        }
-
-        // 3) 이제 2단계로 “각 위키별 최신 리비전 1건”을 페이징해서 가져옵니다.
-        return pageRevisionQueryRepository.findLatestRevisionsForWikis(wikiIds, pageable);
+    public List<PageRevision> getLatestRevisionPerWiki(Pageable pageable) {
+        return pageRevisionQueryRepository.findLatestRevisionsByCurrentRevision(pageable);
     }
-
     // 중복되고 너무 길어져서 가독성 획득 위해 메소드로 분리
     private PageRevisionResponse toResponseDTO(PageRevision entity) {
         return PageRevisionResponse.builder()

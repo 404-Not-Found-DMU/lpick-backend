@@ -8,6 +8,7 @@ import com.notfound.lpickbackend.userinfo.command.repository.UserInfoCommandRepo
 import com.notfound.lpickbackend.wiki.command.application.domain.Ballot;
 import com.notfound.lpickbackend.wiki.command.application.domain.Debate;
 import com.notfound.lpickbackend.wiki.command.application.domain.DebateStatus;
+import com.notfound.lpickbackend.wiki.query.dto.response.BallotResponse;
 import com.notfound.lpickbackend.wiki.command.application.dto.request.BallotRequest;
 import com.notfound.lpickbackend.wiki.command.repository.BallotCommandRepository;
 import com.notfound.lpickbackend.wiki.command.repository.DebateCommandRepository;
@@ -26,7 +27,7 @@ public class BallotCommandService {
     private final UserInfoCommandRepository userInfoCommandRepository;
 
     @Transactional
-    public void ballotToDebate(String debateId, BallotRequest req, OAuth2UserDetails userDetail) {
+    public BallotResponse ballotToDebate(String debateId, BallotRequest req, OAuth2UserDetails userDetail) {
 
         // 이미 해당 토론에 투표했으면, 더이상 참여불가.
         if(ballotCommandRepository.existsByDebate_DtIdAndOauth_OauthId(debateId, userDetail.getUsername()))
@@ -51,6 +52,8 @@ public class BallotCommandService {
                 .ballotValue(req.getBallotValue())
                 .build();
 
-        ballotCommandRepository.save(ballot);
+        Ballot resultBallot = ballotCommandRepository.save(ballot);
+
+        return new BallotResponse(true, resultBallot.getBallotValue());
     }
 }

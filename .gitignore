@@ -35,5 +35,14 @@ API-KEY-PROV.yml
 .gradle/
 build/
 
+# 빌드 산출물
+**/bin/
+**/build/
+**/out/
+*.iml
+
+# IDE 설정
+.vscode/
+.idea/
 
 logstash.conf

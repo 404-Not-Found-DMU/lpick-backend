@@ -50,18 +50,19 @@ public class WikiDomainQueryService {
     public List<WikiPageTitleResponse> getRecentlyModifiedWikiPageList(int pageAmount, Instant now) {
         List<PageRevision> revisionList = pageRevisionQueryService.getLatestRevisionPerWiki(
                 PageRequest.of(0, pageAmount)
-        ).getContent();
+        );
 
-        return revisionList.stream().map(i -> {
-            Instant updateRevisionAt = i.getCreatedAt();
-            WikiPage wikiPage = i.getWiki();
-            return WikiPageTitleResponse.builder()
-                    .wikiId(wikiPage.getWikiId())
-                    .title(wikiPage.getTitle())
-                    .modifiedBefore(TimeAgoUtil.toTimeAgo(updateRevisionAt, now))
-                    .wikiPageClass(wikiPage.getWikiClass())
-                    .build();
-        }).toList();
+        return revisionList.stream()
+                .map(rev -> {
+                    WikiPage wiki = rev.getWiki();
+                    return WikiPageTitleResponse.builder()
+                            .wikiId(wiki.getWikiId())
+                            .title(wiki.getTitle())
+                            .modifiedBefore(TimeAgoUtil.toTimeAgo(rev.getCreatedAt(), now))
+                            .wikiPageClass(wiki.getWikiClass())
+                            .build();
+                })
+                .toList();
     }
 
     public WikiPageViewResponse getRandomWikiPageView(OAuth2UserDetails userDetail) {

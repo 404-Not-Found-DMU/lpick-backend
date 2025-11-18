@@ -14,6 +14,7 @@ import com.notfound.lpickbackend.servicedata.command.application.domain.Gear;
 import com.notfound.lpickbackend.servicedata.command.application.domain.GearClass;
 import com.notfound.lpickbackend.servicedata.command.application.repository.GearClassCommandRepository;
 import com.notfound.lpickbackend.servicedata.command.application.repository.GearDefaultSettingRepository;
+import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClassEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,7 +51,7 @@ public class GearDefaultSettingService {
     );
     private static final String NONE = "None";
 
-    public Result importFlatCsv(MultipartFile csvFile, boolean dryRun, com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass gearClass) throws Exception {
+    public Result importFlatCsv(MultipartFile csvFile, boolean dryRun, GearClassEnum gearClass) throws Exception {
         // 1) 항상 TURNTABLE로 연결 (GearClass PK = className)
         GearClass eqClass = gearClassRepository.findById(gearClass.name())
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_GEAR_CLASS));

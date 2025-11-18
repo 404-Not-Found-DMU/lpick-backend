@@ -3,14 +3,18 @@ package com.notfound.lpickbackend.wiki.query.service;
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.debate.query.repository.DebateQueryRepository;
+import com.notfound.lpickbackend.wiki.command.application.domain.Ballot;
 import com.notfound.lpickbackend.wiki.command.application.domain.Debate;
 import com.notfound.lpickbackend.wiki.command.application.domain.DebateStatus;
+import com.notfound.lpickbackend.wiki.query.dto.response.BallotResponse;
 import com.notfound.lpickbackend.wiki.query.dto.BallotCount;
 import com.notfound.lpickbackend.wiki.query.dto.response.DebateBallotStatResponse;
 import com.notfound.lpickbackend.wiki.query.repository.BallotQueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -57,5 +61,17 @@ public class BallotQueryService {
         if (total <= 0) return 0.0;
         double raw = (part * 100.0) / total;
         return Math.round(raw * 10.0) / 10.0;
+    }
+
+    public BallotResponse getUserBallotValue(String oauthId, String debateId) {
+
+        BallotResponse response = new BallotResponse(false, null);
+        Optional<Ballot> ballotOptional = ballotQueryRepository.findByOauth_OauthIdAndDebate_DtId(oauthId, debateId);
+
+        if(ballotOptional.isPresent()) {
+            response = new BallotResponse(true, ballotOptional.get().getBallotValue());
+        }
+
+        return response;
     }
 }

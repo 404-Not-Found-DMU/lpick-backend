@@ -11,7 +11,7 @@ import com.notfound.lpickbackend.servicedata.query.dto.SearchResultWithImage;
 import com.notfound.lpickbackend.servicedata.query.service.AlbumQueryService;
 import com.notfound.lpickbackend.servicedata.query.service.DiscogsApiService;
 import com.notfound.lpickbackend.servicedata.query.service.UnifiedSearchService;
-import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass;
+import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClassEnum;
 import com.notfound.lpickbackend.wiki.query.service.WikiPageQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -85,7 +85,7 @@ public class SearchController {
     public ResponseEntity<List<GearSearchResultDTO>> autocompleteGear(
             @RequestParam("keyword") String keyword,
             @RequestParam(value = "eqClass", required = false)
-            GearClass eqClass,
+            GearClassEnum eqClass,
             @RequestParam(value = "size", defaultValue = "10") int size
     ) {
         List<GearSearchResultDTO> results =
@@ -124,7 +124,7 @@ public class SearchController {
     public ResponseEntity<List<GearSearchResultDTO>> searchGearByKeyword(
             @RequestParam("keyword") String keyword,
             @RequestParam(value = "eqClass", required = false)
-            GearClass eqClass, // TURNTABLE / SPEAKER / HEADPHONE 등
+            GearClassEnum eqClass, // TURNTABLE / SPEAKER / HEADPHONE 등
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
     ) {
