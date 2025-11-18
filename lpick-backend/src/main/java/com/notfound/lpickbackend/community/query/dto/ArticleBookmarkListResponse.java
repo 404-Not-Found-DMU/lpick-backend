@@ -6,6 +6,7 @@ public record ArticleBookmarkListResponse(
         String articleCreatedAt,
         String articleTitle,
         String articleContent,
+        String articleId,
         long likeCount,
         long viewCount
 ) {
