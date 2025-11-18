@@ -19,4 +19,5 @@ public class DebateChatInfo {
     private Instant createdAt;
     private Boolean isBlind; // 가림처리되어있는지(true인 경우 프론트엔드에서 흐림처리 + 클릭하여 확인)
     private String isAnswerTo; // 누군가에 대한 답변 글인경우 해당 글에 대한 chatId를 명시
+    private String profile;
 }

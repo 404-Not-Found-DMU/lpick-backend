@@ -19,7 +19,8 @@ public interface DebateChatQueryRepository extends JpaRepository<DebateChat, Str
               dc.content,
               dc.createdAt,
               dc.isBlind,
-              p.dscId
+              p.dscId,
+              dc.oauth.profile
             )
             from DebateChat dc
             join dc.oauth o
