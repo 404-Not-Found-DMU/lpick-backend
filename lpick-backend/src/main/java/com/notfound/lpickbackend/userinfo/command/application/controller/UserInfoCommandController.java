@@ -126,14 +126,14 @@ public class UserInfoCommandController {
     }
 
     @PatchMapping(
-            value = "/authn",
+            value = "/auth",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @Operation(summary = "최초 회원가입", description = "최초 로그인 시 자기소개와 프로필사진을 등록하는 기능")
+    @Operation(summary = "정보 수정", description = "회원의 기본정보를 수정하는 기능")
     ResponseEntity<SuccessCode> userUpdate(
             @RequestPart(name = "userinfo") UserRegistrationRequest userInfo,
-            @RequestPart(name = "profileImage") MultipartFile profileImage
+            @RequestPart(name = "profileImage", required = false) MultipartFile profileImage
     ) {
 
         String oAuthId = UserInfoUtil.getOAuthId();

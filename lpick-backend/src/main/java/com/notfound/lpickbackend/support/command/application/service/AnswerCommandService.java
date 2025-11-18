@@ -46,6 +46,10 @@ public class AnswerCommandService {
 
         Answer answer = getAnswer(answerId);
 
+        Question question = answer.getQuestion();
+
+        question.updateIsAnswered(false);
+
         answerCommandRepository.delete(answer);
     }
 

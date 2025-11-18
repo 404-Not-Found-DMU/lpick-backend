@@ -36,7 +36,7 @@ public class Answer {
     private String title;
 
     @NotNull
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;
 

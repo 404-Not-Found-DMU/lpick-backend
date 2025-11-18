@@ -23,6 +23,7 @@ public interface ArticleBookmarkQueryRepository extends JpaRepository<ArticleBoo
             cast(a.createdAt as string),
             a.title,
             a.content,
+            a.articleId,
             count(distinct al.articleLikeId),
             a.viewCount
         )
