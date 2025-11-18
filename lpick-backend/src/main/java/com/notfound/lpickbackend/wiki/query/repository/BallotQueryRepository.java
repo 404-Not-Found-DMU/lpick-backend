@@ -1,11 +1,14 @@
 package com.notfound.lpickbackend.wiki.query.repository;
 
 import com.notfound.lpickbackend.wiki.command.application.domain.Ballot;
+import com.notfound.lpickbackend.wiki.query.dto.response.BallotResponse;
 import com.notfound.lpickbackend.wiki.query.dto.BallotCount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public interface BallotQueryRepository extends JpaRepository<Ballot, String> {
@@ -21,4 +24,6 @@ public interface BallotQueryRepository extends JpaRepository<Ballot, String> {
     where b.debate.dtId = :dtId
     """)
     BallotCount countByDebateGrouped(@Param("dtId") String dtId);
+
+    Optional<Ballot> findByOauth_OauthIdAndDebate_DtId(String oauthId, String dtId);
 }
