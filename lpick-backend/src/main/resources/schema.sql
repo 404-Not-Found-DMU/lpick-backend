@@ -63,8 +63,9 @@ CREATE TABLE IF NOT EXISTS wiki_page
     title            varchar(50) NOT NULL,
     current_revision varchar(50) NULL,
     status           varchar(10) NOT NULL,
-    class            varchar(10) NOT NULL
-);
+    class            varchar(10) NOT NULL,
+    random_point     DOUBLE PRECISION DEFAULT random() NOT NULL
+    );
 
 CREATE TABLE IF NOT EXISTS artist_like
 (
@@ -832,6 +833,9 @@ ALTER TABLE expert_request
 CREATE INDEX IF NOT EXISTS idx_album_wiki_id
     ON album (wiki_id);
 
+CREATE INDEX IF NOT EXISTS idx_album_lpti
+    ON album (lpti);
+
 -- artist ↔ wiki_page 조인용
 CREATE INDEX IF NOT EXISTS idx_artist_wiki_id
     ON artist (wiki_id);
@@ -858,8 +862,11 @@ CREATE INDEX IF NOT EXISTS idx_wiki_page_title
 
 -- wiki_id + 최신순 조회 최적화
 CREATE INDEX IF NOT EXISTS idx_page_revision_wiki_created_at
-    ON page_revision (wiki_id, created_at DESC);
+    ON page_revision (wiki_id, revision_number, created_at DESC);
 
 -- 사용자 ID
 CREATE INDEX IF NOT EXISTS idx_page_revision_oauth_id
     ON page_revision (oauth_id);
+
+-- 전체 랜덤 조회를 위한 단일 인덱스
+CREATE INDEX idx_wiki_page_random ON wiki_page (random_point);
