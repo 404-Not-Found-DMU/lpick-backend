@@ -1,5 +1,6 @@
 package com.notfound.lpickbackend.userinfo.command.application.controller;
 
+import com.notfound.lpickbackend.common.exception.SuccessCode;
 import com.notfound.lpickbackend.security.details.OAuth2UserDetails;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
 import com.notfound.lpickbackend.userinfo.command.application.dto.domaindto.request.UserGearPostRequest;
@@ -23,11 +24,13 @@ public class UserGearCommandController {
 
     @PostMapping("/user/gear")
     @Operation(summary = "사용자 음향기기 추가", description = "사용자의 음향기기를 추가. 현재 기준, Gear 테이블 미존재하는 기기 추가는 불가능.")
-    public void createNewUserGear(
+    public ResponseEntity<SuccessCode> createNewUserGear(
             @RequestBody @Valid UserGearPostRequest userGearPostRequest,
             @AuthenticationPrincipal OAuth2UserDetails userDetail
     ) {
         userGearCommandService.createNewUserGear(userDetail.getUsername(), userGearPostRequest);
+
+        return ResponseEntity.ok(SuccessCode.SUCCESS);
     }
 
     @PatchMapping("/user/gear/{userGearId}/favorite-toggle")

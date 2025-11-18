@@ -2,8 +2,7 @@ package com.notfound.lpickbackend.userinfo.query.controller;
 
 import com.notfound.lpickbackend.common._wrapper.BlindableResponse;
 import com.notfound.lpickbackend.security.details.OAuth2UserDetails;
-import com.notfound.lpickbackend.security.util.UserInfoUtil;
-import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass;
+import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClassEnum;
 import com.notfound.lpickbackend.userinfo.query.dto.response.usergear.GearInfoResponse;
 import com.notfound.lpickbackend.userinfo.query.dto.response.usergear.UserGearCollectionResponse;
 import com.notfound.lpickbackend.userinfo.query.service.UserGearQueryService;
@@ -34,10 +33,10 @@ public class UserGearQueryController {
         return ResponseEntity.ok().body(userGearQueryService.getUserOwnedGear(userDetail.getUsername()));
     }
 
-    @GetMapping("/user/gear-list/{gearClass}")
+    @GetMapping("/user/gear-list/{gearClassEnum}")
     @Operation(summary = "요청 당사자의 음향기기 목록 확인", description = "확인되는 음향기기는 분류별로 모두 확인 가능. favorite 여부가 1순위, createdAt 역순이 2순위 정렬 형식. createdAt은 response dto에서 제공되지않음.")
     public ResponseEntity<List<GearInfoResponse>> getUserOwnedGearListByGearClass(
-            @PathVariable("gearClass") GearClass gearClass,
+            @PathVariable("gearClassEnum") GearClassEnum gearClass,
             @AuthenticationPrincipal OAuth2UserDetails userDetail
     ) {
         return ResponseEntity.ok().body(userGearQueryService.getUserOwnedGearListByGearClass(userDetail.getUsername(), gearClass));

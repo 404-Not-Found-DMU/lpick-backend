@@ -5,7 +5,7 @@ import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserGear;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserSetting;
-import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass;
+import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClassEnum;
 import com.notfound.lpickbackend.userinfo.query.dto.response.usergear.GearInfoResponse;
 import com.notfound.lpickbackend.userinfo.query.dto.response.usergear.UserGearCollectionResponse;
 import com.notfound.lpickbackend.userinfo.query.repository.UserGearQueryRepository;
@@ -87,7 +87,7 @@ public class UserGearQueryService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_GEAR));
     }
 
-    public List<GearInfoResponse> getUserOwnedGearListByGearClass(String oauthId, GearClass gearClass) {
+    public List<GearInfoResponse> getUserOwnedGearListByGearClass(String oauthId, GearClassEnum gearClass) {
         return userGearQueryRepository.findAllUserGearListByUserIdAndGearClass_V1(oauthId, gearClass.name());
     }
 }

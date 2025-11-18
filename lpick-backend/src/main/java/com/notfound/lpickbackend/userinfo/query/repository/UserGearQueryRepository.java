@@ -1,7 +1,6 @@
 package com.notfound.lpickbackend.userinfo.query.repository;
 
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserGear;
-import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass;
 import com.notfound.lpickbackend.userinfo.query.dto.response.usergear.GearInfoResponse;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -141,7 +140,7 @@ public interface UserGearQueryRepository extends JpaRepository<UserGear, String>
     JOIN ug.eq g
     JOIN g.eqClass eq
     WHERE ug.oauth.oauthId = :oauthId
-      AND eq = :gearClass
+      AND eq.className = :gearClass
     ORDER BY 
         CASE WHEN ug.isFavorite = TRUE THEN 1 ELSE 0 END DESC,
         ug.createdAt DESC

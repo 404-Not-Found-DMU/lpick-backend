@@ -43,7 +43,7 @@ spring:
 #      format_sql: true
   data:
     redis:
-      host: ${redis.name}
+      host: 127.0.0.1 #${redis.name}
       port: 6379
   cookie:
     secure: ${cookie.secure}

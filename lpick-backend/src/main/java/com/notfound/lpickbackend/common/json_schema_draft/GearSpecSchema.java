@@ -1,11 +1,10 @@
 package com.notfound.lpickbackend.common.json_schema_draft;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
-import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass;
+import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClassEnum;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +20,7 @@ public class GearSpecSchema {
     public GearSpecSchema() {
         var factory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V202012);
 
-        for (GearClass gearClass : GearClass.values()) {
+        for (GearClassEnum gearClass : GearClassEnum.values()) {
             String typeName = gearClass.name();  // e.g., TURNTABLE, SPEAKER, HEADPHONE
             String schemaPath = String.format("revision_schema/specs_schema_%s.json", typeName.toLowerCase());
 
