@@ -61,8 +61,10 @@ public class QuestionCommandService {
 
         Answer answer = question.getAnswer();
 
-        answerCommandRepository.delete(answer);
-
+        if(answer != null) {
+            answerCommandRepository.delete(answer);
+        }
+        
         questionCommandRepository.delete(question);
     }
 
