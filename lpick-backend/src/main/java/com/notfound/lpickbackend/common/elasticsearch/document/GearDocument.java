@@ -1,7 +1,7 @@
 package com.notfound.lpickbackend.common.elasticsearch.document;
 
 import com.notfound.lpickbackend.servicedata.command.application.domain.Gear;
-import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass;
+import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClassEnum;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -51,7 +51,7 @@ public class GearDocument {
     private String img;
 
     @Field(type = FieldType.Keyword)
-    private GearClass eqClass; // GearClass 이름을 저장 - TURNTABLE, SPEAKER, HEADPHONE
+    private GearClassEnum eqClass; // GearClass 이름을 저장 - TURNTABLE, SPEAKER, HEADPHONE
 
     @Field(type = FieldType.Keyword)
     private String wikiId;

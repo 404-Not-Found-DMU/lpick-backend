@@ -5,7 +5,7 @@ import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.servicedata.command.application.domain.Gear;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserGear;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserInfo;
-import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass;
+import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClassEnum;
 import com.notfound.lpickbackend.userinfo.query.service.UserGearQueryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ class UserGearCommandServiceTest {
 
     private UserGear mockUserGear;
 
-    private final GearClass className = GearClass.TURNTABLE;
+    private final GearClassEnum className = GearClassEnum.TURNTABLE;
 
     private final String oauthId1 = "oauth123";
     private final String oauthId2 = "oauth222";
@@ -62,7 +62,7 @@ class UserGearCommandServiceTest {
 
         com.notfound.lpickbackend.servicedata.command.application.domain.GearClass TURNTABLE =
                 com.notfound.lpickbackend.servicedata.command.application.domain.GearClass.builder()
-                        .className(GearClass.TURNTABLE.name())
+                        .className(GearClassEnum.TURNTABLE.name())
                         .build();
 
         Gear mockGear =  Gear.builder()

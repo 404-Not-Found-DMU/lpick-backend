@@ -1,13 +1,11 @@
 package com.notfound.lpickbackend.servicedata.command.application.controller;
 
 import com.notfound.lpickbackend.common.dto.IdResponse;
-import com.notfound.lpickbackend.common.exception.CustomException;
-import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.common.exception.SuccessCode;
 import com.notfound.lpickbackend.servicedata.command.application.domain.dto.TempGearRequest;
 import com.notfound.lpickbackend.servicedata.command.application.service.GearCommandService;
 import com.notfound.lpickbackend.servicedata.command.application.service.GearDefaultSettingService;
-import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass;
+import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClassEnum;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -35,7 +33,7 @@ public class GearCommandController {
     public ResponseEntity<Map<String, Object>> importFlatCsv(
             @RequestPart("file") MultipartFile csv,
             @RequestParam(defaultValue = "false") boolean dryRun,
-            @RequestParam GearClass gearClass
+            @RequestParam GearClassEnum gearClass
             ) throws Exception {
         var r = gearDefaultSettingService.importFlatCsv(csv, dryRun, gearClass);
         return ResponseEntity.ok(Map.of(

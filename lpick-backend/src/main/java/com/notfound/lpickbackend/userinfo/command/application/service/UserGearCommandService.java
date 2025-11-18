@@ -2,16 +2,13 @@ package com.notfound.lpickbackend.userinfo.command.application.service;
 
 import com.notfound.lpickbackend.common.exception.CustomException;
 import com.notfound.lpickbackend.common.exception.ErrorCode;
-import com.notfound.lpickbackend.common.util.EnumUtils;
 import com.notfound.lpickbackend.servicedata.command.application.domain.Gear;
 import com.notfound.lpickbackend.servicedata.command.application.repository.GearCommandRepository;
-import com.notfound.lpickbackend.servicedata.query.service.GearQueryService;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.UserGear;
-import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClass;
+import com.notfound.lpickbackend.userinfo.command.application.domain.inherenceENUM.GearClassEnum;
 import com.notfound.lpickbackend.userinfo.command.application.dto.domaindto.request.UserGearPostRequest;
 import com.notfound.lpickbackend.userinfo.command.repository.UserGearCommandRepository;
 import com.notfound.lpickbackend.userinfo.query.dto.response.FavoriteToggleStatus;
-import com.notfound.lpickbackend.userinfo.query.dto.response.usergear.GearInfoResponse;
 import com.notfound.lpickbackend.userinfo.query.service.UserGearQueryService;
 import com.notfound.lpickbackend.userinfo.query.service.UserInfoQueryService;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +38,7 @@ public class UserGearCommandService {
 
         // eqClass Eager Loading 설정되어있음.
         // request 받은 데이터와 실제 db 데이터가 다른 enum 양식인 경우 오류 처리
-        if (targetGear.getEqClass().toEnum() != GearClass.valueOf(userGearPostRequest.getGearClass()))
+        if (targetGear.getEqClass().toEnum() != GearClassEnum.valueOf(userGearPostRequest.getGearClass()))
             throw new CustomException(ErrorCode.USER_GEAR_ILLEGAL_ENUM_VALUE_DETECTED);
 
         UserGear userGear = UserGear.builder()
