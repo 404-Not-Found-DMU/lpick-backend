@@ -142,7 +142,7 @@ public class DataSyncService { // AlbumSyncService에서 이름 변경
             Function<T, String> idExtractor,
             String entityName
     ) {
-        final int BATCH_SIZE = 5000;  // 필요하면 2000 정도로 낮춰도 좋음
+        final int BATCH_SIZE = 10000;  // 필요하면 2000 정도로 낮춰도 좋음
         String lastId = null;
         int batchIndex = 0;
 
@@ -178,7 +178,7 @@ public class DataSyncService { // AlbumSyncService에서 이름 변경
             entityManager.clear();
 
             try {
-                Thread.sleep(500); // 필요하면 200~300 으로 줄이거나 제거
+                Thread.sleep(200); // 필요하면 200~300 으로 줄이거나 제거
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
