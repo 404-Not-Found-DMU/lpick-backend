@@ -13,6 +13,7 @@ import com.notfound.lpickbackend.servicedata.query.repository.GearQueryRepositor
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.ExpertRequest;
 import com.notfound.lpickbackend.wiki.query.repository.WikiPageQueryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DataSyncService { // AlbumSyncService에서 이름 변경
 
     //--- JPA Repositories
@@ -93,14 +95,14 @@ public class DataSyncService { // AlbumSyncService에서 이름 변경
                     .collect(Collectors.toList());
 
             if (documents.isEmpty()) {
-                System.out.println(String.format("'%s' 동기화 완료: 마지막 페이지 (페이지 %d)", entityName, pageNumber));
+                log.warn("'{}' 동기화 완료: 마지막 페이지 (페이지 {})", entityName, pageNumber);
                 break; // 데이터가 없으면 종료
             }
 
             // 2. ElasticSearch에 배치 저장
             elasticsearchRepository.saveAll(documents);
 
-            System.out.println(String.format("'%s' 페이지 %d 동기화 완료 (요소 수: %d)", entityName, pageNumber, documents.size()));
+            log.warn("'{}' 페이지 {} 동기화 완료 (요소 수: {})", entityName, pageNumber, documents.size());
 
             if (!entityPage.hasNext()) {
                 break; // 마지막 페이지 처리 완료
