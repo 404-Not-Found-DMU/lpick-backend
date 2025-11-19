@@ -72,6 +72,10 @@ public class WikiPageQueryService {
     }
 
     public WikiPage getRandomWikiPage() {
-        return wikiPageQueryRepository.findRandomOne();
+        double randomVal = Math.random();
+
+        return wikiPageQueryRepository.findFirstByRandomPointGreaterThanEqualOrderByRandomPointAsc(randomVal)
+                .orElseGet(() -> wikiPageQueryRepository.findFirstByOrderByRandomPointAsc()
+                        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_WIKI)));
     }
 }

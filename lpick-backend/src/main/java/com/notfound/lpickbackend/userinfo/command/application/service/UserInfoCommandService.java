@@ -121,7 +121,7 @@ public class UserInfoCommandService extends DefaultOAuth2UserService {
 
         try {
 
-            imageUrl = s3Uploader.upload(profileImage, "USER-INFO");
+            if(profileImage != null && !profileImage.isEmpty()) imageUrl = s3Uploader.upload(profileImage, "USER-INFO");
 
             UserInfo user = getUserInfo(oAuthId);
 
@@ -129,7 +129,8 @@ public class UserInfoCommandService extends DefaultOAuth2UserService {
 
         } catch (Exception e) {
             // 보상 삭제
-            if (!imageUrl.isEmpty()) {
+
+            if (imageUrl != null) {
                 s3Uploader.deleteByUrl(imageUrl);
             }
 
@@ -141,28 +142,30 @@ public class UserInfoCommandService extends DefaultOAuth2UserService {
     @Transactional
     public void userUpdate(String oAuthId, UserUpdateRequest userInfo, MultipartFile profileImage) {
 
-        String imageUrl = "";
+        String newImageUrl = null; // 초기값을 null로 설정
 
         try {
-
-            imageUrl = s3Uploader.upload(profileImage, "USER-INFO");
-
             UserInfo user = getUserInfo(oAuthId);
 
-            // 보상삭제
-            if(!imageUrl.isEmpty()) {
-                s3Uploader.deleteByUrl(user.getProfile());
+            // 1. 새 이미지가 들어온 경우에만 업로드 수행
+            if (profileImage != null && !profileImage.isEmpty()) {
+                newImageUrl = s3Uploader.upload(profileImage, "USER-INFO");
+
+                // 기존 이미지가 있다면 S3에서 삭제 (새 이미지 업로드 성공 후에 삭제하는 것이 안전)
+                if (user.getProfile() != null && !user.getProfile().isEmpty()) {
+                    s3Uploader.deleteByUrl(user.getProfile());
+                }
             }
 
-            user.update(userInfo, imageUrl);
+            // 2. 엔티티 업데이트 (새 이미지가 없으면 null이 전달됨)
+            user.update(userInfo, newImageUrl);
 
         } catch (Exception e) {
-            // 보상 삭제
-            if (!imageUrl.isEmpty()) {
-                s3Uploader.deleteByUrl(imageUrl);
+            // 3. 보상 트랜잭션 (예외 발생 시 업로드된 새 이미지 삭제)
+            if (newImageUrl != null) {
+                s3Uploader.deleteByUrl(newImageUrl);
             }
-
-            throw new CustomException(ErrorCode.USER_REGISTRATION_FAIL);
+            throw new CustomException(ErrorCode.USER_UPDATE_FAIL);
         }
 
     }

@@ -5,10 +5,7 @@ import com.notfound.lpickbackend.common.exception.ErrorCode;
 import com.notfound.lpickbackend.common.exception.SuccessCode;
 import com.notfound.lpickbackend.security.util.CookieUtil;
 import com.notfound.lpickbackend.security.util.UserInfoUtil;
-import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.LogoutRequestDTO;
-import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.TokenRefreshRequestDTO;
-import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.TokenResponseDTO;
-import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.UserRegistrationRequest;
+import com.notfound.lpickbackend.userinfo.command.application.dto.infodto.*;
 import com.notfound.lpickbackend.userinfo.command.application.service.UserInfoCommandService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -132,13 +129,13 @@ public class UserInfoCommandController {
     )
     @Operation(summary = "정보 수정", description = "회원의 기본정보를 수정하는 기능")
     ResponseEntity<SuccessCode> userUpdate(
-            @RequestPart(name = "userinfo") UserRegistrationRequest userInfo,
+            @RequestPart(name = "userinfo") UserUpdateRequest userInfo,
             @RequestPart(name = "profileImage", required = false) MultipartFile profileImage
     ) {
 
         String oAuthId = UserInfoUtil.getOAuthId();
 
-        userCommandService.userRegistration(oAuthId, userInfo, profileImage);
+        userCommandService.userUpdate(oAuthId, userInfo, profileImage);
 
         return ResponseEntity.ok(SuccessCode.SUCCESS);
     }
