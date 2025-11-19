@@ -53,9 +53,9 @@ public class PageRevisionQueryService {
      *
      * 추후 추가 필요사항 : wikiStatus가 OPEN인 revision들만 불러와야한다.
      */
-    public List<PageRevision> getLatestRevisionPerWiki(Pageable pageable) {
-        return pageRevisionQueryRepository.findLatestRevisionsByCurrentRevision(pageable);
-    }
+//    public List<PageRevision> getLatestRevisionPerWiki(Pageable pageable) {
+//        return pageRevisionQueryRepository.findLatestRevisionsByCurrentRevision(pageable);
+//    }
     // 중복되고 너무 길어져서 가독성 획득 위해 메소드로 분리
     private PageRevisionResponse toResponseDTO(PageRevision entity) {
         return PageRevisionResponse.builder()
