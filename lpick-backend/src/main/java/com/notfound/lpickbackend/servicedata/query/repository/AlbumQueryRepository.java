@@ -1,6 +1,8 @@
 package com.notfound.lpickbackend.servicedata.query.repository;
 
+import com.notfound.lpickbackend.common.elasticsearch.repository.KeysetPageRepository;
 import com.notfound.lpickbackend.servicedata.command.application.domain.Album;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface AlbumQueryRepository extends JpaRepository<Album, String> {
+public interface AlbumQueryRepository extends JpaRepository<Album, String>, KeysetPageRepository<Album> {
 
     /**
      * 특정 LPTI를 가진 앨범 중 random_point를 기준으로 5개의 앨범을 랜덤 조회합니다.
@@ -47,4 +49,13 @@ public interface AlbumQueryRepository extends JpaRepository<Album, String> {
                                   @Param("limit") int limit);
 
     List<Album> findTop5ByReleaseDateIsNotNullOrderByReleaseDateDesc();
+
+    @Override
+    @Query("""
+        SELECT a
+        FROM Album a
+        WHERE (:lastId IS NULL OR a.albumId > :lastId)
+        ORDER BY a.albumId ASC
+        """)
+    List<Album> findNextPage(@Param("lastId") String lastId, Pageable pageable);
 }
