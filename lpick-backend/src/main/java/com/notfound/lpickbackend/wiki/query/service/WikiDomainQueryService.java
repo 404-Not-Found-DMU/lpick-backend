@@ -7,6 +7,8 @@ import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
 import com.notfound.lpickbackend.wiki.query.dto.response.ReviewResponse;
 import com.notfound.lpickbackend.wiki.query.dto.response.WikiPageTitleResponse;
 import com.notfound.lpickbackend.wiki.query.dto.response.WikiPageViewResponse;
+import com.notfound.lpickbackend.wiki.query.dto.row.WikiRecentModifiedRow;
+import com.notfound.lpickbackend.wiki.query.repository.PageRevisionQueryRepository;
 import com.notfound.lpickbackend.wiki.query.util.TimeAgoUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,6 +27,8 @@ public class WikiDomainQueryService {
     private final PageRevisionQueryService pageRevisionQueryService;
     private final WikiBookmarkQueryService wikiBookmarkQueryService;
     private final WikiReviewQueryService wikiReviewQueryService;
+
+    private final PageRevisionQueryRepository pageRevisionQueryRepository;
 
     public WikiPageViewResponse getWikiPageView(String wikiId, OAuth2UserDetails userDetail) {
         WikiPage wikiPage = wikiPageQueryService.getWikiPageById(wikiId);
@@ -48,20 +52,17 @@ public class WikiDomainQueryService {
     // 최근에 수정된 wikiPage 10개의 리스트를 제공. '최근 수정된 위키문서' 란에 표기하기위한 목적
     // 장르별(앨범(힙합, 재즈 등), 음향기기(턴테이블, 스피커 등), 아티스트 등) 상세 READ는 추후 구현
     public List<WikiPageTitleResponse> getRecentlyModifiedWikiPageList(int pageAmount, Instant now) {
-        List<PageRevision> revisionList = pageRevisionQueryService.getLatestRevisionPerWiki(
+        List<WikiRecentModifiedRow> revisionList = pageRevisionQueryRepository.findLatestModified(
                 PageRequest.of(0, pageAmount)
         );
 
         return revisionList.stream()
-                .map(rev -> {
-                    WikiPage wiki = rev.getWiki();
-                    return WikiPageTitleResponse.builder()
-                            .wikiId(wiki.getWikiId())
-                            .title(wiki.getTitle())
-                            .modifiedBefore(TimeAgoUtil.toTimeAgo(rev.getCreatedAt(), now))
-                            .wikiPageClass(wiki.getWikiClass())
-                            .build();
-                })
+                .map(row -> WikiPageTitleResponse.builder()
+                        .wikiId(row.wikiId())
+                        .title(row.title())
+                        .modifiedBefore(TimeAgoUtil.toTimeAgo(row.createdAt(), now))
+                        .wikiPageClass(row.wikiClass())
+                        .build())
                 .toList();
     }
 

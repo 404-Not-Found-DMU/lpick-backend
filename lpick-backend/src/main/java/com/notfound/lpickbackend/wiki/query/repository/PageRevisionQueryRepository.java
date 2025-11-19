@@ -1,6 +1,7 @@
 package com.notfound.lpickbackend.wiki.query.repository;
 
 import com.notfound.lpickbackend.wiki.command.application.domain.PageRevision;
+import com.notfound.lpickbackend.wiki.query.dto.row.WikiRecentModifiedRow;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -58,14 +59,18 @@ public interface PageRevisionQueryRepository extends JpaRepository<PageRevision,
 
     int countByUserInfo_OauthId(String oauthId);
 
-    @EntityGraph(attributePaths = {"wiki"})
     @Query("""
-    SELECT pr
-    FROM PageRevision pr
-    JOIN pr.wiki w
-    WHERE w.wikiStatus = 'OPEN'
-      AND pr.revisionNumber = w.currentRevision
-    ORDER BY pr.createdAt DESC
-    """)
-    List<PageRevision> findLatestRevisionsByCurrentRevision(Pageable pageable);
+select new com.notfound.lpickbackend.wiki.query.dto.row.WikiRecentModifiedRow(
+    w.wikiId,
+    w.title,
+    pr.createdAt,
+    w.wikiClass
+)
+from PageRevision pr
+join pr.wiki w
+where w.wikiStatus = 'OPEN'
+  and pr.revisionNumber = w.currentRevision
+order by pr.createdAt desc
+""")
+    List<WikiRecentModifiedRow> findLatestModified(Pageable pageable);
 }
