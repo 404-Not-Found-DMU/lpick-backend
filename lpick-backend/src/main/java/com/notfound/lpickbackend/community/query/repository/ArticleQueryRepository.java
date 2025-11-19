@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ArticleQueryRepository extends JpaRepository<Article, String>, KeysetPageRepository<WikiPage> {
+public interface ArticleQueryRepository extends JpaRepository<Article, String>, KeysetPageRepository<Article> {
 
     // 게시글 id, 제목, 좋아요 개수, 코멘트 개수, 작성자
     /*
@@ -172,10 +172,10 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String>, 
 
     @Override
     @Query("""
-        SELECT w
-        FROM WikiPage w
-        WHERE (:lastId IS NULL OR w.wikiId > :lastId)
-        ORDER BY w.wikiId ASC
+        SELECT a
+        FROM Article a
+        WHERE (:lastId IS NULL OR a.articleId > :lastId)
+        ORDER BY a.articleId ASC
         """)
-    List<WikiPage> findNextPage(@Param("lastId") String lastId, Pageable pageable);
+    List<Article> findNextPage(@Param("lastId") String lastId, Pageable pageable);
 }

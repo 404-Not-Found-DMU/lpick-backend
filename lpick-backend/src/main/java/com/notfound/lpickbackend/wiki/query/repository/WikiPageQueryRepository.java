@@ -1,7 +1,10 @@
 package com.notfound.lpickbackend.wiki.query.repository;
 
+import com.notfound.lpickbackend.common.elasticsearch.repository.KeysetPageRepository;
+import com.notfound.lpickbackend.servicedata.command.application.domain.Album;
 import com.notfound.lpickbackend.servicedata.query.dto.SearchResultWithImage;
 import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface WikiPageQueryRepository extends JpaRepository<WikiPage, String> {
+public interface WikiPageQueryRepository extends JpaRepository<WikiPage, String>, KeysetPageRepository<WikiPage> {
 
     @Query("SELECT wp.wikiId FROM WikiPage wp WHERE wp.artist.artistId = :artistId")
     Optional<String> findWikiIdByArtistId(@Param("artistId") String artistId);
@@ -44,4 +47,13 @@ public interface WikiPageQueryRepository extends JpaRepository<WikiPage, String>
 
     // 2. 범위 밖일 경우를 대비해 맨 처음 녀석 조회 (Fallback)
     Optional<WikiPage> findFirstByOrderByRandomPointAsc();
+
+    @Override
+    @Query("""
+        SELECT w
+        FROM WikiPage w
+        WHERE (:lastId IS NULL OR w.wikiId > :lastId)
+        ORDER BY w.wikiId ASC
+        """)
+    List<WikiPage> findNextPage(@Param("lastId") String lastId, Pageable pageable);
 }

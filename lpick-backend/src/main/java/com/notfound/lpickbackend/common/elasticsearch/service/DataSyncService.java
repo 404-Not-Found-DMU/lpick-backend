@@ -11,7 +11,9 @@ import com.notfound.lpickbackend.servicedata.query.repository.AlbumQueryReposito
 import com.notfound.lpickbackend.servicedata.query.repository.ArtistQueryRepository;
 import com.notfound.lpickbackend.servicedata.query.repository.GearQueryRepository;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.ExpertRequest;
+import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
 import com.notfound.lpickbackend.wiki.query.repository.WikiPageQueryRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -39,6 +41,7 @@ public class DataSyncService { // AlbumSyncService에서 이름 변경
     private final GearQueryRepository gearQueryRepository;
     private final ArticleQueryRepository articleQueryRepository;
     private final WikiPageQueryRepository wikiPageQueryRepository;
+    private final EntityManager entityManager;
 
     //--- Elasticsearch Repositories
     private final AlbumDocumentRepository albumDocumentRepository;
@@ -136,11 +139,11 @@ public class DataSyncService { // AlbumSyncService에서 이름 변경
             KeysetPageRepository<T> jpaRepository,
             ElasticsearchRepository<D, ?> elasticsearchRepository,
             Function<T, D> documentMapper,
-            Function<T, String> idExtractor,   // 엔티티에서 ID 추출
+            Function<T, String> idExtractor,
             String entityName
     ) {
-        final int BATCH_SIZE = 5000;
-        String lastId = null; // 시작 커서
+        final int BATCH_SIZE = 5000;  // 필요하면 2000 정도로 낮춰도 좋음
+        String lastId = null;
         int batchIndex = 0;
 
         Pageable pageable = PageRequest.of(0, BATCH_SIZE);
@@ -171,8 +174,11 @@ public class DataSyncService { // AlbumSyncService에서 이름 변경
 
             batchIndex++;
 
+            // 🔥 여기가 중요: 배치마다 영속성 컨텍스트 비우기
+            entityManager.clear();
+
             try {
-                Thread.sleep(500); // 부하 조절 (필요 시 조정/삭제)
+                Thread.sleep(500); // 필요하면 200~300 으로 줄이거나 제거
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -216,19 +222,21 @@ public class DataSyncService { // AlbumSyncService에서 이름 변경
 
     // --- 상대적으로 소량: 기존 OFFSET 방식 유지 ---
     public void syncAllArticles() {
-        syncAllDataOffset(
+        syncAllDataKeyset(
                 articleQueryRepository,
                 articleDocumentRepository,
                 ArticleDocument::from,
+                Article::getArticleId,
                 "Article"
         );
     }
 
     public void syncAllWikiPage() {
-        syncAllDataOffset(
+        syncAllDataKeyset(
                 wikiPageQueryRepository,
                 wikiPageDocumentRepository,
                 WikiPageDocument::from,
+                WikiPage::getWikiId,
                 "WikiPage"
         );
     }
