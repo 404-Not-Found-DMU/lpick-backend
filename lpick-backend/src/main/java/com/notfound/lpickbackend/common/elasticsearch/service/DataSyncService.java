@@ -84,7 +84,7 @@ public class DataSyncService { // AlbumSyncService에서 이름 변경
 
         while (true) {
             // 1. 페이지 단위로 데이터 조회
-            int BATCH_SIZE = 500;
+            int BATCH_SIZE = 5000;
             PageRequest pageRequest = PageRequest.of(pageNumber, BATCH_SIZE);
             Page<T> entityPage = jpaRepository.findAll(pageRequest);
 
