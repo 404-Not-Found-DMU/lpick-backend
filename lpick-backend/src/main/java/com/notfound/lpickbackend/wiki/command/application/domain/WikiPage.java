@@ -62,6 +62,10 @@ public class WikiPage {
             fetch = FetchType.LAZY)
     private Gear gear;
 
+    // DB가 알아서 생성하므로 insertable = false 설정 (혹은 @PrePersist 사용 가능)
+    @Column(name = "random_point", insertable = false, updatable = false)
+    private Double randomPoint;
+
     public void updateCurrentRevision(String newRevisionNumber) {
         this.currentRevision = newRevisionNumber;
     }

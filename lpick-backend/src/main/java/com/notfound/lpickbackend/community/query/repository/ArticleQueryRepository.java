@@ -1,8 +1,10 @@
 package com.notfound.lpickbackend.community.query.repository;
 
+import com.notfound.lpickbackend.common.elasticsearch.repository.KeysetPageRepository;
 import com.notfound.lpickbackend.community.command.domain.Article;
 import com.notfound.lpickbackend.community.query.dto.ArticleDetailResponse;
 import com.notfound.lpickbackend.community.query.dto.ArticleListResponse;
+import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ArticleQueryRepository extends JpaRepository<Article, String> {
+public interface ArticleQueryRepository extends JpaRepository<Article, String>, KeysetPageRepository<Article> {
 
     // 게시글 id, 제목, 좋아요 개수, 코멘트 개수, 작성자
     /*
@@ -167,4 +169,13 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String> {
     ArticleDetailResponse findByIdWithLikeAndCommentAndBookmarkCount(@Param("articleId") String articleId);
 
     int countByOauth_OauthId(String oauthId);
+
+    @Override
+    @Query("""
+        SELECT a
+        FROM Article a
+        WHERE (:lastId IS NULL OR a.articleId > :lastId)
+        ORDER BY a.articleId ASC
+        """)
+    List<Article> findNextPage(@Param("lastId") String lastId, Pageable pageable);
 }
