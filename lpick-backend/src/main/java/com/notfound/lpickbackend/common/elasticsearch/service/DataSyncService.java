@@ -84,7 +84,7 @@ public class DataSyncService { // AlbumSyncService에서 이름 변경
 
         while (true) {
             // 1. 페이지 단위로 데이터 조회
-            int BATCH_SIZE = 5000;
+            int BATCH_SIZE = 500;
             PageRequest pageRequest = PageRequest.of(pageNumber, BATCH_SIZE);
             Page<T> entityPage = jpaRepository.findAll(pageRequest);
 
@@ -110,7 +110,7 @@ public class DataSyncService { // AlbumSyncService에서 이름 변경
 
             // 3. (선택적) 요청 사이에 잠시 대기하여 부하 줄이기
             try {
-                Thread.sleep(2000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
