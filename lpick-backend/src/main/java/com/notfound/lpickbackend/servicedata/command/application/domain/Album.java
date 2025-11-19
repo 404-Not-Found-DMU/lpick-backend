@@ -36,6 +36,10 @@ public class Album {
     @Column(name = "lpti", length = 20)
     private String lpti;
 
+    // DB가 알아서 생성하므로 insertable = false 설정 (혹은 @PrePersist 사용 가능)
+    @Column(name = "random_point", insertable = false, updatable = false)
+    private Double randomPoint;
+
     @OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "wiki_id")
     private WikiPage wiki;

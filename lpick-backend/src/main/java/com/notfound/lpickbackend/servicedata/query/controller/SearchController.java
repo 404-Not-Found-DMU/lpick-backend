@@ -69,6 +69,60 @@ public class SearchController {
         return ResponseEntity.ok(SuccessCode.SUCCESS);
     }
 
+    @PostMapping("/sync/wiki")
+    @Operation(summary = "DB <-> 위키 싱크", description = "위키 데이터를 맞추기 위한 api입니다.")
+    public ResponseEntity<SuccessCode> syncWiki() {
+
+        // 김경환 수정
+        // 기존의 sync 구현 방식은 인덱스 양식(mapping-json)을 참조하지 않고, 인덱스를 구현해야할 데이터를 불러온 뒤 각 타입별로 es가 '추론'하여 인덱스 구조를 구현중인 심각한 문제가있었습니다.
+        // 이를 해결하기 위해 아래와 같이 수정합니다.
+
+        // GPT 요약 첨부 :
+        // mapping JSON = DB의 스키마(DDL, schema.sql)
+        // Document 클래스 = ORM 엔티티
+        // 현재 흐름은 “schema.sql도 안 돌리고, ORM도 안 쓰고, DB가 들어온 데이터 보고 컬럼 타입을 추정해서 테이블 만든” 상황과 같다.
+
+        dataSyncService.syncAllWikiPage();
+
+        return ResponseEntity.ok(SuccessCode.SUCCESS);
+    }
+
+    @PostMapping("/sync/article")
+    @Operation(summary = "DB <-> 게시글 싱크", description = "게시글 데이터를 맞추기 위한 api입니다.")
+    public ResponseEntity<SuccessCode> syncArticle() {
+
+        // 김경환 수정
+        // 기존의 sync 구현 방식은 인덱스 양식(mapping-json)을 참조하지 않고, 인덱스를 구현해야할 데이터를 불러온 뒤 각 타입별로 es가 '추론'하여 인덱스 구조를 구현중인 심각한 문제가있었습니다.
+        // 이를 해결하기 위해 아래와 같이 수정합니다.
+
+        // GPT 요약 첨부 :
+        // mapping JSON = DB의 스키마(DDL, schema.sql)
+        // Document 클래스 = ORM 엔티티
+        // 현재 흐름은 “schema.sql도 안 돌리고, ORM도 안 쓰고, DB가 들어온 데이터 보고 컬럼 타입을 추정해서 테이블 만든” 상황과 같다.
+
+        dataSyncService.syncAllArticles();
+
+        return ResponseEntity.ok(SuccessCode.SUCCESS);
+    }
+
+    @PostMapping("/sync/gear")
+    @Operation(summary = "DB <-> gear 싱크", description = "장비 데이터를 맞추기 위한 api입니다.")
+    public ResponseEntity<SuccessCode> syncGear() {
+
+        // 김경환 수정
+        // 기존의 sync 구현 방식은 인덱스 양식(mapping-json)을 참조하지 않고, 인덱스를 구현해야할 데이터를 불러온 뒤 각 타입별로 es가 '추론'하여 인덱스 구조를 구현중인 심각한 문제가있었습니다.
+        // 이를 해결하기 위해 아래와 같이 수정합니다.
+
+        // GPT 요약 첨부 :
+        // mapping JSON = DB의 스키마(DDL, schema.sql)
+        // Document 클래스 = ORM 엔티티
+        // 현재 흐름은 “schema.sql도 안 돌리고, ORM도 안 쓰고, DB가 들어온 데이터 보고 컬럼 타입을 추정해서 테이블 만든” 상황과 같다.
+
+        dataSyncService.syncAllGears();
+
+        return ResponseEntity.ok(SuccessCode.SUCCESS);
+    }
+
     @GetMapping("/autocomplete")
     @Operation(summary = "검색어 자동 완성 목록 api", description = "검색어를 입력할 때 마다 자동완성된 검색어 목록을 제공합니다.")
     public ResponseEntity<List<SearchResult>> getAutocompleteSuggestions(

@@ -36,7 +36,9 @@ CREATE TABLE IF NOT EXISTS wiki_page (
     title              varchar(50)    NOT NULL,
     current_revision   varchar(50)    NULL,
     status             varchar(10)    NOT NULL,
-    class              varchar(10)    NOT NULL
+    class              varchar(10)    NOT NULL,
+    -- ★ 추가된 부분: 랜덤 조회용 컬럼 (자동 생성)
+    random_point       DOUBLE PRECISION DEFAULT random() NOT NULL
 );
 """
 

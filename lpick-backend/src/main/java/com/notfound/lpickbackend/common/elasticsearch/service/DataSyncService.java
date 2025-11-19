@@ -11,10 +11,14 @@ import com.notfound.lpickbackend.servicedata.query.repository.AlbumQueryReposito
 import com.notfound.lpickbackend.servicedata.query.repository.ArtistQueryRepository;
 import com.notfound.lpickbackend.servicedata.query.repository.GearQueryRepository;
 import com.notfound.lpickbackend.userinfo.command.application.domain.entity.ExpertRequest;
+import com.notfound.lpickbackend.wiki.command.application.domain.WikiPage;
 import com.notfound.lpickbackend.wiki.query.repository.WikiPageQueryRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.IndexOperations;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
@@ -28,14 +32,16 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DataSyncService { // AlbumSyncService에서 이름 변경
 
-    //--- JPA Repositories
+    //--- JPA / Query Repositories
     private final AlbumQueryRepository albumQueryRepository;
     private final ArtistQueryRepository artistQueryRepository;
     private final GearQueryRepository gearQueryRepository;
     private final ArticleQueryRepository articleQueryRepository;
     private final WikiPageQueryRepository wikiPageQueryRepository;
+    private final EntityManager entityManager;
 
     //--- Elasticsearch Repositories
     private final AlbumDocumentRepository albumDocumentRepository;
@@ -47,11 +53,15 @@ public class DataSyncService { // AlbumSyncService에서 이름 변경
 
     private final ElasticsearchOperations operations;
 
+    // ========================================
+    // Index 재생성
+    // ========================================
+
     /** Document 클래스에 설정 된 Setting, Mapping을 적용한다. */
     private void recreateIndex(Class<?> docClass) {
         IndexOperations io = operations.indexOps(docClass);
         if (io.exists()) io.delete();
-        io.create();                             // @Setting 적용
+        io.create();                               // @Setting 적용
         io.putMapping(io.createMapping(docClass)); // @Mapping 적용
     }
 
@@ -65,120 +75,205 @@ public class DataSyncService { // AlbumSyncService에서 이름 변경
 
     /** 초기화 + 전체 싱크 한 번에 */
     public void recreateAndSyncAll() {
-        recreateAllIndices();        // 1) 인덱스/매핑 먼저
-        syncAllAlbums();             // 2) 그 다음 색인
+        recreateAllIndices();  // 1) 인덱스/매핑 먼저
+        syncAllAlbums();       // 2) 그 다음 색인
         syncAllArtists();
         syncAllGears();
         syncAllArticles();
         syncAllWikiPage();
     }
 
+    // ========================================
+    // 1. OFFSET 기반 범용 동기화 (소량 데이터용 - Article, WikiPage 등)
+    // ========================================
+
     @Transactional(readOnly = true)
-    protected <T, D> void syncAllData(
+    protected <T, D> void syncAllDataOffset(
             PagingAndSortingRepository<T, ?> jpaRepository,
             ElasticsearchRepository<D, ?> elasticsearchRepository,
             Function<T, D> documentMapper,
             String entityName
     ) {
         int pageNumber = 0;
+        final int BATCH_SIZE = 5000;
 
         while (true) {
-            // 1. 페이지 단위로 데이터 조회
-            int BATCH_SIZE = 500;
             PageRequest pageRequest = PageRequest.of(pageNumber, BATCH_SIZE);
             Page<T> entityPage = jpaRepository.findAll(pageRequest);
 
             List<D> documents = entityPage.getContent().stream()
-                    .map(documentMapper) // 매개변수로 받은 매핑 함수 사용
+                    .map(documentMapper)
                     .collect(Collectors.toList());
 
             if (documents.isEmpty()) {
-                System.out.println(String.format("'%s' 동기화 완료: 마지막 페이지 (페이지 %d)", entityName, pageNumber));
-                break; // 데이터가 없으면 종료
+                log.warn("'{}' 동기화 완료: 마지막 페이지 (페이지 {})", entityName, pageNumber);
+                break;
             }
 
-            // 2. ElasticSearch에 배치 저장
             elasticsearchRepository.saveAll(documents);
 
-            System.out.println(String.format("'%s' 페이지 %d 동기화 완료 (요소 수: %d)", entityName, pageNumber, documents.size()));
+            log.warn("'{}' 페이지 {} 동기화 완료 (요소 수: {})",
+                    entityName, pageNumber, documents.size());
 
             if (!entityPage.hasNext()) {
-                break; // 마지막 페이지 처리 완료
+                log.warn("'{}' 더 이상 다음 페이지 없음. 동기화 종료.", entityName);
+                break;
             }
 
             pageNumber++;
 
-            // 3. (선택적) 요청 사이에 잠시 대기하여 부하 줄이기
             try {
-                Thread.sleep(500);
+                Thread.sleep(500); // 부하 조절 (필요 시 조정/삭제)
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
         }
     }
 
-    //--- Public API: 범용 메서드 호출 ---
+    // ========================================
+    // 2. Keyset 기반 범용 동기화 (대량 데이터용 - Album, Artist, Gear)
+    // ========================================
 
+    @Transactional(readOnly = true)
+    protected <T, D> void syncAllDataKeyset(
+            KeysetPageRepository<T> jpaRepository,
+            ElasticsearchRepository<D, ?> elasticsearchRepository,
+            Function<T, D> documentMapper,
+            Function<T, String> idExtractor,
+            String entityName
+    ) {
+        final int BATCH_SIZE = 10000;  // 필요하면 2000 정도로 낮춰도 좋음
+        String lastId = null;
+        int batchIndex = 0;
+
+        Pageable pageable = PageRequest.of(0, BATCH_SIZE);
+
+        while (true) {
+            // 1. lastId 이후 데이터 조회 (Keyset)
+            List<T> entities = jpaRepository.findNextPage(lastId, pageable);
+
+            if (entities.isEmpty()) {
+                log.warn("'{}' 동기화 완료: 마지막 배치 index={}", entityName, batchIndex);
+                break;
+            }
+
+            // 2. 문서 변환
+            List<D> documents = entities.stream()
+                    .map(documentMapper)
+                    .collect(Collectors.toList());
+
+            // 3. ES 저장
+            elasticsearchRepository.saveAll(documents);
+
+            // 4. 다음 커서(lastId) 업데이트
+            T lastEntity = entities.get(entities.size() - 1);
+            lastId = idExtractor.apply(lastEntity);
+
+            log.warn("'{}' 배치 {} 동기화 완료 (요소 수: {}, lastId: {})",
+                    entityName, batchIndex, documents.size(), lastId);
+
+            batchIndex++;
+
+            // 🔥 여기가 중요: 배치마다 영속성 컨텍스트 비우기
+            entityManager.clear();
+
+            try {
+                Thread.sleep(200); // 필요하면 200~300 으로 줄이거나 제거
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    // ========================================
+    // Public API: 엔티티별 동기화 엔트리 포인트
+    // ========================================
+
+    // --- 대용량: Keyset 사용 ---
     public void syncAllAlbums() {
-        syncAllData(albumQueryRepository, albumDocumentRepository, AlbumDocument::from, "Album");
+        syncAllDataKeyset(
+                albumQueryRepository,
+                albumDocumentRepository,
+                AlbumDocument::from,
+                Album::getAlbumId,
+                "Album"
+        );
     }
 
     public void syncAllArtists() {
-        syncAllData(artistQueryRepository, artistDocumentRepository, ArtistDocument::from, "Artist");
+        syncAllDataKeyset(
+                artistQueryRepository,
+                artistDocumentRepository,
+                ArtistDocument::from,
+                Artist::getArtistId,
+                "Artist"
+        );
     }
 
     public void syncAllGears() {
-        syncAllData(gearQueryRepository, gearDocumentRepository, GearDocument::from, "Gear");
+        syncAllDataKeyset(
+                gearQueryRepository,
+                gearDocumentRepository,
+                GearDocument::from,
+                Gear::getGearId,   // 필드명에 맞게 수정
+                "Gear"
+        );
     }
 
+    // --- 상대적으로 소량: 기존 OFFSET 방식 유지 ---
     public void syncAllArticles() {
-        syncAllData(articleQueryRepository, articleDocumentRepository, ArticleDocument::from, "Article");
-    }
-    public void syncAllWikiPage() {
-        syncAllData(wikiPageQueryRepository, wikiPageDocumentRepository, WikiPageDocument::from, "WikiPage");
+        syncAllDataKeyset(
+                articleQueryRepository,
+                articleDocumentRepository,
+                ArticleDocument::from,
+                Article::getArticleId,
+                "Article"
+        );
     }
 
-    /**
-     * 앨범이 저장/수정될 때 Elasticsearch에 반영합니다.
-     */
+    public void syncAllWikiPage() {
+        syncAllDataKeyset(
+                wikiPageQueryRepository,
+                wikiPageDocumentRepository,
+                WikiPageDocument::from,
+                WikiPage::getWikiId,
+                "WikiPage"
+        );
+    }
+
+    // ========================================
+    // 단건 Sync API (기존 그대로)
+    // ========================================
+
+    /** 앨범이 저장/수정될 때 Elasticsearch에 반영합니다. */
     public void syncAlbum(Album album) {
         AlbumDocument document = AlbumDocument.from(album);
         albumDocumentRepository.save(document);
     }
 
-    /**
-     * 앨범이 삭제될 때 Elasticsearch에서도 제거합니다.
-     */
+    /** 앨범이 삭제될 때 Elasticsearch에서도 제거합니다. */
     public void deleteAlbum(String albumId) {
         albumDocumentRepository.deleteById(albumId);
     }
 
-    /**
-     * 아티스트가 저장/수정될 때 Elasticsearch에 반영합니다.
-     */
+    /** 아티스트가 저장/수정될 때 Elasticsearch에 반영합니다. */
     public void syncArtist(Artist artist) {
         ArtistDocument document = ArtistDocument.from(artist);
         artistDocumentRepository.save(document);
     }
 
-    /**
-     * 아티스트가 삭제될 때 Elasticsearch에서도 제거합니다.
-     */
+    /** 아티스트가 삭제될 때 Elasticsearch에서도 제거합니다. */
     public void deleteArtist(String artistId) {
         artistDocumentRepository.deleteById(artistId);
     }
 
-    /**
-     * 기어가 저장/수정될 때 Elasticsearch에 반영합니다.
-     */
+    /** 기어가 저장/수정될 때 Elasticsearch에 반영합니다. */
     public void syncGear(Gear gear) {
         GearDocument document = GearDocument.from(gear);
         gearDocumentRepository.save(document);
     }
 
-    /**
-     * 기어가 삭제될 때 Elasticsearch에서도 제거합니다.
-     */
+    /** 기어가 삭제될 때 Elasticsearch에서도 제거합니다. */
     public void deleteGear(String gearId) {
         gearDocumentRepository.deleteById(gearId);
     }
@@ -192,17 +287,13 @@ public class DataSyncService { // AlbumSyncService에서 이름 변경
         articleDocumentRepository.deleteById(articleId);
     }
 
-    /**
-     * 기어가 저장/수정될 때 Elasticsearch에 반영합니다.
-     */
+    /** 전문가 요청 저장/수정 시 Elasticsearch 반영 */
     public void syncExpertRequest(ExpertRequest expertRequest) {
         ExpertRequestDocument document = ExpertRequestDocument.from(expertRequest);
         expertRequestDocumentRepository.save(document);
     }
 
-    /**
-     * 기어가 삭제될 때 Elasticsearch에서도 제거합니다.
-     */
+    /** 전문가 요청 삭제 시 Elasticsearch에서도 제거 */
     public void deleteExpertRequest(String expertRequestId) {
         expertRequestDocumentRepository.deleteById(expertRequestId);
     }
