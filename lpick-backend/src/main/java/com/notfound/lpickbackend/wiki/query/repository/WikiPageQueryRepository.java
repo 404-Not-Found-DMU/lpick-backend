@@ -50,10 +50,13 @@ public interface WikiPageQueryRepository extends JpaRepository<WikiPage, String>
 
     @Override
     @Query("""
-        SELECT w
-        FROM WikiPage w
-        WHERE (:lastId IS NULL OR w.wikiId > :lastId)
-        ORDER BY w.wikiId ASC
-        """)
+    SELECT w
+    FROM WikiPage w
+        LEFT JOIN FETCH w.artist
+        LEFT JOIN FETCH w.album
+        LEFT JOIN FETCH w.gear
+    WHERE (:lastId IS NULL OR w.wikiId > :lastId)
+    ORDER BY w.wikiId ASC
+    """)
     List<WikiPage> findNextPage(@Param("lastId") String lastId, Pageable pageable);
 }
