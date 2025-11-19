@@ -156,6 +156,7 @@ public interface ArticleQueryRepository extends JpaRepository<Article, String>, 
         COUNT(DISTINCT b),
         a.oauth.oauthId,
         a.oauth.nickname,
+        a.oauth.profile,
         a.viewCount
     )
     FROM Article a

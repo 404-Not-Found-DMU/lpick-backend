@@ -27,6 +27,8 @@ public class ParentsCommentResponse {
 
     private String author;
 
+    private String authorProfile;
+
     private boolean liked;
 
     private int likeCount;
