@@ -869,6 +869,15 @@ CREATE INDEX IF NOT EXISTS idx_page_revision_wiki_created_at
 CREATE INDEX IF NOT EXISTS idx_page_revision_oauth_id
     ON page_revision (oauth_id);
 
+
+-- 최신 수정 위키페이지 조회 목적(PageRevision과 연계)
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_page_revision_created_at_desc
+    ON page_revision (created_at DESC);
+
+-- 최신 수정 위키페이지 조회 목적(PageRevision과 연계)
+CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS idx_page_revision_wiki_revnum
+    ON page_revision (wiki_id, revision_number);
+
 CREATE INDEX IF NOT EXISTS idx_album_release_date
     ON album (release_date);
 

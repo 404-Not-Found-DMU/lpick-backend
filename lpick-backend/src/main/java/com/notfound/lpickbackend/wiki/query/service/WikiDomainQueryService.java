@@ -11,6 +11,7 @@ import com.notfound.lpickbackend.wiki.query.dto.row.WikiRecentModifiedRow;
 import com.notfound.lpickbackend.wiki.query.repository.PageRevisionQueryRepository;
 import com.notfound.lpickbackend.wiki.query.util.TimeAgoUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class WikiDomainQueryService {
     private final WikiPageQueryService wikiPageQueryService;
@@ -52,11 +54,14 @@ public class WikiDomainQueryService {
     // 최근에 수정된 wikiPage 10개의 리스트를 제공. '최근 수정된 위키문서' 란에 표기하기위한 목적
     // 장르별(앨범(힙합, 재즈 등), 음향기기(턴테이블, 스피커 등), 아티스트 등) 상세 READ는 추후 구현
     public List<WikiPageTitleResponse> getRecentlyModifiedWikiPageList(int pageAmount, Instant now) {
-        List<WikiRecentModifiedRow> revisionList = pageRevisionQueryRepository.findLatestModified(
-                PageRequest.of(0, pageAmount)
-        );
+        long start = System.currentTimeMillis();
+        List<WikiRecentModifiedRow> rows;
+        long dbStart = System.currentTimeMillis();
+        rows = pageRevisionQueryRepository.findLatestModified(PageRequest.of(0, pageAmount));
+        long dbElapsed = System.currentTimeMillis() - dbStart;
+        log.info("[recent-modify] DB query took {} ms (rows={})", dbElapsed, rows.size());
 
-        return revisionList.stream()
+        List<WikiPageTitleResponse> result = rows.stream()
                 .map(row -> WikiPageTitleResponse.builder()
                         .wikiId(row.wikiId())
                         .title(row.title())
@@ -64,6 +69,10 @@ public class WikiDomainQueryService {
                         .wikiPageClass(row.wikiClass())
                         .build())
                 .toList();
+
+        long totalElapsed = System.currentTimeMillis() - start;
+        log.info("[recent-modify] total service took {} ms", totalElapsed);
+        return result;
     }
 
     public WikiPageViewResponse getRandomWikiPageView(OAuth2UserDetails userDetail) {

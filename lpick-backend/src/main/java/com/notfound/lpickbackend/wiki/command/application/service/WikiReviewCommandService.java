@@ -35,9 +35,6 @@ public class WikiReviewCommandService {
                 .oauth(userInfo)
                 .wiki(wikiPage).build()
         );
-
-        throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-
     }
 
     public void updateReview(String reviewId, String userId, ReviewPostRequest req) {
